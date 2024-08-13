@@ -1,12 +1,12 @@
-import { SafeAreaView } from "../../components/layout/safeAreaView"
-import {Text} from 'react-native'
+import { SafeAreaView } from "../../components/layout/safeAreaView";
+import QuickLinks from "./quickLinks";
 
-const Home = () =>{
-    return(
+const Home = () => {
+  return (
     <SafeAreaView>
-        <Text>Welcome to Home</Text>
+      <QuickLinks />
     </SafeAreaView>
-    )
-}
+  );
+};
 
-export default Home
+export default Home;
