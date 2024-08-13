@@ -12,6 +12,8 @@ const Bills = () => {
         <View>
           <Text>Due Bills</Text>
           <Text>N20,000</Text>
+
+          <Text>N20,000</Text>
         </View>
       </View>
     </SafeAreaView>
