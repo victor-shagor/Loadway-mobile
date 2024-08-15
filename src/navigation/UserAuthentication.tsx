@@ -2,15 +2,13 @@ import { View, Text } from "react-native";
 import React from "react";
 import Login from "../screens/UserAuthentication.tsx/Login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import VerifyEmail from "../screens/UserAuthentication.tsx/VerifyEmail.com";
-import { NavigatorScreenParams } from "@react-navigation/native";
 import ForgotPassword from "../screens/UserAuthentication.tsx/ForgotPassword";
 import UpdatePassword from "../screens/UserAuthentication.tsx/UpdatePassword";
 import { useOnboarding } from "../hooks/isFirstLaunch";
 import DashboardStack from "./DashboardStack";
-import { SafeAreaView } from "../components/layout/safeAreaView";
 
-// useOnboardi
+
+
 
 export type AuthenticationStackParamList = {
   login: any;
@@ -23,11 +21,11 @@ const Stack = createNativeStackNavigator<AuthenticationStackParamList>();
 const UserAuthentication = () => {
   const context = useOnboarding()!;
   const { login } = context;
-  // if (login) {
-  //   <DashboardStack />;
-  // }
+  if (login) {
+    <DashboardStack />;
+  }
   return (
-    <SafeAreaView>
+    <View style={{flex: 1}}>
       {login ? (
         <DashboardStack />
       ) : (
@@ -42,7 +40,7 @@ const UserAuthentication = () => {
           <Stack.Screen name="updatepassword" component={UpdatePassword} />
         </Stack.Navigator>
       )}
-    </SafeAreaView>
+    </View>         
   );
 };
 

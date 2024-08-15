@@ -1,11 +1,12 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useOnboarding } from '@/src/hooks/isFirstLaunch'
+import useOnboardingContext from '@/src/utils/Context'
+
 
 
 const VerifyEmailButton = () => {
-  const context = useOnboarding()!;
-  const {color } = context;
+  const {color } = useOnboardingContext();
   return (
     <View className={`mx-5 bg-[${color}] h-[50px] rounded-lg`}>
       <TouchableOpacity

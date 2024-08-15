@@ -4,7 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@/src/navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+import useOnboardingContext from "@/src/utils/Context";
+
 
 const LoginButton = () => {
   const navigation =
@@ -13,27 +14,18 @@ const LoginButton = () => {
     useState<keyof AuthenticationStackParamList>("updatepassword");
 
   const [userHasUpdatedPassword, setUserHasUpdatedPassword] = useState(false);
+   
 
-  const context = useOnboarding()!;
-  const { setLogin } = context;
-
-  // const setUpdatePassword = async () => {
-  //   try {
-  //      await AsyncStorage.setItem(
-  //       "updatedPassword",
-  //       "true"
-  //     );
-  //   } catch (error) {
-  //     console.error("Error setting password status:", error);
-  //   }
-  // };
+  const getData = async () => await AsyncStorage.getItem('');
+  console.log(getData());
+  
+  const { setLogin } = useOnboardingContext();
 
   const clickBtn = async () => {
     console.log(userHasUpdatedPassword,"breaking news");
     if (userHasUpdatedPassword) {
       setLogin(true);
     } else {
-      // await setUpdatePassword();
       navigation.navigate('updatepassword');
     }
   };
@@ -43,7 +35,6 @@ const LoginButton = () => {
     const hasUserUpadatePassword = async () => {
       try {
         const userStatus = await AsyncStorage.getItem("updatedPassword");
-        console.log(userStatus, 'userStat')
         if (!userStatus) {
           setUserHasUpdatedPassword(false);
            await AsyncStorage.setItem(
@@ -53,7 +44,6 @@ const LoginButton = () => {
         } else {
           setUserHasUpdatedPassword(true);
         }
-        console.log("User status:", userStatus);
       } catch (error) {
         console.error("Error retrieving password status:", error);
       }

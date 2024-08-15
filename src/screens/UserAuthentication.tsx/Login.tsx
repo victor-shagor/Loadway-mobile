@@ -28,7 +28,7 @@ const Login = () => {
     };
 
   return (
-    <View className=" h-screen">
+    <View className=" h-screen flex-1">
       <View className="h-[40vh] w-full bg-[#FFF1C6] rounded-b-[70px] relative">
         <LoadWayLogoDarkWordmark />
         <View className=" flex-row items-end left-[20%] ml-[-10] absolute bottom-[0.1]">

@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@/src/navigation/UserAuthentication";
 import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+import useOnboardingContext from "@/src/utils/Context";
+import { ForgotPasswordBtnProps } from "@/src/utils/Types";
 
 
 
@@ -15,50 +17,62 @@ const ForgotPasswordBtn = ({
   type,
   setModalVisible,
   action,
-}: {
-  bg_color: string;
-  border_color: string;
-  text_color: string;
-  text: string;
-  type: string;
-  action: string;
-  setModalVisible?: (value: boolean) => void;
-}) => {
+}:ForgotPasswordBtnProps ) => {
 
     const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
-    const context = useOnboarding()!;
-    const {setLogin} = context;
+
+    const {setLogin} = useOnboardingContext();
 
   const CancelBtnHandler = () => {
     if (type === "modal" && action === "cancelModal") {
       if (setModalVisible) {
+        // I perform other unique functions
         setModalVisible(false);
       }
     }else if(type === "modal" && action === "sendEmailToBackend"){
+        if (setModalVisible) {
+            // I perform other unique functions
+            setModalVisible(false);
+          }
         navigation.navigate('forgotpassword');
     }else if(type === "forgotpassword" && action === "backToLogin"){
+        // I perform other unique functions
         navigation.navigate('login');
-        //backToLogin
     }else if(type === "forgotpassword" && action === "resetpassword"){
+        // I perform other unique functions
         setLogin(true);
-        //resetpassword
+    }else if(type === "updatepasword" && action === "backToLogin"){
+        // I perform other unique functions
+        navigation.navigate('login');
+    }else if(type === "updatepasword" && action === "savepassword"){
+        // I perform other unique functions
+        navigation.navigate('login');
     }
   };
   return (
     <View className="relative">
       <View
-        className={`ml-5 bg-[${bg_color}] h-[50px] rounded-lg w-[43vw]
-         border-2 border-[${border_color}] `}
+        className={`ml-5 h-[50px] rounded-lg w-[43vw]
+         border-2 `}
+         style={{
+            backgroundColor: bg_color,
+            borderColor: border_color,
+        }}
       >
         <TouchableOpacity
-          activeOpacity={100}
+          activeOpacity={0.7}
           onPress={CancelBtnHandler}
         >
           <View
-            className={`bg-[${bg_color}] h-full flex-row justify-center items-center rounded-lg `}
+            className={`h-full flex-row justify-center items-center rounded-lg `}
+            style={{
+                backgroundColor: bg_color,
+            }}
           >
-            <Text className={`font-semibold text-center text-[${text_color}]`}>
+            <Text className={`font-semibold text-center`}
+            style={{ color: text_color}}
+            >
               {text}
             </Text>
           </View>

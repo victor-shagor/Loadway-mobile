@@ -40,7 +40,8 @@ const RootNavigation = () => {
 
       const { setIsFirstLaunch } = context;
 
-      await AsyncStorage.clear();
+      // await AsyncStorage.clear();
+      await AsyncStorage.removeItem('alreadyLaunched');
       try {
         const value = await AsyncStorage.getItem("alreadyLaunched");
         console.log(value, "value");

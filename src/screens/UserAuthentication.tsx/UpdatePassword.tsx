@@ -10,8 +10,8 @@ const UpdatePassword = () => {
         small_text="Please enter the verification code sent to  davidloadways@gmail.com"
         btn_text="Save"
         type="updatepasword"
-        actionForCancelBtn="updatepassword"
-        actionForSendBtn=""
+        actionForCancelBtn="backToLogin"
+        actionForSendBtn="savepassword"
       />
     </View>
   );

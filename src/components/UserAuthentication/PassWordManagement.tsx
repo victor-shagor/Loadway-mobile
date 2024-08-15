@@ -5,15 +5,9 @@ import CustomText from "@/src/components/UserAuthentication/CustomText";
 import { PasswordInput } from "@/src/components/UserAuthentication/Inputs";
 import CustomCheckBox from "@/src/components/UserAuthentication/CustomCheckBox";
 import ForgotPasswordBtn from "@/src/components/UserAuthentication/ForgotPasswordBtn";
+import { PassWordManagementProps } from "@/src/utils/Types";
 
-type PassWordManagementProps = {
-  big_Text: string;
-  small_text: string;
-  btn_text: string;
-  type: string;
-  actionForCancelBtn: string;
-  actionForSendBtn: string;
-};
+
 
 const PassWordManagement = ({
   big_Text,
@@ -23,6 +17,8 @@ const PassWordManagement = ({
   actionForCancelBtn,
   actionForSendBtn
 }: PassWordManagementProps) => {
+
+    console.log(actionForCancelBtn,actionForSendBtn)
   return (
     <View>
       <LoadWayLogoDarkWordmark />
@@ -46,14 +42,14 @@ const PassWordManagement = ({
       <View className=" my-2">
         <PasswordInput />
       </View>
-      <View className=" flex-row absolute bottom-[-33vh]">
+      <View className=" flex-row absolute bottom-[-37vh]">
         <ForgotPasswordBtn
           bg_color="#F6411B1A"
           border_color="#CD361633"
           text_color="#CD3616"
           text="Cancel"
           type={type}
-          action=""
+          action={actionForCancelBtn}
         />
         <ForgotPasswordBtn
           bg_color="#F6411B"
@@ -61,7 +57,7 @@ const PassWordManagement = ({
           text_color="#FFFFFF"
           text={btn_text}
           type={type}
-          action=""
+          action={actionForSendBtn}
         />
       </View>
     </View>
