@@ -9,9 +9,12 @@ import OnboardingContext from "./hooks/isFirstLaunch";
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+  const [color, setColor] = useState<string>('#CECAC3');
+  const [login, setLogin] = useState<boolean>(false);
+
   return (
     <>
-      <OnboardingContext.Provider value={{ setIsFirstLaunch, isFirstLaunch }}>
+      <OnboardingContext.Provider value={{ setIsFirstLaunch, isFirstLaunch, color, setColor,login, setLogin}}>
         <SafeAreaProvider>
           <RootNavigation />
         </SafeAreaProvider>

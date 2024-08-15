@@ -1,10 +1,9 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NavigationCircle from "./NavigationCircle";
 import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+import { useEffect } from "react";
 // import Animated, {FadeIn, FadeInLeft, useSharedValue} from "react-native-reanimated";
-
-
 
 type propsComponent = {
   bigText: string;
@@ -23,24 +22,27 @@ const OnboardingComponent: React.FC<propsComponent> = ({
   postion,
 }: propsComponent) => {
 
-  const  context = useOnboarding();
+  const context = useOnboarding();
+  const screenWidth = Dimensions.get('window').width;
 
-;
   const navigation = () => {
     if (id === 1) {
-      setPosition(100);
+      const calculatedPosition = screenWidth * id;
+      setPosition(calculatedPosition);
     } else if (id === 2) {
-      setPosition(200);
+      const calculatedPosition = screenWidth * id;
+      setPosition(calculatedPosition);
     } else {
-      setPosition(0);
-      if(context){
+      const calculatedPosition = screenWidth * id;
+      setPosition(calculatedPosition);
+      if (context) {
         const setIsFirstLaunch = context.setIsFirstLaunch;
         setIsFirstLaunch(false);
       }
     }
+    console.log(postion, id);
   };
-
-  // const margin = useSharedValue(0);
+  
 
   return (
     <View className=" bg-red-200 relative h-screen w-screen">
@@ -63,8 +65,7 @@ const OnboardingComponent: React.FC<propsComponent> = ({
         </TouchableOpacity>
       </View>
       <View className="">
-        <Text 
-        className=" text-[#F6411B] text-[40px] px-5 font-bold mt-14 relative z-20">
+        <Text className=" text-[#F6411B] text-[40px] px-5 font-bold mt-14 relative z-20">
           {bigText}
         </Text>
       </View>

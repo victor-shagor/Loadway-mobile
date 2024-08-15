@@ -1,6 +1,9 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import VerifyEmailInput from "@/src/components/UserAuthentication/VerifyEmailInput";
+import VerifyEmailButton from "@/src/components/UserAuthentication/VerifyEmailButton";
+
+
 
 const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
 const VerifyEmail = () => {
@@ -25,6 +28,13 @@ const VerifyEmail = () => {
       </View>
       <View>
         <VerifyEmailInput />
+      </View>
+      <View>
+       <VerifyEmailButton />
+      </View>
+      <View className=" flex-row justify-center my-5">
+        <Text className="font-semibold text-[14px]">Already have an account?</Text>
+        <Text className=" text-[#F76141] font-semibold text-[14px]">Resend code</Text>
       </View>
     </View>
   );

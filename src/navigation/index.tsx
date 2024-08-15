@@ -8,7 +8,7 @@ import Onboarding from "../screens/Onboarding/onboarding";
 import { useOnboarding } from "../hooks/isFirstLaunch";
 import { SafeAreaView } from "../components/layout/safeAreaView";
 import UserAuthentication from "./UserAuthentication";
-import { NavigatorScreenParams } from "@react-navigation/native";
+
 
 export type RootStackParamList = {
   login: undefined;
@@ -16,7 +16,9 @@ export type RootStackParamList = {
 };
 export type AuthenticationStackParamList = {
   login: undefined;
-  verify: undefined;
+  // verify: undefined;
+  forgotpassword: any;
+  updatepassword: any;
 };
 
 const RootNavigation = () => {

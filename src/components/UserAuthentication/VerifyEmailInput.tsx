@@ -1,7 +1,13 @@
 import { View, TextInput, Text } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
+import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+
+
 
 const VerifyEmailInput = () => {
+  const context = useOnboarding()!;
+  const { setColor } = context;
+
   const array = [1, 2, 3, 4, 5];
   const [inputValues, setInputValues] = useState<number[]>([]);
   const inputRefs = useRef<TextInput[]>([]);
@@ -15,6 +21,9 @@ const VerifyEmailInput = () => {
 
     if (id < array.length && value) {
       inputRefs.current[id].focus();
+    }
+    if (id === 5) {
+      setColor('#F6411B');
     }
   };
 

@@ -3,6 +3,10 @@ import React, { createContext, useContext } from 'react';
 type OnboardingContextType = {
     setIsFirstLaunch: (value : boolean)=> void;
     isFirstLaunch: boolean | null;
+    color: string,
+    setColor: (value: string)=> void;
+    login: boolean;
+    setLogin: (value : boolean)=> void;
 }
  const OnboardingContext = createContext< OnboardingContextType | null>(null);
 
