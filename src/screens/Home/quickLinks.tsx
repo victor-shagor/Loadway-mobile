@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   AntDesign,
   Feather,
@@ -21,10 +23,23 @@ import {
   recentChatArray,
 } from "./data";
 
-const renderIcon = (
+export type RootStackParamList = {
+  GateAccess: undefined;
+  Emergency: undefined;
+  Message: undefined;
+  Electricity: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  keyof RootStackParamList
+>;
+
+export const renderIcon = (
   icon: IconTypes | string,
   provider: IconProvider,
-  size: number
+  size: number,
+  color: string
 ) => {
   switch (provider) {
     case "AntDesign":
@@ -32,7 +47,7 @@ const renderIcon = (
         <AntDesign
           name={icon as keyof typeof AntDesign.glyphMap}
           size={size}
-          color={appColors.orange}
+          color={color}
         />
       );
 
@@ -41,7 +56,7 @@ const renderIcon = (
         <Feather
           name={icon as keyof typeof Feather.glyphMap}
           size={size}
-          color={appColors.orange}
+          color={color}
         />
       );
 
@@ -50,7 +65,15 @@ const renderIcon = (
         <MaterialCommunityIcons
           name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
           size={size}
-          color={appColors.orange}
+          color={color}
+        />
+      );
+    case "Entypo":
+      return (
+        <Entypo
+          name={icon as keyof typeof Entypo.glyphMap}
+          size={size}
+          color={color}
         />
       );
 
@@ -60,6 +83,8 @@ const renderIcon = (
 };
 
 const QuickLinks = () => {
+  const navigation = useNavigation<NavigationProp>();
+
   return (
     <View style={styles.container}>
       <View style={{ gap: 8 }}>
@@ -71,11 +96,15 @@ const QuickLinks = () => {
         </ThemedText>
 
         <FlatList
+          horizontal
           data={quickLinksArray}
           renderItem={({ item }) => (
-            <TouchableOpacity style={{ alignItems: "center", gap: 5 }}>
+            <TouchableOpacity
+              style={{ alignItems: "center", gap: 5 }}
+              onPress={() => navigation.navigate(item.href)}
+            >
               <View style={styles.iconContainer}>
-                {renderIcon(item.icon, item.iconProvider, 24)}
+                {renderIcon(item.icon, item.iconProvider, 24, appColors.orange)}
               </View>
               <ThemedText type="small" style={{ fontWeight: 600 }}>
                 {item.name}
@@ -99,14 +128,26 @@ const QuickLinks = () => {
         <FlatList
           data={recentChatArray}
           renderItem={({ item }) => (
-            <View>
-              <Image source={item.image} />
-              <ThemedText>{item.name}</ThemedText>
+            <View style={[styles.quickLinksContainer, { marginBottom: 8 }]}>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <Image source={item.image} style={{ width: 50, height: 50 }} />
+                <View style={{ gap: 2 }}>
+                  <ThemedText type="title">{item.name}</ThemedText>
+                  <ThemedText>{item.itemSent}</ThemedText>
+                </View>
+              </View>
+
+              <Entypo
+                name="chevron-small-right"
+                size={20}
+                color={appColors.black}
+              />
             </View>
           )}
           keyExtractor={(item) => item.name}
           scrollEnabled={false}
-          contentContainerStyle={styles.recentChatsContainer}
         />
       </View>
     </View>
@@ -116,7 +157,6 @@ const QuickLinks = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     gap: 15,
   },
   quickLinksContainer: {
@@ -128,16 +168,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     backgroundColor: appColors.white,
+    flex: 1,
   },
   iconContainer: {
-    backgroundColor: appColors.gray,
+    backgroundColor: appColors.iconGray,
     height: 50,
     width: 50,
     borderRadius: 13,
     alignItems: "center",
     justifyContent: "center",
   },
-  recentChatsContainer: {},
+  recentChatsContainer: {
+    gap: 12,
+  },
 });
 
 export default QuickLinks;

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
     minHeight: 160,
-    backgroundColor: appColors.deepGray,
+    backgroundColor: appColors.black,
     padding: 20,
   },
   headerItemsWrapper: {

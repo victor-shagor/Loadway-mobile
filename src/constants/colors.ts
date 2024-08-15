@@ -3,7 +3,9 @@ export const appColors = {
   black: "#0C0A04",
   orange: "#F6411B",
   wine: "#53192f",
+  iconGray: "rgba(212, 212, 212, 0.16)",
+  iconWine: "#612A3F",
   gray: "#D4D4D4",
   lightGray: "#66635A",
-  deepGray: "#151107",
+  deepGray: "#3F3C31",
 };

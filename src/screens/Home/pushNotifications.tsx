@@ -6,40 +6,42 @@ import { appColors } from "@src/constants/colors";
 const PushNotifications = () => {
   return (
     <View style={styles.pushNotificationWrapper}>
-      <View style={{ gap: 15 }}>
-        <ThemedText
-          type="default"
-          style={{ color: appColors.lightGray, fontWeight: 600 }}
-        >
-          Push Notifications
-        </ThemedText>
-
-        <View style={styles.alertContainer}>
+      <View style={{ gap: 8 }}>
+        <View style={{ gap: 8 }}>
           <ThemedText
-            type="small"
-            style={{ fontWeight: 700, color: appColors.orange }}
+            type="default"
+            style={{ color: appColors.lightGray, fontWeight: 600 }}
           >
-            ALERT
+            Push Notifications
           </ThemedText>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <View style={styles.alertContainer}>
             <ThemedText
-              type="default"
-              style={{ color: appColors.white, fontWeight: 600 }}
+              type="small"
+              style={{ fontWeight: 700, color: appColors.orange }}
             >
-              Unauthorized entry at front gate
+              ALERT
             </ThemedText>
 
-            <View style={styles.highRisk}>
-              <ThemedText type="small" style={{ color: appColors.orange }}>
-                High Risk
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <ThemedText
+                type="default"
+                style={{ color: appColors.white, fontWeight: 600 }}
+              >
+                Unauthorized entry at front gate
               </ThemedText>
+
+              <View style={styles.highRisk}>
+                <ThemedText type="small" style={{ color: appColors.orange }}>
+                  High Risk
+                </ThemedText>
+              </View>
             </View>
           </View>
         </View>
@@ -78,7 +80,6 @@ const PushNotifications = () => {
 const styles = StyleSheet.create({
   pushNotificationWrapper: {
     flex: 1,
-    padding: 20,
   },
   alertContainer: {
     flex: 1,

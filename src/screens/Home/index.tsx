@@ -1,10 +1,12 @@
 import { SafeAreaView } from "../../components/layout/safeAreaView";
-import QuickLinks from "./quickLinks";
+import DashboardHeader from "./header";
+import RecentActivity from "./recentActivity";
 
 const Home = () => {
   return (
     <SafeAreaView>
-      <QuickLinks />
+      <DashboardHeader />
+      <RecentActivity />
     </SafeAreaView>
   );
 };

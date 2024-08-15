@@ -2,21 +2,28 @@ import {
   AntDesign,
   Feather,
   MaterialCommunityIcons,
+  Entypo,
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
+import { RootStackParamList } from "./quickLinks";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
   | keyof typeof Feather.glyphMap
-  | keyof typeof MaterialCommunityIcons.glyphMap;
+  | keyof typeof MaterialCommunityIcons.glyphMap
+  | keyof typeof Entypo.glyphMap;
 
-export type IconProvider = "AntDesign" | "Feather" | "MaterialCommunityIcons";
+export type IconProvider =
+  | "AntDesign"
+  | "Feather"
+  | "MaterialCommunityIcons"
+  | "Entypo";
 
 export interface QuicklinkProps {
   icon: IconTypes;
   name: string;
-  href?: string;
+  href: keyof RootStackParamList;
   iconProvider: IconProvider;
 }
 
@@ -26,19 +33,38 @@ export interface RecentChatProps {
   itemSent: string;
 }
 
+export interface RecentActivityProps {
+  activityIcon: IconTypes;
+  iconProvider: IconProvider;
+  activityTag: string;
+  activityTitle: string;
+  activityDate: string;
+  activityAmount?: string;
+}
+
 export const quickLinksArray: QuicklinkProps[] = [
-  { icon: "unlock", name: "Gate Access", href: "/", iconProvider: "AntDesign" },
-  { icon: "alert-circle", name: "Alert", href: "/", iconProvider: "Feather" },
+  {
+    icon: "unlock",
+    name: "Gate Access",
+    href: "GateAccess",
+    iconProvider: "AntDesign",
+  },
+  {
+    icon: "alert-circle",
+    name: "Alert",
+    href: "Emergency",
+    iconProvider: "Feather",
+  },
   {
     icon: "chat-question-outline",
     name: "Complaints",
-    href: "/",
+    href: "Message",
     iconProvider: "MaterialCommunityIcons",
   },
   {
     icon: "lightning-bolt-outline",
     name: "Buy Elecricity",
-    href: "/",
+    href: "Electricity",
     iconProvider: "MaterialCommunityIcons",
   },
 ];
@@ -53,5 +79,32 @@ export const recentChatArray: RecentChatProps[] = [
     image: images.user.cso,
     name: "CSO",
     itemSent: "sent an image",
+  },
+];
+
+export const recentActivityArray: RecentActivityProps[] = [
+  {
+    activityIcon: "chat-question-outline",
+    activityTag: "Complaint",
+    activityTitle: "Water Leak",
+    activityDate: "03, May 2023",
+    activityAmount: "N20,000",
+    iconProvider: "MaterialCommunityIcons",
+  },
+  {
+    activityIcon: "chat-question-outline",
+    activityTag: "Complaint",
+    activityTitle: "Front Door Fix",
+    activityDate: "03, May 2023",
+    activityAmount: "N12,000",
+    iconProvider: "MaterialCommunityIcons",
+  },
+  {
+    activityIcon: "unlock",
+    activityTag: "Gate access request",
+    activityTitle: "John David",
+    activityDate: "03, May 2023",
+    activityAmount: "122ABC",
+    iconProvider: "AntDesign",
   },
 ];

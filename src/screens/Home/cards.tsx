@@ -6,11 +6,25 @@ import {
   ImageBackground,
   ImageSourcePropType,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import images from "@src/constants/images";
+
+const { width: screenWidth } = Dimensions.get("window");
+
+type RootStackParamList = {
+  FundWallet: undefined;
+};
+
+type FundWalletNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "FundWallet"
+>;
 
 interface DashboardCardProps {
   cardTag: string;
@@ -38,6 +52,8 @@ const cardArray: DashboardCardProps[] = [
 ];
 
 const RenderedCard = (prop: DashboardCardProps) => {
+  const navigation = useNavigation<FundWalletNavigationProp>();
+
   return (
     <View style={[styles.renderCardWrapper, { backgroundColor: prop.bgColor }]}>
       <ImageBackground
@@ -56,6 +72,7 @@ const RenderedCard = (prop: DashboardCardProps) => {
           </View>
 
           <TouchableOpacity
+            onPress={() => navigation.navigate("FundWallet")}
             style={[styles.renderCardHeader, styles.cardButton]}
           >
             <AntDesign name="plus" size={15} color={appColors.white} />
@@ -96,24 +113,18 @@ const Cards = () => {
         />
       )}
       keyExtractor={(item) => item.cardTag}
-      contentContainerStyle={styles.renderedContent}
+      decelerationRate="fast"
+      showsHorizontalScrollIndicator={false}
+      pagingEnabled={true}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  renderedContent: {
-    padding: 20,
-    gap: 30,
-    flex: 1,
-    height: 250,
-  },
   renderCardWrapper: {
-    alignItems: "stretch",
-    justifyContent: "flex-end",
-    height: "100%",
-    width: "100%",
-    marginHorizontal: "auto",
+    height: 200,
+    width: screenWidth * 0.85,
+    marginHorizontal: 10,
     borderRadius: 15,
   },
   renderCardImage: {
@@ -139,4 +150,5 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0, 0.7)",
   },
 });
+
 export default Cards;
