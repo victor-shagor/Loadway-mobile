@@ -1,12 +1,23 @@
-import { SafeAreaView } from "../../components/layout/safeAreaView"
-import {Text} from 'react-native'
+import { SafeAreaView } from "../../components/layout/safeAreaView";
+import { Text, View } from "react-native";
 
-const Bills = () =>{
-    return(
+const Bills = () => {
+  return (
     <SafeAreaView>
-        <Text>Welcome to Bills</Text>
-    </SafeAreaView>
-    )
-}
+      <View>
+        <View>
+          <Text>Wallet Balance</Text>
+          <Text>N10,000</Text>
+        </View>
+        <View>
+          <Text>Due Bills</Text>
+          <Text>N20,000</Text>
 
-export default Bills
+          <Text>N20,000</Text>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default Bills;
