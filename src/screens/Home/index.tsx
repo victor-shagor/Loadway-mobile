@@ -1,12 +1,15 @@
-import { SafeAreaView } from "../../components/layout/safeAreaView"
-import {Text} from 'react-native'
+import { SafeAreaView } from "../../components/layout/safeAreaView";
+import DashboardHeader from "./header";
+import RecentActivity from "./recentActivity";
+import ThemedModal from "@src/components/CustomModal";
 
-const Home = () =>{
-    return(
+const Home = () => {
+  return (
     <SafeAreaView>
-        <Text>Welcome to Home</Text>
+      <DashboardHeader />
+      <RecentActivity />
     </SafeAreaView>
-    )
-}
+  );
+};
 
-export default Home
+export default Home;

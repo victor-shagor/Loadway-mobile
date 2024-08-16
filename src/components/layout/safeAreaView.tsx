@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, View, ViewProps } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from "react";
+import { StyleSheet, View, ViewProps } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type SafeAreaViewProps = {
   disableBottomSafeArea?: boolean;
@@ -9,7 +9,9 @@ type SafeAreaViewProps = {
   children: React.ReactNode;
 };
 
-export const SafeAreaView: React.FC<SafeAreaViewProps & ViewProps> = props => {
+export const SafeAreaView: React.FC<SafeAreaViewProps & ViewProps> = (
+  props
+) => {
   const {
     disableBottomSafeArea = false,
     disableTopSafeArea = false,
