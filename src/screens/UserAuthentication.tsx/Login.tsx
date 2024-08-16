@@ -7,33 +7,27 @@ import {
   Platform,
   ScrollView
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   EmailInput,
   PasswordInput,
 } from "@/src/components/UserAuthentication/Inputs";
 import LoginButton from "@/src/components/UserAuthentication/LoginButton";
-import { useNavigation } from "@react-navigation/native";
 import LoadWayLogoDarkWordmark from "@/src/components/UserAuthentication/LoadWayLogoDarkWordmark";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AuthenticationStackParamList } from "@/src/navigation";
 import ResetPasswordModal from "@/src/components/Modal/ResetPasswordModal";
+import * as Burnt from "burnt";
 
 const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
 const group = require("@/src/assets/icons/Group.png");
 const group_one = require("@/src/assets/icons/Group-1.png");
 const group_two = require("@/src/assets/icons/Group-2.png");
 
+
 const Login = () => {
-  const navigation =
-    useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
   const forgotPasswordHandler = () => {
     setModalVisible(true);
-    // navigation.navigate('forgotpassword');
   };
 
   return (

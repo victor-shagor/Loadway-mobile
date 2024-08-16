@@ -14,7 +14,6 @@ const Onboarding = () => {
 
   return (
     <View 
-    // className={`flex-row relative right-[100vw]`}
      style={{ position: 'relative', right: position , flexDirection: 'row'}}
      >
       <OnboardingComponent

@@ -1,9 +1,7 @@
 import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import NavigationCircle from "./NavigationCircle";
 import { useOnboarding } from "@/src/hooks/isFirstLaunch";
 import { useEffect } from "react";
-// import Animated, {FadeIn, FadeInLeft, useSharedValue} from "react-native-reanimated";
 
 type propsComponent = {
   bigText: string;

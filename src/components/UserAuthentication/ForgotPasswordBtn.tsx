@@ -28,50 +28,66 @@ const ForgotPasswordBtn = ({
   const { setLogin } = useOnboardingContext();
   const inputValue = AuthInputs();
 
-  const CancelBtnHandler = async () => {
-    if (type === "modal" && action === "cancelModal") {
-      if (setModalVisible) {
-        setModalVisible(false);
-      }
-    } else if (type === "modal" && action === "sendEmailToBackend") {
-      try {
-        const url = `${BaseUrl}${requestPasswordChange}`;
-        const payload = inputValue.changePasswordDetails;
-        const sendEmailToBackend = await axios.post(url, payload);
-        if (setModalVisible) {
-          setModalVisible(false);
-        };
-        const successmessage = sendEmailToBackend.data.success ;
-        if (successmessage) {
-          navigation.navigate("forgotpassword");
-        } else console.log("An error occurred");
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (type === "forgotpassword" && action === "backToLogin") {
-      // I perform other unique functions
-      navigation.navigate("login");
-    } else if (type === "forgotpassword" && action === "resetpassword") {
-      try {
-        const url = `${BaseUrl}${ChangePassword}`;
-        const payload = inputValue.resetPassword;
-        console.log(payload)
-        const resetPassword = await axios.patch(url, payload);
-        console.log(resetPassword.data.success)
-        if (resetPassword) {
-          setLogin(true);
-        } else console.log("An error occurred");
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (type === "updatepasword" && action === "backToLogin") {
-      // I perform other unique functions
-      navigation.navigate("login");
-    } else if (type === "updatepasword" && action === "savepassword") {
-      // I perform other unique functions
-      navigation.navigate("login");
+  const closeModal = () => {
+    if (setModalVisible) {
+      setModalVisible(false);
     }
   };
+
+
+  const navigateTo = (route: 'login' | 'forgotpassword' | "updatepassword") => {
+    navigation.navigate(route);
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      const url = `${BaseUrl}${requestPasswordChange}`;
+      const payload = inputValue.changePasswordDetails;
+      const response = await axios.post(url, payload);
+      if (response.data.success) {
+        navigateTo("forgotpassword");
+      } else {
+        console.log("An error occurred");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+    } finally {
+      closeModal();
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      const url = `${BaseUrl}${ChangePassword}`;
+      const payload = inputValue.resetPassword;
+      const response = await axios.patch(url, payload);
+      if (response.data.success) {
+        setLogin(true);
+      } else {
+        console.log("An error occurred");
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+    }
+  };
+  
+  const CancelBtnHandler = async () => {
+    if (type === "modal" && action === "cancelModal") {
+      closeModal();
+    } else if (type === "modal" && action === "sendEmailToBackend") {
+      await handleSendEmail();
+    } else if (type === "forgotpassword" && action === "backToLogin") {
+      navigateTo("login");
+    } else if (type === "forgotpassword" && action === "resetpassword") {
+      await handleResetPassword();
+    } else if (type === "updatepasword" && action === "backToLogin") {
+      navigateTo("login");
+    } else if (type === "updatepasword" && action === "savepassword") {
+      navigateTo("login");
+    }
+  };
+  
+
   return (
     <View className="relative">
       <View

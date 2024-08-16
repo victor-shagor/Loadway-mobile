@@ -1,10 +1,5 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
-import LoadWayLogoDarkWordmark from "@/src/components/UserAuthentication/LoadWayLogoDarkWordmark";
-import CustomText from "@/src/components/UserAuthentication/CustomText";
-import { PasswordInput } from "@/src/components/UserAuthentication/Inputs";
-import CustomCheckBox from "@/src/components/UserAuthentication/CustomCheckBox";
-import ForgotPasswordBtn from "@/src/components/UserAuthentication/ForgotPasswordBtn";
 import PassWordManagement from "@/src/components/UserAuthentication/PassWordManagement";
 
 const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
