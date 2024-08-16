@@ -22,6 +22,8 @@ import {
   quickLinksArray,
   recentChatArray,
 } from "./data";
+import CustomModal from "@src/components/CustomModal";
+import BuyElectricity from "../modals/electricity";
 
 export type RootStackParamList = {
   GateAccess: undefined;
@@ -99,17 +101,46 @@ const QuickLinks = () => {
           horizontal
           data={quickLinksArray}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={{ alignItems: "center", gap: 5 }}
-              onPress={() => navigation.navigate(item.href)}
-            >
-              <View style={styles.iconContainer}>
-                {renderIcon(item.icon, item.iconProvider, 24, appColors.orange)}
-              </View>
-              <ThemedText type="small" style={{ fontWeight: 600 }}>
-                {item.name}
-              </ThemedText>
-            </TouchableOpacity>
+            <>
+              {item.href === "Electricity" ? (
+                <CustomModal
+                  triggerItem={
+                    <>
+                      <View style={styles.iconContainer}>
+                        {renderIcon(
+                          item.icon,
+                          item.iconProvider,
+                          24,
+                          appColors.orange
+                        )}
+                      </View>
+                      <ThemedText type="small" style={{ fontWeight: 600 }}>
+                        {item.name}
+                      </ThemedText>
+                    </>
+                  }
+                  triggerItemStyle={{ alignItems: "center", gap: 5 }}
+                  modalContent={<BuyElectricity />}
+                />
+              ) : (
+                <TouchableOpacity
+                  style={{ alignItems: "center", gap: 5 }}
+                  onPress={() => navigation.navigate(item.href)}
+                >
+                  <View style={styles.iconContainer}>
+                    {renderIcon(
+                      item.icon,
+                      item.iconProvider,
+                      24,
+                      appColors.orange
+                    )}
+                  </View>
+                  <ThemedText type="small" style={{ fontWeight: 600 }}>
+                    {item.name}
+                  </ThemedText>
+                </TouchableOpacity>
+              )}
+            </>
           )}
           keyExtractor={(item) => item.name}
           scrollEnabled={false}

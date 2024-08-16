@@ -5,20 +5,19 @@ const screenHeight = Dimensions.get("window").height;
 
 const FundWalletModal = () => {
   return (
-    <View style={styles.modalContainer}>
+    <View style={styles.container}>
       <Text>FundWalletModal</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    maxHeight: screenHeight * 0.6,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 100,
     padding: 20,
   },
 });

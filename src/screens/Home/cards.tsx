@@ -8,23 +8,14 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import images from "@src/constants/images";
+import CustomModal from "@src/components/CustomModal";
+import FundWalletModal from "../modals/fundWallet";
 
 const { width: screenWidth } = Dimensions.get("window");
-
-type RootStackParamList = {
-  FundWallet: undefined;
-};
-
-type FundWalletNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "FundWallet"
->;
 
 interface DashboardCardProps {
   cardTag: string;
@@ -52,49 +43,54 @@ const cardArray: DashboardCardProps[] = [
 ];
 
 const RenderedCard = (prop: DashboardCardProps) => {
-  const navigation = useNavigation<FundWalletNavigationProp>();
-
   return (
-    <View style={[styles.renderCardWrapper, { backgroundColor: prop.bgColor }]}>
-      <ImageBackground
-        source={prop.bgImage as ImageSourcePropType}
-        resizeMode="contain"
-        style={styles.renderCardImage}
+    <>
+      <View
+        style={[styles.renderCardWrapper, { backgroundColor: prop.bgColor }]}
       >
-        <View style={styles.renderCardHeaderContainer}>
-          <View style={styles.renderCardHeader}>
-            <ThemedText
-              type="small"
-              style={{ color: appColors.white, fontWeight: "600" }}
-            >
-              {prop.cardTag}
-            </ThemedText>
+        <ImageBackground
+          source={prop.bgImage as ImageSourcePropType}
+          resizeMode="contain"
+          style={styles.renderCardImage}
+        >
+          <View style={styles.renderCardHeaderContainer}>
+            <View style={styles.renderCardHeader}>
+              <ThemedText
+                type="small"
+                style={{ color: appColors.white, fontWeight: "600" }}
+              >
+                {prop.cardTag}
+              </ThemedText>
+            </View>
+
+            <CustomModal
+              triggerItem={
+                <>
+                  <AntDesign name="plus" size={15} color={appColors.white} />
+                  <ThemedText
+                    type="small"
+                    style={{ color: appColors.white, fontWeight: "600" }}
+                  >
+                    Fund Wallet
+                  </ThemedText>
+                </>
+              }
+              triggerItemStyle={[styles.renderCardHeader, styles.cardButton]}
+              modalContent={<FundWalletModal />}
+            />
           </View>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("FundWallet")}
-            style={[styles.renderCardHeader, styles.cardButton]}
-          >
-            <AntDesign name="plus" size={15} color={appColors.white} />
-            <ThemedText
-              type="small"
-              style={{ color: appColors.white, fontWeight: "600" }}
-            >
-              Fund Wallet
+          <View style={{ gap: 6 }}>
+            <ThemedText type="title" style={{ color: appColors.white }}>
+              {prop.amount}
             </ThemedText>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ gap: 6 }}>
-          <ThemedText type="title" style={{ color: appColors.white }}>
-            {prop.amount}
-          </ThemedText>
-          <ThemedText style={{ color: appColors.white }}>
-            {prop.date}
-          </ThemedText>
-        </View>
-      </ImageBackground>
-    </View>
+            <ThemedText style={{ color: appColors.white }}>
+              {prop.date}
+            </ThemedText>
+          </View>
+        </ImageBackground>
+      </View>
+    </>
   );
 };
 
