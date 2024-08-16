@@ -7,7 +7,7 @@ const UpdatePassword = () => {
     <View>
       <PassWordManagement
         big_Text="Update Password"
-        small_text="Please enter the verification code sent to  davidloadways@gmail.com"
+        small_text="Please update you password"
         btn_text="Save"
         type="updatepasword"
         actionForCancelBtn="backToLogin"

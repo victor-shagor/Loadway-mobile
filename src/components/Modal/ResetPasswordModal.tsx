@@ -4,6 +4,8 @@ import CustomText from "../UserAuthentication/CustomText";
 import { EmailInput } from "../UserAuthentication/Inputs";
 import ForgotPasswordBtn from "../UserAuthentication/ForgotPasswordBtn";
 
+
+
 const illustration = require("@/src/assets/icons/boyIluustration.png");
 const ResetPasswordModal = ({
   modalVisible,
@@ -12,6 +14,8 @@ const ResetPasswordModal = ({
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
 }) => {
+
+
   return (
     <View>
       <Modal visible={modalVisible} transparent animationType="slide">
@@ -23,7 +27,7 @@ const ResetPasswordModal = ({
                 heading="Forgot password?"
                 sub_heading="Enter your email address and we will send you reset instructions."
               />
-              <EmailInput />
+              <EmailInput action='changePassword' />
               <View className=" flex-row relative right-3 my-5">
                 <ForgotPasswordBtn
                   bg_color="#F6411B1A"

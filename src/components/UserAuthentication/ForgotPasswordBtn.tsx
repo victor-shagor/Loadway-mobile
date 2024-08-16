@@ -6,7 +6,10 @@ import { AuthenticationStackParamList } from "@/src/navigation/UserAuthenticatio
 import { useOnboarding } from "@/src/hooks/isFirstLaunch";
 import useOnboardingContext from "@/src/utils/Context";
 import { ForgotPasswordBtnProps } from "@/src/utils/Types";
-
+import axios from "axios";
+import { BaseUrl } from "@/src/utils/Base_url";
+import { requestPasswordChange, ChangePassword } from "@/src/utils/AuthRoutes";
+import AuthInputs from "@/src/utils/AuthInputValues";
 
 
 const ForgotPasswordBtn = ({
@@ -17,37 +20,56 @@ const ForgotPasswordBtn = ({
   type,
   setModalVisible,
   action,
-}:ForgotPasswordBtnProps ) => {
-
-    const navigation =
+}: ForgotPasswordBtnProps) => {
+  const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
+    
 
-    const {setLogin} = useOnboardingContext();
+  const { setLogin } = useOnboardingContext();
+  const inputValue = AuthInputs();
 
-  const CancelBtnHandler = () => {
+  const CancelBtnHandler = async () => {
     if (type === "modal" && action === "cancelModal") {
       if (setModalVisible) {
-        // I perform other unique functions
         setModalVisible(false);
       }
-    }else if(type === "modal" && action === "sendEmailToBackend"){
+    } else if (type === "modal" && action === "sendEmailToBackend") {
+      try {
+        const url = `${BaseUrl}${requestPasswordChange}`;
+        const payload = inputValue.changePasswordDetails;
+        const sendEmailToBackend = await axios.post(url, payload);
         if (setModalVisible) {
-            // I perform other unique functions
-            setModalVisible(false);
-          }
-        navigation.navigate('forgotpassword');
-    }else if(type === "forgotpassword" && action === "backToLogin"){
-        // I perform other unique functions
-        navigation.navigate('login');
-    }else if(type === "forgotpassword" && action === "resetpassword"){
-        // I perform other unique functions
-        setLogin(true);
-    }else if(type === "updatepasword" && action === "backToLogin"){
-        // I perform other unique functions
-        navigation.navigate('login');
-    }else if(type === "updatepasword" && action === "savepassword"){
-        // I perform other unique functions
-        navigation.navigate('login');
+          setModalVisible(false);
+        };
+        const successmessage = sendEmailToBackend.data.success ;
+        if (successmessage) {
+          navigation.navigate("forgotpassword");
+        } else console.log("An error occurred");
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (type === "forgotpassword" && action === "backToLogin") {
+      // I perform other unique functions
+      navigation.navigate("login");
+    } else if (type === "forgotpassword" && action === "resetpassword") {
+      try {
+        const url = `${BaseUrl}${ChangePassword}`;
+        const payload = inputValue.resetPassword;
+        console.log(payload)
+        const resetPassword = await axios.patch(url, payload);
+        console.log(resetPassword.data.success)
+        if (resetPassword) {
+          setLogin(true);
+        } else console.log("An error occurred");
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (type === "updatepasword" && action === "backToLogin") {
+      // I perform other unique functions
+      navigation.navigate("login");
+    } else if (type === "updatepasword" && action === "savepassword") {
+      // I perform other unique functions
+      navigation.navigate("login");
     }
   };
   return (
@@ -55,23 +77,21 @@ const ForgotPasswordBtn = ({
       <View
         className={`ml-5 h-[50px] rounded-lg w-[43vw]
          border-2 `}
-         style={{
-            backgroundColor: bg_color,
-            borderColor: border_color,
+        style={{
+          backgroundColor: bg_color,
+          borderColor: border_color,
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={CancelBtnHandler}
-        >
+        <TouchableOpacity activeOpacity={0.7} onPress={CancelBtnHandler}>
           <View
             className={`h-full flex-row justify-center items-center rounded-lg `}
             style={{
-                backgroundColor: bg_color,
+              backgroundColor: bg_color,
             }}
           >
-            <Text className={`font-semibold text-center`}
-            style={{ color: text_color}}
+            <Text
+              className={`font-semibold text-center`}
+              style={{ color: text_color }}
             >
               {text}
             </Text>

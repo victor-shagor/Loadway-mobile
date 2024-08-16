@@ -1,4 +1,12 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView
+} from "react-native";
 import React, { useState } from "react";
 import {
   EmailInput,
@@ -11,7 +19,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@/src/navigation";
 import ResetPasswordModal from "@/src/components/Modal/ResetPasswordModal";
 
-
 const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
 const group = require("@/src/assets/icons/Group.png");
 const group_one = require("@/src/assets/icons/Group-1.png");
@@ -20,45 +27,58 @@ const group_two = require("@/src/assets/icons/Group-2.png");
 const Login = () => {
   const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
-    const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-    const forgotPasswordHandler = ()=>{
-      setModalVisible(true);
-      // navigation.navigate('forgotpassword');
-    };
+  const forgotPasswordHandler = () => {
+    setModalVisible(true);
+    // navigation.navigate('forgotpassword');
+  };
 
   return (
-    <View className=" h-screen flex-1">
-      <View className="h-[40vh] w-full bg-[#FFF1C6] rounded-b-[70px] relative">
-        <LoadWayLogoDarkWordmark />
-        <View className=" flex-row items-end left-[20%] ml-[-10] absolute bottom-[0.1]">
-          <Image source={group} />
-          <Image source={group_one} />
-          <Image source={group_two} />
-          <Image />
+    <KeyboardAvoidingView 
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1, height: '100%'}}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 0.1 }}>
+      <View className=" h-full flex-1">
+        <View className="h-[40vh] w-full bg-[#FFF1C6] rounded-b-[70px] relative">
+          <LoadWayLogoDarkWordmark />
+          <View className=" flex-row items-end left-[20%] ml-[-10] absolute bottom-[0.1]">
+            <Image source={group} />
+            <Image source={group_one} />
+            <Image source={group_two} />
+            <Image />
+          </View>
         </View>
-      </View>
-      <View>
-        <Text className=" text-[#191508] py-10 text-center text-[18px] font-semibold">
-          Welcome back, {"\n"} Let’s make your living experience {"\n"} awesome!
-        </Text>
-      </View>
-      <View>
-        <EmailInput />
-        <PasswordInput />
-      </View>
-      <View>
-        <TouchableOpacity onPress={forgotPasswordHandler}>
-          <Text className=" text-[#F76141] my-2 text-right mr-[6vw]">
-            Forgot Password
+        <View>
+          <Text className=" text-[#191508] py-10 text-center text-[18px] font-semibold">
+            Welcome back, {"\n"} Let’s make your living experience {"\n"}{" "}
+            awesome!
           </Text>
-        </TouchableOpacity>
+        </View>
+        <View>
+          <EmailInput action="setLoginEmail" />
+          <PasswordInput action="setLoginEmail" />
+        </View>
+        <View>
+          <TouchableOpacity onPress={forgotPasswordHandler}>
+            <Text className=" text-[#F76141] my-2 text-right mr-[6vw]">
+              Forgot Password
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <LoginButton />
+        </View>
+        <ResetPasswordModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
       </View>
-      <View>
-        <LoginButton />
-      </View>
-      <ResetPasswordModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
