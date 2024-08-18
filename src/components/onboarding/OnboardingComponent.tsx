@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
 import NavigationCircle from "./NavigationCircle";
-import { useOnboarding } from "@/src/hooks/isFirstLaunch";
-import { useEffect } from "react";
+import { useOnboarding } from "@src/context/onboarding";
+import images from "@src/constants/images";
 
 type propsComponent = {
   bigText: string;
@@ -10,7 +10,6 @@ type propsComponent = {
   id: number;
   postion: number;
 };
-const icon = require("@/src/assets/icons/LoadWayIcon.png");
 
 const OnboardingComponent: React.FC<propsComponent> = ({
   bigText,
@@ -49,7 +48,7 @@ const OnboardingComponent: React.FC<propsComponent> = ({
         style={[{ flexDirection: "row" }]}
         className=" justify-between mx-5 my-10 "
       >
-        <Image source={icon} className=" relative z-20" />
+        <Image source={images.onboarding.icon} className=" relative z-20" />
         <TouchableOpacity className=" relative z-20 ">
           <Text
             className=" text-white relative z-20 text-md font-medium"

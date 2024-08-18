@@ -9,21 +9,17 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
-  AntDesign,
-  Feather,
-  MaterialCommunityIcons,
   Entypo,
 } from "@expo/vector-icons/";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import {
-  IconTypes,
-  IconProvider,
   quickLinksArray,
   recentChatArray,
-} from "./data";
+} from "@src/screens/home/data";
 import CustomModal from "@src/components/CustomModal";
-import BuyElectricity from "../modals/electricity";
+import BuyElectricity from "@src/screens/modals/electricity";
+import { renderIcon } from "@src/components/common/renderIcon";
 
 export type RootStackParamList = {
   GateAccess: undefined;
@@ -37,59 +33,12 @@ type NavigationProp = NativeStackNavigationProp<
   keyof RootStackParamList
 >;
 
-export const renderIcon = (
-  icon: IconTypes | string,
-  provider: IconProvider,
-  size: number,
-  color: string
-) => {
-  switch (provider) {
-    case "AntDesign":
-      return (
-        <AntDesign
-          name={icon as keyof typeof AntDesign.glyphMap}
-          size={size}
-          color={color}
-        />
-      );
-
-    case "Feather":
-      return (
-        <Feather
-          name={icon as keyof typeof Feather.glyphMap}
-          size={size}
-          color={color}
-        />
-      );
-
-    case "MaterialCommunityIcons":
-      return (
-        <MaterialCommunityIcons
-          name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
-          size={size}
-          color={color}
-        />
-      );
-    case "Entypo":
-      return (
-        <Entypo
-          name={icon as keyof typeof Entypo.glyphMap}
-          size={size}
-          color={color}
-        />
-      );
-
-    default:
-      return "";
-  }
-};
-
 const QuickLinks = () => {
   const navigation = useNavigation<NavigationProp>();
 
   return (
     <View style={styles.container}>
-      <View style={{ gap: 8 }}>
+      <View style={{ gap: 8, marginBottom: 20 }}>
         <ThemedText
           type="default"
           style={{ color: appColors.lightGray, fontWeight: 600 }}
@@ -114,7 +63,7 @@ const QuickLinks = () => {
                           appColors.orange
                         )}
                       </View>
-                      <ThemedText type="small" style={{ fontWeight: 600 }}>
+                      <ThemedText type="small" style={{ fontWeight: 600, fontSize: 10 }}>
                         {item.name}
                       </ThemedText>
                     </>
@@ -135,7 +84,7 @@ const QuickLinks = () => {
                       appColors.orange
                     )}
                   </View>
-                  <ThemedText type="small" style={{ fontWeight: 600 }}>
+                  <ThemedText type="small" style={{ fontWeight: 600, fontSize: 10 }}>
                     {item.name}
                   </ThemedText>
                 </TouchableOpacity>
@@ -148,7 +97,7 @@ const QuickLinks = () => {
         />
       </View>
 
-      <View style={{ gap: 8 }}>
+      <View style={{ gap: 8, marginBottom: 20 }}>
         <ThemedText
           type="default"
           style={{ color: appColors.lightGray, fontWeight: 600 }}
@@ -161,7 +110,7 @@ const QuickLinks = () => {
           renderItem={({ item }) => (
             <View style={[styles.quickLinksContainer, { marginBottom: 8 }]}>
               <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+                style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
               >
                 <Image source={item.image} style={{ width: 50, height: 50 }} />
                 <View style={{ gap: 2 }}>

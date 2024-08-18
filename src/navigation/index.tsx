@@ -5,10 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import Onboarding from "../screens/Onboarding/onboarding";
-import { useOnboarding } from "../hooks/isFirstLaunch";
 import { SafeAreaView } from "../components/layout/safeAreaView";
 import UserAuthentication from "./UserAuthentication";
-
+import { useOnboarding } from "@src/context/onboarding";
 
 export type RootStackParamList = {
   login: undefined;
@@ -25,7 +24,7 @@ const RootNavigation = () => {
   const context = useOnboarding();
 
   const user = () => {
-    AsyncStorage.getItem("alreadyLaunched").then((value:any) => {
+    AsyncStorage.getItem("alreadyLaunched").then((value: any) => {
       return value;
     });
   };
@@ -67,35 +66,35 @@ const RootNavigation = () => {
     );
   }
 
+  console.log(context, "context");
+
   const { isFirstLaunch } = context;
 
-  if (isFirstLaunch === null) {
-    return (
-      <SafeAreaView>
-        <View className=" flex-1 text-center text-[40px]">
-          <Text>Loading</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // if (isFirstLaunch === null) {
+  //   return (
+  //     <SafeAreaView>
+  //       <View className=" flex-1 text-center text-[40px]">
+  //         <Text>Loading</Text>
+  //       </View>
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     // <NavigationContainer>
-    //   <StatusBar style="dark" />
+    // <StatusBar style="dark" />
     //   <DashboardStack />
     // </NavigationContainer>
-    <SafeAreaView>
-      <NavigationContainer>
-        {isFirstLaunch ? (
+    // <SafeAreaView>
+    <NavigationContainer>
+      {/* {isFirstLaunch ? (
           <Onboarding />
         ) : (
-          <>
-          <UserAuthentication />
-          <DashboardStack />
-          </>
-        )}
-      </NavigationContainer>
-    </SafeAreaView>
+        )} */}
+
+      <UserAuthentication />
+    </NavigationContainer>
+    // </SafeAreaView>
   );
 };
 

@@ -6,16 +6,16 @@ import {
   Platform,
 } from "react-native";
 import React from "react";
-import LoadWayLogoDarkWordmark from "@/src/components/UserAuthentication/LoadWayLogoDarkWordmark";
-import CustomText from "@/src/components/UserAuthentication/CustomText";
+import LoadWayLogoDarkWordmark from "@src/components/UserAuthentication/LoadWayLogoDarkWordmark";
+import CustomText from "@src/components/UserAuthentication/CustomText";
 import {
   PasswordInput,
   EmailInput,
-} from "@/src/components/UserAuthentication/Inputs";
-import CustomCheckBox from "@/src/components/UserAuthentication/CustomCheckBox";
-import ForgotPasswordBtn from "@/src/components/UserAuthentication/ForgotPasswordBtn";
-import { PassWordManagementProps } from "@/src/utils/Types";
-import AuthInputs from "@/src/utils/AuthInputValues";
+} from "@src/components/UserAuthentication/Inputs";
+import CustomCheckBox from "@src/components/UserAuthentication/CustomCheckBox";
+import ForgotPasswordBtn from "@src/components/UserAuthentication/ForgotPasswordBtn";
+import { PassWordManagementProps } from "@src/utils/Types";
+import AuthInputs from "@src/utils/AuthInputValues";
 
 const PassWordManagement = ({
   big_Text,

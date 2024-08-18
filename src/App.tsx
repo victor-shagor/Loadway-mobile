@@ -1,16 +1,19 @@
+// import "expo-router/entry"
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
 import { registerRootComponent } from "expo";
 import RootNavigation from "./navigation";
-
+import Toast from 'react-native-toast-message';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useState } from "react";
-import OnboardingContext from "./hooks/isFirstLaunch";
+import { User } from "./models/User";
+import OnboardingContext from "./context/onboarding";
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const [color, setColor] = useState<string>("#CECAC3");
   const [login, setLogin] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
     password: string;
@@ -34,6 +37,8 @@ export default function App() {
     <>
       <OnboardingContext.Provider
         value={{
+          currentUser,
+          setCurrentUser,
           setIsFirstLaunch,
           isFirstLaunch,
           color,
@@ -45,13 +50,14 @@ export default function App() {
           changePasswordDetails,
           setChangePasswordDetails,
           resetPassword, 
-          setResetPassword
+          setResetPassword,
         }}
       >
         <SafeAreaProvider>
           <RootNavigation />
         </SafeAreaProvider>
       </OnboardingContext.Provider>
+      <Toast />
     </>
   );
 }

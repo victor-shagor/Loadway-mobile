@@ -11,16 +11,13 @@ import React, { useEffect, useState } from "react";
 import {
   EmailInput,
   PasswordInput,
-} from "@/src/components/UserAuthentication/Inputs";
-import LoginButton from "@/src/components/UserAuthentication/LoginButton";
-import LoadWayLogoDarkWordmark from "@/src/components/UserAuthentication/LoadWayLogoDarkWordmark";
-import ResetPasswordModal from "@/src/components/Modal/ResetPasswordModal";
-import * as Burnt from "burnt";
+} from "@src/components/UserAuthentication/Inputs";
+import LoginButton from "@src/components/UserAuthentication/LoginButton";
+import LoadWayLogoDarkWordmark from "@src/components/UserAuthentication/LoadWayLogoDarkWordmark";
+import ResetPasswordModal from "@src/components/Modal/ResetPasswordModal";
+import { SafeAreaView } from "@src/components/layout/safeAreaView";
+import images from "@src/constants/images";
 
-const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
-const group = require("@/src/assets/icons/Group.png");
-const group_one = require("@/src/assets/icons/Group-1.png");
-const group_two = require("@/src/assets/icons/Group-2.png");
 
 const Login = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,14 +26,9 @@ const Login = () => {
     setModalVisible(true);
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      console.log("object");
-      Burnt.toast({ duration: 12, title: "Hello World!", message:"An error occured", from: "top" });
-    }, 1000);
-  }, []);
 
   return (
+    <SafeAreaView>
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, height: "100%" }}
@@ -46,9 +38,9 @@ const Login = () => {
           <View className="h-[40vh] w-full bg-[#FFF1C6] rounded-b-[70px] relative">
             <LoadWayLogoDarkWordmark />
             <View className=" flex-row items-end left-[20%] ml-[-10] absolute bottom-[0.1]">
-              <Image source={group} />
-              <Image source={group_one} />
-              <Image source={group_two} />
+              <Image source={images.onboarding.group} />
+              <Image source={images.onboarding.group_one} />
+              <Image source={images.onboarding.group_two} />
               <Image />
             </View>
           </View>
@@ -79,6 +71,7 @@ const Login = () => {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

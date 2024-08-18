@@ -1,4 +1,5 @@
-import React, { createContext, useContext } from "react";
+import { User } from "@src/models/User";
+import { createContext, useContext } from "react";
 
 type OnboardingContextType = {
   setIsFirstLaunch: (value: boolean) => void;
@@ -11,6 +12,8 @@ type OnboardingContextType = {
   setLoginDetails: (value: { email: string; password: string }) => void;
   changePasswordDetails: { email: string };
   setChangePasswordDetails: (value: { email: string }) => void;
+  currentUser: User | null;
+  setCurrentUser: (value: any) => void;
   resetPassword: {
     email: string;
     initialLogin: boolean;
@@ -22,7 +25,7 @@ type OnboardingContextType = {
     initialLogin: boolean;
     code: string;
     newPassword: string;
-  } ) => void;
+  }) => void;
 };
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
 

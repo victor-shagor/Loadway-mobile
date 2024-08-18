@@ -1,6 +1,6 @@
 import { View, TextInput, Text } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+import { useOnboarding } from "@src/context/onboarding";
 
 
 

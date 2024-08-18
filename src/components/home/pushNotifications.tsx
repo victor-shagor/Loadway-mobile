@@ -80,6 +80,7 @@ const PushNotifications = () => {
 const styles = StyleSheet.create({
   pushNotificationWrapper: {
     flex: 1,
+    marginBottom: 20,
   },
   alertContainer: {
     flex: 1,

@@ -8,4 +8,5 @@ export const appColors = {
   gray: "#D4D4D4",
   lightGray: "#66635A",
   deepGray: "#3F3C31",
+  deepWine: "#410019",
 };

@@ -1,11 +1,13 @@
 import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
-import { recentActivityArray, RecentActivityProps } from "./data";
-import QuickLinks, { renderIcon } from "./quickLinks";
+import { recentActivityArray, RecentActivityProps } from "../../screens/home/data";
+import QuickLinks from "./quickLinks";
 import { appColors } from "@src/constants/colors";
 import Cards from "./cards";
 import PushNotifications from "./pushNotifications";
+import { User } from "@src/models/User";
+import { renderIcon } from "../common/renderIcon";
 
 interface RecentActivityPropsWithIndex {
   prop: RecentActivityProps;
@@ -33,12 +35,14 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
             justifyContent: "space-between",
           }}
         >
-          {renderIcon(
-            prop.activityIcon,
-            prop.iconProvider,
-            24,
-            appColors.iconWine
-          )}
+          <View style={styles.iconContainer}>
+            {renderIcon(
+              prop.activityIcon,
+              prop.iconProvider,
+              24,
+              appColors.iconWine
+            )}
+          </View>
           <View style={{ gap: 3 }}>
             <ThemedText type="small">{prop.activityTag}</ThemedText>
             <ThemedText type="title">{prop.activityTitle}</ThemedText>
@@ -47,19 +51,13 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
 
         <View style={{ gap: 2 }}>
           <ThemedText type="default">{prop.activityDate}</ThemedText>
-          <ThemedText
-            type="title"
-            style={{ alignSelf: "flex-end", color: appColors.deepGray }}
-          >
-            {prop.activityAmount}
-          </ThemedText>
         </View>
       </View>
     </View>
   );
 };
 
-const RecentActivity = () => {
+const RecentActivity = ({currentUser}:{currentUser: User | null}) => {
   return (
     <FlatList
       data={recentActivityArray}
@@ -69,7 +67,7 @@ const RecentActivity = () => {
       keyExtractor={(item) => item.activityTitle}
       ListHeaderComponent={
         <View style={{ gap: 15 }}>
-          <Cards />
+          <Cards currentUser={currentUser}/>
           <PushNotifications />
           <QuickLinks />
 
@@ -94,13 +92,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: appColors.white,
     borderColor: appColors.gray,
-    minHeight: 60,
+    minHeight: 70,
     padding: 10,
   },
   recentActivityHeader: {
     color: appColors.lightGray,
     fontWeight: 600,
     marginBottom: 8,
+  },
+  iconContainer: {
+    backgroundColor: appColors.iconGray,
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

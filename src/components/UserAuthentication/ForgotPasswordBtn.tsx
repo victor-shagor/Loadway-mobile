@@ -2,14 +2,13 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { AuthenticationStackParamList } from "@/src/navigation/UserAuthentication";
-import { useOnboarding } from "@/src/hooks/isFirstLaunch";
-import useOnboardingContext from "@/src/utils/Context";
-import { ForgotPasswordBtnProps } from "@/src/utils/Types";
+import { AuthenticationStackParamList } from "@src/navigation/UserAuthentication";
+import useOnboardingContext from "@src/utils/Context";
+import { ForgotPasswordBtnProps } from "@src/utils/Types";
 import axios from "axios";
-import { BaseUrl } from "@/src/utils/Base_url";
-import { requestPasswordChange, ChangePassword } from "@/src/utils/AuthRoutes";
-import AuthInputs from "@/src/utils/AuthInputValues";
+import { BaseUrl } from "@src/utils/Base_url";
+import { requestPasswordChange, ChangePassword } from "@src/utils/AuthRoutes";
+import AuthInputs from "@src/utils/AuthInputValues";
 
 
 const ForgotPasswordBtn = ({

@@ -11,7 +11,9 @@ export function ThemedText({
 }: ThemedTextProps) {
   return (
     <Text
-      style={[
+      style={
+        [
+        { fontFamily: "Epilogue" },
         type === "default" ? styles.default : undefined,
         type === "title" ? styles.title : undefined,
         type === "small" ? styles.small : undefined,
@@ -28,11 +30,12 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: 600,
   },
   small: {
     fontSize: 12,
     fontWeight: "500",
+
   },
 });

@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { useOnboarding } from '@/src/hooks/isFirstLaunch'
-import useOnboardingContext from '@/src/utils/Context'
+import useOnboardingContext from '@src/utils/Context'
 
 
 

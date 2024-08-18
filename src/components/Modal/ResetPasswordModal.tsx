@@ -3,10 +3,9 @@ import React, { useState } from "react";
 import CustomText from "../UserAuthentication/CustomText";
 import { EmailInput } from "../UserAuthentication/Inputs";
 import ForgotPasswordBtn from "../UserAuthentication/ForgotPasswordBtn";
+import images from "@src/constants/images";
 
 
-
-const illustration = require("@/src/assets/icons/boyIluustration.png");
 const ResetPasswordModal = ({
   modalVisible,
   setModalVisible,
@@ -22,7 +21,7 @@ const ResetPasswordModal = ({
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)" }}>
           <View className=" flex-1 flex-row h-screen justify-center items-center">
             <View className=" bg-[#FFFFFF] rounded-2xl">
-              <Image source={illustration} className=" m-5"/>
+              <Image source={images.onboarding.illustration} className=" m-5"/>
               <CustomText
                 heading="Forgot password?"
                 sub_heading="Enter your email address and we will send you reset instructions."

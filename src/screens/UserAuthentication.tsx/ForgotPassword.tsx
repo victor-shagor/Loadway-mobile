@@ -1,11 +1,10 @@
-import { View, Text, Image } from "react-native";
 import React from "react";
-import PassWordManagement from "@/src/components/UserAuthentication/PassWordManagement";
+import PassWordManagement from "@src/components/UserAuthentication/PassWordManagement";
+import { SafeAreaView } from "@src/components/layout/safeAreaView";
 
-const icon = require("@/src/assets/icons/LoadWayLogoDarkWordmark.png");
 const ForgotPassword = () => {
   return (
-    <View>
+    <SafeAreaView>
       <PassWordManagement
         big_Text="Reset Password"
         small_text="Please enter the verification code sent to  davidloadways@gmail.com"
@@ -14,7 +13,7 @@ const ForgotPassword = () => {
         actionForCancelBtn="backToLogin"
         actionForSendBtn="resetpassword"
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

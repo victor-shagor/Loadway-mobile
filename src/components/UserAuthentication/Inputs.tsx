@@ -1,12 +1,9 @@
 import { View, TextInput, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import useOnboardingContext from "@/src/utils/Context";
-import AuthInputs from "@/src/utils/AuthInputValues";
+import useOnboardingContext from "@src/utils/Context";
+import AuthInputs from "@src/utils/AuthInputValues";
+import images from "@src/constants/images";
 
-
-
-const eyeOpen = require("@/src/assets/icons/view.png");
-const eyeClosed = require("@/src/assets/icons/hide.png");
 
 
 export const EmailInput = ({action}:{ action: string}) => {
@@ -84,7 +81,7 @@ export const PasswordInput = ({action}:{ action: string}) => {
         onPress={changeVisibilty}
         >
           <Image
-            source={eyeOpen}
+            source={images.onboarding.eyeOpen}
             className=" w-[3vh] h-[3vh]"
             // onProgress={changeVisibilty}
           />
@@ -94,7 +91,7 @@ export const PasswordInput = ({action}:{ action: string}) => {
         onPress={changeVisibilty}
         >
         <Image
-          source={eyeClosed}
+          source={images.onboarding.eyeClosed}
           className=" w-[3vh] h-[3vh]"
         //   onProgress={changeVisibilty}
         />

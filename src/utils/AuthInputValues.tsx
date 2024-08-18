@@ -1,4 +1,4 @@
-import useOnboardingContext from "@/src/utils/Context";
+import useOnboardingContext from "@src/utils/Context";
 
 const AuthInputs = () => {
   const {

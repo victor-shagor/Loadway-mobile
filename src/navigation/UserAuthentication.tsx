@@ -4,8 +4,9 @@ import Login from "../screens/UserAuthentication.tsx/Login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword from "../screens/UserAuthentication.tsx/ForgotPassword";
 import UpdatePassword from "../screens/UserAuthentication.tsx/UpdatePassword";
-import { useOnboarding } from "../hooks/isFirstLaunch";
 import DashboardStack from "./DashboardStack";
+import { SafeAreaView } from "@src/components/layout/safeAreaView";
+import { useOnboarding } from "@src/context/onboarding";
 
 
 

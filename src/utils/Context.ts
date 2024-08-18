@@ -1,14 +1,12 @@
+import { useOnboarding } from "@src/context/onboarding";
 
-import { useOnboarding } from '../hooks/isFirstLaunch'
-
-
-const useOnboardingContext  = () => {
-    const context  = useOnboarding()!;
-    if (!context) {
-      throw new Error('An error occurred');
-    }
+const useOnboardingContext = () => {
+  const context = useOnboarding()!;
+  if (!context) {
+    throw new Error("An error occurred");
+  }
 
   return context;
-}
+};
 
-export default useOnboardingContext ;
+export default useOnboardingContext;

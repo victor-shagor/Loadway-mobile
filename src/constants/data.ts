@@ -6,7 +6,7 @@ import {
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
-import { RootStackParamList } from "../../components/home/quickLinks";
+import { RootStackParamList } from "@src/components/home/quickLinks";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap

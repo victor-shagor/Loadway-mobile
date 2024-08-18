@@ -39,9 +39,16 @@ const CustomModal = ({
         children={triggerItem}
         style={triggerItemStyle}
       />
-
       <Portal>
-        <Modalize ref={modalizeRef} modalHeight={screenHeight * 0.7}>
+        <Modalize
+          ref={modalizeRef}
+          adjustToContentHeight
+          avoidKeyboardLikeIOS
+          handlePosition="inside"
+          overlayStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+          }}
+        >
           {modalContent}
         </Modalize>
       </Portal>

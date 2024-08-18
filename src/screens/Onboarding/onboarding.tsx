@@ -1,7 +1,6 @@
 import { View, Dimensions  } from "react-native";
 import {useState} from "react";
-import OnboardingComponent from "@/src/components/onboarding/OnboardingComponent";
-import { useOnboarding } from "@/src/hooks/isFirstLaunch";
+import OnboardingComponent from "@src/components/onboarding/OnboardingComponent";
 
 const Onboarding = () => {
 
