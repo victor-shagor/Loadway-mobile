@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@src/navigation";
@@ -62,6 +62,7 @@ const LoginButton = () => {
       });
     }
   };
+
 
   return (
     <View className=" mx-5 bg-[#F6411B] h-[50px] rounded-lg">

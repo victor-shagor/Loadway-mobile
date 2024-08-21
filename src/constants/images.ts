@@ -21,6 +21,10 @@ const images = {
     propertyManager: require("@src/assets/icons/propertyManager.png"),
     cso: require("@src/assets/icons/cso.png"),
   },
+  wallet:{
+    walletIcon: require("@src/assets/icons/wallet.png"),
+    bitcoin: require("@src/assets/gif/bitcoin.gif"),
+  }
 };
 
 export default images;

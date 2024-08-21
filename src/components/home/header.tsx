@@ -37,7 +37,7 @@ const DashboardHeader = ({currentUser}: any) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
-    minHeight: 180,
+    minHeight: 100,
     backgroundColor: appColors.black,
     padding: 20,
   },

@@ -9,4 +9,5 @@ export const appColors = {
   lightGray: "#66635A",
   deepGray: "#3F3C31",
   deepWine: "#410019",
+  green: "#00D548"
 };
