@@ -1,7 +1,10 @@
 import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
-import { recentActivityArray, RecentActivityProps } from "../../screens/home/data";
+import {
+  recentActivityArray,
+  RecentActivityProps,
+} from "../../screens/home/data";
 import QuickLinks from "./quickLinks";
 import { appColors } from "@src/constants/colors";
 import Cards from "./cards";
@@ -57,7 +60,7 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
   );
 };
 
-const RecentActivity = ({currentUser}:{currentUser: User | null}) => {
+const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
   return (
     <FlatList
       data={recentActivityArray}
@@ -67,7 +70,7 @@ const RecentActivity = ({currentUser}:{currentUser: User | null}) => {
       keyExtractor={(item) => item.activityTitle}
       ListHeaderComponent={
         <View style={{ gap: 15 }}>
-          <Cards currentUser={currentUser}/>
+          <Cards currentUser={currentUser} />
           <PushNotifications />
           <QuickLinks />
 
@@ -77,6 +80,7 @@ const RecentActivity = ({currentUser}:{currentUser: User | null}) => {
         </View>
       }
       contentContainerStyle={{ padding: 10, paddingBottom: 100 }}
+      showsVerticalScrollIndicator={false}
     />
   );
 };

@@ -6,15 +6,10 @@ import { AuthenticationStackParamList } from "@src/navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useOnboardingContext from "@src/utils/Context";
 import axios from "axios";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import { BaseUrl } from "@src/utils/Base_url";
 import { LoginUser } from "@src/utils/AuthRoutes";
 import { getCurrentUser } from "@src/api/user";
-
-
-
-
-
 
 const LoginButton = () => {
   const navigation =
@@ -22,43 +17,44 @@ const LoginButton = () => {
   const [updatePasswordStatus, setUpdatePasswordStatus] =
     useState<keyof AuthenticationStackParamList>("updatepassword");
 
-    const [loading, setLoading] = useState(false);
-    const { loginDetails, setCurrentUser, setLogin } = useOnboardingContext();
+  const [loading, setLoading] = useState(false);
+  const { loginDetails, setCurrentUser, setLogin } = useOnboardingContext();
 
-   
+  const getData = async () => await AsyncStorage.getItem("");
 
-  const getData = async () => await AsyncStorage.getItem('');
- 
   const clickBtn = async () => {
     try {
       setLoading(true);
-      if (!loginDetails.email && !loginDetails.password ) {
-         return console.log('Show error screen');
-         
+      if (!loginDetails.email && !loginDetails.password) {
+        return console.log("Show error screen");
       }
-      const url = `${BaseUrl}${LoginUser}`
+      const url = `${BaseUrl}${LoginUser}`;
       const payload = loginDetails;
-      const response = await axios.post(url , payload);
+      const response = await axios.post(url, payload);
       const validateLogin = response.data?.data?.firstLogin;
-      const currentUser = await getCurrentUser(response.data?.data?.accessToken);
-      await AsyncStorage.setItem('accessToken', response.data?.data?.accessToken);
+      const currentUser = await getCurrentUser(
+        response.data?.data?.accessToken
+      );
+      await AsyncStorage.setItem(
+        "accessToken",
+        response.data?.data?.accessToken
+      );
       setCurrentUser(currentUser);
       if (validateLogin) {
         setLoading(false);
-        navigation.navigate('updatepassword');
-      }else{
+        navigation.navigate("updatepassword");
+      } else {
         setLoading(false);
         setLogin(true);
       }
-      console.log(response.data.data.firstLogin)
-
-    } catch (error:any) {
-      console.log('Error', error);
+      // console.log(response.data.data.firstLogin);
+    } catch (error: any) {
+      console.log("Error", error);
       setLoading(false);
       Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Incorrect email or password',
+        type: "error",
+        text1: "Error",
+        text2: "Incorrect email or password",
       });
     }
   };
@@ -69,7 +65,11 @@ const LoginButton = () => {
         <View className="bg-[#F6411B] h-full flex-row justify-center items-center rounded-lg">
           <Text className=" font-semibold text-center text-white">Sign in</Text>
           {loading && (
-            <ActivityIndicator size="small" color="#fff" style={{ marginLeft: 8 }} />
+            <ActivityIndicator
+              size="small"
+              color="#fff"
+              style={{ marginLeft: 8 }}
+            />
           )}
         </View>
       </TouchableOpacity>

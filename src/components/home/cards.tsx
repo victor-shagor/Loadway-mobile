@@ -106,14 +106,14 @@ const Cards = ({ currentUser }: { currentUser: User | null }) => {
   const cardArray: DashboardCardProps[] = [
     {
       cardTag: "Wallet Balance",
-      amount: currentUser?.wallet?.balance || 0.00,
+      amount: currentUser?.wallet?.balance || 0.0,
       date: `as at ${formattedDate}`,
       bgColor: appColors.wine,
       bgImage: images.icons.dashboardCard1,
     },
     {
       cardTag: "Due Bills",
-      amount: currentUser?.duesSum || 0.00,
+      amount: currentUser?.duesSum || 0.0,
       date: `as at ${formattedDate}`,
       bgColor: appColors.black,
       bgImage: images.icons.dashboardCard1,

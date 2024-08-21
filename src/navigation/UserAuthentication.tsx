@@ -8,9 +8,6 @@ import DashboardStack from "./DashboardStack";
 import { SafeAreaView } from "@src/components/layout/safeAreaView";
 import { useOnboarding } from "@src/context/onboarding";
 
-
-
-
 export type AuthenticationStackParamList = {
   login: any;
   forgotpassword: any;
@@ -22,26 +19,24 @@ const Stack = createNativeStackNavigator<AuthenticationStackParamList>();
 const UserAuthentication = () => {
   const context = useOnboarding()!;
   const { login } = context;
+
   if (login) {
-    <DashboardStack />;
+    return <DashboardStack />;
   }
+
   return (
-    <View style={{flex: 1}}>
-      {login ? (
-        <DashboardStack />
-      ) : (
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="login" component={Login} />
-          {/* <Stack.Screen name='verify' component={VerifyEmail}/> */}
-          <Stack.Screen name="forgotpassword" component={ForgotPassword} />
-          <Stack.Screen name="updatepassword" component={UpdatePassword} />
-        </Stack.Navigator>
-      )}
-    </View>         
+    <View style={{ flex: 1 }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="login" component={Login} />
+        {/* <Stack.Screen name='verify' component={VerifyEmail}/> */}
+        <Stack.Screen name="forgotpassword" component={ForgotPassword} />
+        <Stack.Screen name="updatepassword" component={UpdatePassword} />
+      </Stack.Navigator>
+    </View>
   );
 };
 
