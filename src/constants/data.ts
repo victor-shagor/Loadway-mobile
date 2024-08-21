@@ -40,6 +40,13 @@ export interface RecentActivityProps {
   activityTitle: string;
   activityDate: string;
   activityAmount?: string;
+};
+
+export type transactionProps = {
+  name: string;
+  href: keyof RootStackParamList;
+  price: string;
+  date: string;
 }
 
 export const quickLinksArray: QuicklinkProps[] = [
@@ -108,3 +115,78 @@ export const recentActivityArray: RecentActivityProps[] = [
     iconProvider: "AntDesign",
   },
 ];
+
+
+export const HousingBills: QuicklinkProps[] = [
+  {
+    icon: "unlock",
+    name: "Rent",
+    href: "GateAccess",
+    iconProvider: "AntDesign",
+  },
+  {
+    icon: "alert-circle",
+    name: "Security",
+    href: "Emergency",
+    iconProvider: "Feather",
+  },
+  {
+    icon: "chat-question-outline",
+    name: "Estate Dues",
+    href: "Message",
+    iconProvider: "MaterialCommunityIcons",
+  },
+  {
+    icon: "zap",
+    name: "Utilities",
+    href: "Electricity",
+    iconProvider: "Feather",
+  },
+];
+export const OtherBills: QuicklinkProps[] = [
+  {
+    icon: "zap",
+    name: "Electricity",
+    href: "GateAccess",
+    iconProvider: "Feather",
+  },
+  {
+    icon: "wifi",
+    name: "Internet",
+    href: "Emergency",
+    iconProvider: "AntDesign",
+  },
+  {
+    icon: "chat-question-outline",
+    name: "Airtime",
+    href: "Message",
+    iconProvider: "MaterialCommunityIcons",
+  },
+  {
+    icon: "satellite-variant",
+    name: "Cable Tv",
+    href: "Electricity",
+    iconProvider: "MaterialCommunityIcons",
+  },
+];
+
+export const transactionData: transactionProps[] = [
+  {
+    name: "Electricity",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "Jan 01 2023, 11:00AM"
+  },
+  {
+    name: "Wallet funding",
+    href: "Electricity",
+    price: "+N20,000",
+    date: "Jan 01 2023, 11:00AM"
+  },
+  {
+    name: "Electricity",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "Jan 01 2023, 11:00AM"
+  },
+]

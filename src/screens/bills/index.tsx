@@ -1,32 +1,40 @@
-import {  } from "expo-status-bar";
+import {} from "expo-status-bar";
 import { SafeAreaView } from "../../components/layout/safeAreaView";
-import { Text, View, StatusBar } from "react-native";
+import { Text, View, StatusBar, Image, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+import WalletBallance from "@src/components/bills/walletBallance";
+import BillsList from "@src/components/bills/BillsList";
+import { HousingBills, OtherBills } from '@src/constants/data';
+import SectionTitle from "@src/components/bills/SectionTitle";
+import Transaction from "@src/components/bills/Transaction"
+
 
 const Bills = () => {
   useFocusEffect(
     useCallback(() => {
-      StatusBar.setBarStyle("dark-content");
+      StatusBar.setBarStyle("light-content");
     }, [])
-  )
+  );
   return (
     <SafeAreaView>
-      <StatusBar barStyle="dark-content"   />
-      <View>
+      <ScrollView>
+        <StatusBar barStyle="light-content" />
         <View>
-          <Text>Wallet Balance</Text>
-          <Text>N10,000</Text>
+          <WalletBallance />
+          <BillsList title="Housing Bills" data={HousingBills} />
+          <BillsList title="Others" data={OtherBills} />
         </View>
-        <View>
-          <Text>Due Bills</Text>
-          <Text>N20,000</Text>
-
-          <Text>N20,000</Text>
+        <View className="mb-40">
+           <SectionTitle title="Recent Transactions" />
+           <Transaction />
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 export default Bills;
+
+// 3A0427
+// 191508
