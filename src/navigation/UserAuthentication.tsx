@@ -11,6 +11,7 @@ import { useOnboarding } from "@src/context/onboarding";
 
 
 
+
 export type AuthenticationStackParamList = {
   login: any;
   forgotpassword: any;
@@ -36,7 +37,6 @@ const UserAuthentication = () => {
           }}
         >
           <Stack.Screen name="login" component={Login} />
-          {/* <Stack.Screen name='verify' component={VerifyEmail}/> */}
           <Stack.Screen name="forgotpassword" component={ForgotPassword} />
           <Stack.Screen name="updatepassword" component={UpdatePassword} />
         </Stack.Navigator>

@@ -47,7 +47,22 @@ export type transactionProps = {
   href: keyof RootStackParamList;
   price: string;
   date: string;
-}
+  code?: string;
+  time?: string;
+};
+// export type paymentHistoryProps = {
+//   name: string;
+//   href: keyof RootStackParamList;
+//   price: string;
+//   date: string;
+//   code: string;
+//   time: string;
+// };
+export type HousingBillsnProps = {
+  name: string;
+  price: string;
+  color: string;
+};
 
 export const quickLinksArray: QuicklinkProps[] = [
   {
@@ -189,4 +204,61 @@ export const transactionData: transactionProps[] = [
     price: "-N20,000",
     date: "Jan 01 2023, 11:00AM"
   },
-]
+];
+export const HousingBillData: HousingBillsnProps[] = [
+  {
+    name: "Rent",
+    price: "N2,500,000",
+    color: '#805566'
+  },
+  {
+    name: "Security",
+    price: "N500,000",
+    color: '#D4CAA6'
+  },
+  {
+    name: "Estate Dues",
+    price: "N16,000",
+    color: '#C4A485'
+  },
+  {
+    name: "Utilities",
+    price: "N300,000",
+    color: '#FEF2C6'
+  },
+];
+
+export const paymentHistoryData: transactionProps[] = [
+  {
+    name: "Electricity",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "30.02.2023",
+    code: "CS-123456",
+    time: "10:00am"
+  },
+  {
+    name: "Wallet funding",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "30.02.2023",
+    code: "CS-123456",
+    time: "10:00am"
+  },
+  {
+    name: "Electricity",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "30.02.2023",
+    code: "CS-123456",
+    time: "10:00am"
+  },
+  {
+    name: "Wallet funding",
+    href: "Electricity",
+    price: "-N20,000",
+    date: "30.02.2023",
+    code: "CS-123456",
+    time: "10:00am"
+  },
+];

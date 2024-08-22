@@ -35,13 +35,13 @@ const BillsFlatList = ({ data }: { data: QuicklinkProps[] }) => {
   console.log(data);
   return (
     <View 
-     className="mb-5"
+     className="mb-5 flex-row justify-center items-center"
       >
       <FlatList
         horizontal
         data={data}
         renderItem={({ item }) => <Item item={item} />}
-        className="bg-white rounded-xl py-5 mx-4 mt-3"
+        className="bg-white rounded-xl py-5 mx-4 mt-3 "
       />
     </View>
   );

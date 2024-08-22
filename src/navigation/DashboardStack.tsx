@@ -10,9 +10,19 @@ import Messages from "../screens/message";
 import Account from "../screens/account";
 import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
+import HouseBill from "@src/screens/bills/HouseBill";
+import PaymentHistory from "@src/screens/bills/PaymentHistory";
+
+
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+export type BillsStackParamList = {
+  HouseBill: any;
+  PaymentHistory: any;
+};
 
 const CustomTabIcon = ({
   children,
@@ -117,6 +127,16 @@ const DashboardStack = () => {
           name="GateAccess"
           component={GateAccess}
           options={{ title: "Gate Access" }}
+        />
+        <Stack.Screen
+          name="HouseBill"
+          component={HouseBill}
+          options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
+        />
+        <Stack.Screen
+          name="PaymentHistory"
+          component={PaymentHistory}
+          options={{ title: "Payment History", headerTitleAlign: 'center' }}
         />
       </Stack.Group>
     </Stack.Navigator>
