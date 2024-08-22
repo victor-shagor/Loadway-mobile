@@ -3,138 +3,141 @@ import {
   StyleSheet,
   View,
   FlatList,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
-import { ChatProps } from "@src/models/chat";
-import images from "@src/constants/images";
-import useOnboardingContext from "@src/utils/Context";
+import { UserChats } from "@src/constants/data";
+import { ChatRenderItemProps } from "@src/models/chat";
+import ChatModal from "@src/screens/modals/messages/chat";
 import EmptyMessage from "./emptyMessage";
 import CustomModal from "../CustomModal";
-import { SafeAreaView } from "../layout/safeAreaView";
+import SearchInput from "./searchInput";
 
-const UserChats: ChatProps[] = [
-  {
-    name: "User1",
-    image: images.user.propertyManager,
-    message: "Sent a document",
-    time: "1hr",
-    messageCount: "1",
-  },
-  {
-    name: "User2",
-    image: images.user.cso,
-    message: "Message from user2",
-    time: "1hr",
-  },
-];
-
-const SearchInput = () => {
+const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
   return (
-    <View style={styles.searchInputContainer}>
-      <View style={styles.searchInput}>
-        <AntDesign
-          name="search1"
-          size={24}
-          color={appColors.lightGray}
-          style={{ alignSelf: "center" }}
-        />
-        <TextInput
-          keyboardType={"default"}
-          onSubmitEditing={(event) => console.log(event.nativeEvent.text)}
-          placeholder={"Search"}
-          placeholderTextColor={appColors.deepGray}
-          onChangeText={(e) => console.log(e)}
-          style={{ flex: 1 }}
-        />
-      </View>
+    <View style={styles.chatMessageContainer}>
+      <Image source={chatProps.image} style={{ width: 50, height: 50 }} />
+      <View
+        style={[
+          styles.chatMessage,
+          {
+            borderBottomWidth: index !== UserChats.length - 1 ? 1 : 0,
+            borderBottomColor: appColors.gray,
+          },
+        ]}
+      >
+        <View style={{ gap: 2, flex: 1 }}>
+          <ThemedText type="title">{chatProps.name}</ThemedText>
+          <ThemedText
+            style={{ width: "100%", maxWidth: "80%" }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {chatProps.message}
+          </ThemedText>
+        </View>
 
-      <TouchableOpacity>
-        <Ionicons name="filter" size={24} color={appColors.lightGray} />
-      </TouchableOpacity>
+        <View style={{ alignItems: "center", gap: 10 }}>
+          <ThemedText type="small">{chatProps.time}</ThemedText>
+          {chatProps.messageCount && (
+            <View style={styles.messageCountContainer}>
+              <ThemedText style={{ color: appColors.white }}>
+                {chatProps.messageCount}
+              </ThemedText>
+            </View>
+          )}
+        </View>
+      </View>
     </View>
   );
 };
 
 const Chat = () => {
-  // const { currentUser } = useOnboardingContext();
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-        {UserChats.length < 1 ? (
-          <EmptyMessage message={"You have no messages"} />
-        ) : (
-          <View style={{ position: "relative", flex: 1 }}>
-            <FlatList
-              data={UserChats}
-              renderItem={({ item }) => (
-                <View>
-                  <ThemedText>{item.name}</ThemedText>
-                </View>
-              )}
-              keyExtractor={(item) => item.name}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={<SearchInput />}
-              ListHeaderComponentStyle={{ flex: 1 }}
-              contentContainerStyle={{ gap: 10 }}
-            />
+        <>
+          <FlatList
+            data={UserChats}
+            renderItem={({ item, index }) => (
+              <ChatRenderItem chatProps={item} index={index} />
+            )}
+            keyExtractor={(item) => item.name}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <EmptyMessage message={"You have no messages"} />
+            }
+            ListHeaderComponent={<SearchInput />}
+            ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
+          />
 
-            <View style={{ flex: 1 }}>
-              {/* <View style={styles.customModalWrapper}> */}
-              <CustomModal
-                triggerItem={
-                  <ThemedText style={{ color: "red" }}>Click Me</ThemedText>
-                }
-                triggerItemStyle={{ backgroundColor: "red" }}
-                modalContent={
-                  <View>
-                    <ThemedText>Modal</ThemedText>
-                  </View>
-                }
-              />
-            </View>
-          </View>
-        )}
+          <CustomModal
+            triggerItem={
+              <>
+                <AntDesign name="plus" size={15} color={appColors.white} />
+                <ThemedText style={{ color: appColors.white }}>
+                  New Chat
+                </ThemedText>
+              </>
+            }
+            triggerItemStyle={styles.modalTriggerStyle}
+            modalTitle="New Chat"
+            modalContent={<ChatModal />}
+          />
+        </>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  searchInputContainer: {
+  chatMessageContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    minHeight: 80,
+    padding: 10,
     flex: 1,
-  },
-  searchInput: {
-    flexDirection: "row",
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    flex: 0.9,
-    backgroundColor: appColors.gray,
-    padding: 8,
     gap: 15,
-    minHeight: 56,
-    borderRadius: 10,
   },
-  // customModalWrapper: {
-  //   position: "absolute",
-  //   right: 20,
-  //   top: "50%",
-  //   bottom: "50%",
-  // },
+  chatMessage: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 15,
+    flex: 1,
+    paddingBottom: 5,
+  },
+  messageCountContainer: {
+    backgroundColor: appColors.orange,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalTriggerStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+    flex: 1,
+    position: "absolute",
+    top: "70%",
+    right: 0,
+    borderRadius: 50,
+    backgroundColor: appColors.orange,
+    padding: 10,
+  },
 });
 
 export default Chat;

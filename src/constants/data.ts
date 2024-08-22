@@ -7,6 +7,7 @@ import {
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
 import { RootStackParamList } from "@src/components/home/quickLinks";
+import { ChatProps, ComplaintProps } from "@src/models/chat";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
@@ -106,5 +107,37 @@ export const recentActivityArray: RecentActivityProps[] = [
     activityDate: "03, May 2023",
     activityAmount: "122ABC",
     iconProvider: "AntDesign",
+  },
+];
+
+export const UserChats: ChatProps[] = [
+  {
+    name: "User1",
+    image: images.user.propertyManager,
+    message: "Sent a document",
+    time: "1hr",
+    messageCount: "1",
+  },
+  {
+    name: "User2",
+    image: images.user.cso,
+    message:
+      "A very long message from user2. lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis officiis aliquam adipisci tempore hic obcaecati laboriosam, eveniet corporis. Ratione quam dolores voluptate beatae nam! Esse sit quidem distinctio sint. Vero.",
+    time: "1hr",
+  },
+];
+
+export const UserComplaints: ComplaintProps[] = [
+  {
+    name: "Leak in the kitchen",
+    image: images.user.complaint,
+    time: "1hr",
+    state: "PENDING",
+  },
+  {
+    name: "Leak in the kitchen2",
+    image: images.user.complaint,
+    time: "1hr",
+    state: "CLOSED",
   },
 ];
