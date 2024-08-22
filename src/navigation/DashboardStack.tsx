@@ -62,6 +62,7 @@ const TabNavigation = () => {
                 <Octicons name="credit-card" size={size} color={color} />
               </CustomTabIcon>
             ),
+            headerTitleAlign: 'center'
           }}
           name="Bills"
           component={Bills}
