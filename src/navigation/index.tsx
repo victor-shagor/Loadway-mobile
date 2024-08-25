@@ -34,7 +34,6 @@ const RootNavigation = () => {
       if (!context) {
         console.error("Onboarding context is not available.");
         throw new Error("Onboarding context is not available.");
-        return;
       }
 
       const { setIsFirstLaunch } = context;
@@ -43,7 +42,7 @@ const RootNavigation = () => {
       // await AsyncStorage.removeItem('alreadyLaunched');
       try {
         const value = await AsyncStorage.getItem("alreadyLaunched");
-        console.log(value, "value");
+        // console.log(value, "value");
         if (value === null) {
           await AsyncStorage.setItem("alreadyLaunched", "true");
           setIsFirstLaunch(true);
@@ -66,7 +65,7 @@ const RootNavigation = () => {
     );
   }
 
-  console.log(context, "context");
+  // console.log(context, "context");
 
   const { isFirstLaunch } = context;
 

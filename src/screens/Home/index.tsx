@@ -17,10 +17,8 @@ const Home = () => {
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={appColors.black} />
-      <DashboardHeader currentUser={currentUser}/>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <RecentActivity currentUser={currentUser}/>
-      </ScrollView>
+      <DashboardHeader currentUser={currentUser} />
+      <RecentActivity currentUser={currentUser} />
     </>
   );
 };

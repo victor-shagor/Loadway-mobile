@@ -8,15 +8,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {
-  Entypo,
-} from "@expo/vector-icons/";
+import { Entypo } from "@expo/vector-icons/";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
-import {
-  quickLinksArray,
-  recentChatArray,
-} from "@src/screens/home/data";
+import { quickLinksArray, recentChatArray } from "@src/screens/home/data";
 import CustomModal from "@src/components/CustomModal";
 import BuyElectricity from "@src/screens/modals/electricity";
 import { renderIcon } from "@src/components/common/renderIcon";
@@ -63,7 +58,10 @@ const QuickLinks = () => {
                           appColors.orange
                         )}
                       </View>
-                      <ThemedText type="small" style={{ fontWeight: 600, fontSize: 10 }}>
+                      <ThemedText
+                        type="small"
+                        style={{ fontWeight: 600, fontSize: 10 }}
+                      >
                         {item.name}
                       </ThemedText>
                     </>
@@ -84,7 +82,10 @@ const QuickLinks = () => {
                       appColors.orange
                     )}
                   </View>
-                  <ThemedText type="small" style={{ fontWeight: 600, fontSize: 10 }}>
+                  <ThemedText
+                    type="small"
+                    style={{ fontWeight: 600, fontSize: 10 }}
+                  >
                     {item.name}
                   </ThemedText>
                 </TouchableOpacity>

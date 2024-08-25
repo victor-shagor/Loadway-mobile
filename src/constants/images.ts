@@ -20,6 +20,7 @@ const images = {
   user: {
     propertyManager: require("@src/assets/icons/propertyManager.png"),
     cso: require("@src/assets/icons/cso.png"),
+    complaint: require("@src/assets/icons/complaint-image.png"),
   },
   wallet:{
     walletIcon: require("@src/assets/icons/wallet.png"),
