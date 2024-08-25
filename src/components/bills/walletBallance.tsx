@@ -30,9 +30,9 @@ const WalletBallance = () => {
           </View>
         </View>
         {/* -------------- */}
-        <View className=" flex-row justify-between px-5">
+        <View className=" flex-row justify-between px-5 ">
           <View
-            className=" mb-2 py-2 px-4 rounded-lg"
+            className=" mb-5 py-2 px-4 rounded-lg"
             style={{
               backgroundColor: "rgba(192, 170,178, 0.1)",
               height: "83%",

@@ -5,7 +5,12 @@ import { transactionProps } from "@src/constants/data";
 import { renderIcon } from "../common/renderIcon";
 import { appColors } from "@src/constants/colors";
 
-const Item = ({ item }: { item: transactionProps }) => {
+export type forWhatProps = "payment_history" | "recent_transaction";
+const Item = ({
+  item,
+}: {
+  item:  transactionProps;
+}) => {
   const color = item.price.startsWith("-")
     ? appColors.orange
     : item.price.startsWith("+")
@@ -22,7 +27,7 @@ const Item = ({ item }: { item: transactionProps }) => {
     <View className=" flex-row justify-between py-5">
       <View
         className=" rotate-45 p-3 rounded-2xl"
-        style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)"}}
+        style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
       >
         {renderIcon(icon, "AntDesign", 24, color)}
       </View>
@@ -30,9 +35,9 @@ const Item = ({ item }: { item: transactionProps }) => {
         <Text className=" text-[#191508] text-[16px] font-semibold pb-1">
           {item.name}
         </Text>
-        <Text className=" text-[#66635A] text-[10px] font-medium">
-          {item.date}
-        </Text>
+          <Text className=" text-[#66635A] text-[10px] font-medium">
+            {item.date}
+          </Text>
       </View>
       <View>
         <Text className="" style={{ color }}>
@@ -58,7 +63,7 @@ const Transaction = () => {
               index === transactionData.length - 1 && styles.lastItem,
             ]}
           >
-            <Item item={item} />
+            <Item item={item}  />
           </View>
         );
       })}
@@ -69,7 +74,7 @@ const Transaction = () => {
 const styles = StyleSheet.create({
   itemContainer: {
     borderBottomWidth: 0.1,
-    borderColor: "rgba(165, 162, 156, 0.5)", // Custom color or use slate-500
+    borderColor: "rgba(165, 162, 156, 0.5)",
   },
   lastItem: {
     borderBottomWidth: 0,
