@@ -8,6 +8,7 @@ import DashboardStack from "./DashboardStack";
 import { SafeAreaView } from "@src/components/layout/safeAreaView";
 import { useOnboarding } from "@src/context/onboarding";
 
+
 export type AuthenticationStackParamList = {
   login: any;
   forgotpassword: any;
