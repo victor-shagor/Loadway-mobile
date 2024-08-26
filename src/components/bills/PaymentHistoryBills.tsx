@@ -62,7 +62,7 @@ const PaymentHistoryBills = () => {
     return (
       <View
         className=" p-5 mx-5  px-5 bg-white rounded-xl 
-       divide-y divide-slate-500 mt-5"
+       divide-y divide-slate-200 mt-5"
       >
         {paymentHistoryData.map((item, index) => {
           return (

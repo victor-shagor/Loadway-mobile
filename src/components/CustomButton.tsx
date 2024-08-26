@@ -7,11 +7,12 @@ interface CustomButtonProps {
   value: string;
   disable?: boolean;
   isLoading?: boolean;
+  buttonStyle?: any
 }
 
-const CustomButton = ({ isLoading, disable, value }: CustomButtonProps) => {
+const CustomButton = ({ isLoading, disable, value, buttonStyle = {} }: CustomButtonProps) => {
   return (
-    <TouchableOpacity style={styles.customButtonStyle} disabled={disable}>
+    <TouchableOpacity style={[styles.customButtonStyle, buttonStyle]} disabled={disable}>
       <ThemedText type="title" style={{ color: appColors.white }}>
         {value}
       </ThemedText>

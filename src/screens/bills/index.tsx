@@ -2,6 +2,8 @@ import {} from "expo-status-bar";
 import { SafeAreaView } from "../../components/layout/safeAreaView";
 import { Text, View, StatusBar, Image, ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+// import { View, StatusBar, ScrollView } from "react-native";
+// import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import WalletBallance from "@src/components/bills/walletBallance";
 import BillsList from "@src/components/bills/BillsList";
@@ -19,20 +21,20 @@ const Bills = () => {
     }, [])
   );
   return (
-    <SafeAreaView>
+    <View className="mt-5">
       <ScrollView>
         <StatusBar barStyle="light-content" />
-        <View>
+        <View className="mb-5">
           <WalletBallance />
           <BillsList title="Housing Bills" data={HousingBills} />
-          <BillsList title="Others" data={OtherBills} />
+          {/* <BillsList title="Others" data={OtherBills} /> */}
         </View>
         <View className="mb-40">
            <SectionTitle title="Recent Transactions" />
-           <Transaction data={transactionData} forWhat="recent_transaction" />
+           <Transaction  />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

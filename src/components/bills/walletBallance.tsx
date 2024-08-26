@@ -5,7 +5,7 @@ import images from "@src/constants/images";
 const WalletBallance = () => {
   return (
       <View
-        className="m-5 h-[23vh] rounded-2xl relative"
+        className="m-5 h-[20vh] rounded-2xl relative mt-0"
         style={{ overflow: "hidden", backgroundColor: "rgba(65, 0,25, 0.9)" }}
       >
         <View className=" flex-row justify-between p-5">

@@ -47,6 +47,7 @@ const RenderedCard = (prop: DashboardCardProps) => {
             </View>
 
             <CustomModal
+            modalTitle="Fund Wallet"
               triggerItem={
                 <>
                   <AntDesign name="plus" size={15} color={appColors.white} />

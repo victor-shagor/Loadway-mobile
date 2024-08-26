@@ -51,7 +51,7 @@ export const quickLinksArray: QuicklinkProps[] = [
   },
   {
     icon: "alert-circle",
-    name: "Alert",
+    name: "Emergency",
     href: "Emergency",
     iconProvider: "Feather",
   },
