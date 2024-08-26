@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet, View, StatusBar } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 import {  } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
@@ -37,7 +36,7 @@ const DashboardHeader = ({currentUser}: any) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
-    minHeight: 175,
+    minHeight: Platform.OS === "ios" ? 180 : 150,
     backgroundColor: appColors.black,
     padding: 20,
   },

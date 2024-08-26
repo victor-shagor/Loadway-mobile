@@ -52,7 +52,7 @@ const Transaction = () => {
   return (
     <View
       className=" p-5 mx-5  px-5 bg-white rounded-xl 
-     divide-y divide-slate-200 mt-5"
+     divide-y divide-slate-500 mt-5"
     >
       {transactionData.map((item, index) => {
         return (
@@ -74,8 +74,7 @@ const Transaction = () => {
 const styles = StyleSheet.create({
   itemContainer: {
     borderBottomWidth: 0.1,
-    // borderColor: "rgba(165, 162, 156, 0.5)",
-    borderColor: "red", //
+    borderColor: "rgba(165, 162, 156, 0.5)",
   },
   lastItem: {
     borderBottomWidth: 0,
