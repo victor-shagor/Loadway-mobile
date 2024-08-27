@@ -8,11 +8,12 @@ interface CustomButtonProps {
   disable?: boolean;
   isLoading?: boolean;
   buttonStyle?: any
+  onPress: () => void; // Function to call when button is pressed.
 }
 
-const CustomButton = ({ isLoading, disable, value, buttonStyle = {} }: CustomButtonProps) => {
+const CustomButton = ({ isLoading, disable, value, buttonStyle = {}, onPress }: CustomButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.customButtonStyle, buttonStyle]} disabled={disable}>
+    <TouchableOpacity style={[styles.customButtonStyle, buttonStyle]} disabled={disable} onPress={onPress}>
       <ThemedText type="title" style={{ color: appColors.white }}>
         {value}
       </ThemedText>
