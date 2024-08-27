@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Entypo } from "@expo/vector-icons/";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
-import { quickLinksArray, recentChatArray } from "@src/screens/home/data";
+import { quickLinksArray, recentChatArray } from "@src/screens/Home/data";
 import CustomModal from "@src/components/CustomModal";
 import BuyElectricity from "@src/screens/modals/electricity";
 import { renderIcon } from "@src/components/common/renderIcon";
