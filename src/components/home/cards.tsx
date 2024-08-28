@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -14,6 +14,7 @@ import images from "@src/constants/images";
 import CustomModal from "@src/components/CustomModal";
 import FundWalletModal from "../../screens/modals/fundWallet";
 import { User } from "@src/models/User";
+import { Modalize } from "react-native-modalize";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -26,6 +27,7 @@ interface DashboardCardProps {
 }
 
 const RenderedCard = (prop: DashboardCardProps) => {
+  const modalizeRef = useRef<Modalize>(null);
   return (
     <>
       <View
@@ -48,6 +50,7 @@ const RenderedCard = (prop: DashboardCardProps) => {
 
             <CustomModal
             modalTitle="Fund Wallet"
+            modalizeRef={modalizeRef}
               triggerItem={
                 <>
                   <AntDesign name="plus" size={15} color={appColors.white} />
@@ -60,7 +63,7 @@ const RenderedCard = (prop: DashboardCardProps) => {
                 </>
               }
               triggerItemStyle={[styles.renderCardHeader, styles.cardButton]}
-              modalContent={<FundWalletModal />}
+              modalContent={<FundWalletModal close={()=>modalizeRef.current?.close()}/>}
             />
           </View>
 

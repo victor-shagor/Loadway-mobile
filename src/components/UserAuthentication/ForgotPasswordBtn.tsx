@@ -22,6 +22,7 @@ const ForgotPasswordBtn = ({
 }: ForgotPasswordBtnProps) => {
   const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
+    const { currentUser } = useOnboardingContext();
     
 
   const { setLogin } = useOnboardingContext();
@@ -55,18 +56,18 @@ const ForgotPasswordBtn = ({
     }
   };
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (initialLogin=false) => {
     try {
       const url = `${BaseUrl}${ChangePassword}`;
       const payload = inputValue.resetPassword;
-      const response = await axios.patch(url, payload);
+      const response = await axios.patch(url, {...payload, email: currentUser?.email, initialLogin});
       if (response.data.success) {
         setLogin(true);
       } else {
         console.log("An error occurred");
       }
-    } catch (error) {
-      console.error("Error resetting password:", error);
+    } catch (error:any) {
+      console.error("Error resetting password:", error.response);
     }
   };
   
@@ -78,11 +79,11 @@ const ForgotPasswordBtn = ({
     } else if (type === "forgotpassword" && action === "backToLogin") {
       navigateTo("login");
     } else if (type === "forgotpassword" && action === "resetpassword") {
-      await handleResetPassword();
+      await handleResetPassword(false);
     } else if (type === "updatepasword" && action === "backToLogin") {
       navigateTo("login");
     } else if (type === "updatepasword" && action === "savepassword") {
-      navigateTo("login");
+      handleResetPassword(true);
     }
   };
   

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -18,6 +18,7 @@ import ComplaintModal from "@src/screens/modals/messages/complaints";
 import CustomModal from "../CustomModal";
 import EmptyMessage from "./emptyMessage";
 import SearchInput from "./searchInput";
+import { Modalize } from "react-native-modalize";
 
 const ComplaintRenderItem = ({
   complainProps,
@@ -73,6 +74,8 @@ const ComplaintRenderItem = ({
 };
 
 const Complaints = () => {
+
+  const modalizeRef = useRef<Modalize>(null);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -95,6 +98,7 @@ const Complaints = () => {
           />
 
           <CustomModal
+          modalizeRef={modalizeRef}
             triggerItem={
               <>
                 <AntDesign name="plus" size={15} color={appColors.white} />

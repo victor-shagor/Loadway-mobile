@@ -1,10 +1,6 @@
-import { BaseUrl } from "@src/utils/Base_url";
 import axios from "./axiosClient";
 
-export const getCurrentUser = async (token: string) => {
-  // console.log("token", token);
-  const response = await axios.get(`${BaseUrl}/user/current`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getCurrentUser = async () => {
+  const response = await axios.get(`/user/current`);
   return response.data.data;
 };

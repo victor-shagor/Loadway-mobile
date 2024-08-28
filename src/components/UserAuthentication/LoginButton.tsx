@@ -30,15 +30,14 @@ const LoginButton = () => {
       }
       const url = `${BaseUrl}${LoginUser}`;
       const payload = loginDetails;
+      console.log(payload)
       const response = await axios.post(url, payload);
-      const validateLogin = response.data?.data?.firstLogin;
-      const currentUser = await getCurrentUser(
-        response.data?.data?.accessToken
-      );
       await AsyncStorage.setItem(
         "accessToken",
         response.data?.data?.accessToken
       );
+      const validateLogin = response.data?.data?.firstLogin;
+      const currentUser = await getCurrentUser();
       setCurrentUser(currentUser);
       if (validateLogin) {
         setLoading(false);
@@ -49,7 +48,7 @@ const LoginButton = () => {
       }
       // console.log(response.data.data.firstLogin);
     } catch (error: any) {
-      console.log("Error", error);
+      console.log("Error", error.response);
       setLoading(false);
       Toast.show({
         type: "error",

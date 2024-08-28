@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -7,8 +7,57 @@ import {
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import CustomButton from "@src/components/CustomButton";
+import axios from "@src/api/axiosClient";
+import Toast from "react-native-toast-message";
+import Pay from "./paystackWebView";
+import useOnboardingContext from "@src/utils/Context";
 
-export const ChatModal = () => {
+export const FundWalletModal = ({close}: {close: ()=> void}) => {
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [ref, setRef] = useState("");
+  const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
+  const { currentUser } = useOnboardingContext();
+
+  const clickBtn = async () => {
+    try {
+      setLoading(true);
+      const url = `/transaction/initialize`;
+      const payload = { amount: Number(amount), email: currentUser?.email };
+      const response = await axios.post(url, payload);
+      const authUrl = response?.data?.data?.authorization_url;
+      const reference = response?.data?.data?.reference
+      setRef(reference)
+      if (authUrl) {
+        setAuthorizationUrl(authUrl);
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Failed to retrieve authorization URL.",
+        });
+      }
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "An error occurred while processing your request.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (authorizationUrl) {
+    return (
+      <Pay
+      close={close}
+        amount={Number(amount)} 
+        payStackKey="pk_test_bbfd7557d09d937608350e54c02212beeb7c0cfd"
+        reference={ref}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -17,15 +66,24 @@ export const ChatModal = () => {
         <ThemedText type="title" style={{ color: appColors.deepGray }}>
         Enter an Amount
       </ThemedText>
-          <TextInput
-            keyboardType="default"
-            placeholder="Amount"
-            placeholderTextColor={appColors.lightGray}
-            style={[styles.input]}
-            spellCheck
-          />
+        <TextInput
+          keyboardType="numeric"
+          placeholder="Amount"
+          placeholderTextColor={appColors.lightGray}
+          inputMode="numeric"
+          style={[styles.input]}
+          spellCheck
+          value={amount}
+          onChangeText={(value)=>setAmount(value)}
+        />
         </View>
-        <CustomButton value={"Fund"} buttonStyle={styles.buttonStyle}/>
+        <CustomButton 
+          value={"Fund"}
+          buttonStyle={styles.buttonStyle} 
+          onPress={clickBtn}
+          isLoading={loading}
+          disable={(!amount|| Number(amount) < 100) ? true : false}
+        />
       </View>
     </View>
   );
@@ -53,12 +111,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
   },
-  selectedImage: {
-    width: 200,
-    height: 200,
-  },
   buttonStyle:{
     marginVertical: 30
   }
 });
-export default ChatModal;
+export default FundWalletModal;

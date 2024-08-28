@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
-import Home from "../screens/home";
+import Home from "@src/screens/home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Account from "../screens/account";
@@ -12,6 +12,7 @@ import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
 import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
+import React from "react";
 
 
 
