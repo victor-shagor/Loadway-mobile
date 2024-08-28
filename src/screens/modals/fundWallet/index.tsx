@@ -7,27 +7,27 @@ import {
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import CustomButton from "@src/components/CustomButton";
-import { BaseUrl } from "@src/utils/Base_url";
-import axios from "axios";
+import axios from "@src/api/axiosClient";
 import Toast from "react-native-toast-message";
 import Pay from "./paystackWebView";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useOnboardingContext from "@src/utils/Context";
 
-export const FundWalletModal = () => {
+export const FundWalletModal = ({close}: {close: ()=> void}) => {
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState("0");
+  const [amount, setAmount] = useState("");
+  const [ref, setRef] = useState("");
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
-
-  const data = AsyncStorage.getItem("accessToken")
+  const { currentUser } = useOnboardingContext();
 
   const clickBtn = async () => {
     try {
       setLoading(true);
-      const url = `${BaseUrl}/transaction/initialize`;
-      const payload = { amount: Number(amount), email: "tenant@gmail.com" };
+      const url = `/transaction/initialize`;
+      const payload = { amount: Number(amount), email: currentUser?.email };
       const response = await axios.post(url, payload);
-      const authUrl = response.data?.data?.authorization_url;
-      
+      const authUrl = response?.data?.data?.authorization_url;
+      const reference = response?.data?.data?.reference
+      setRef(reference)
       if (authUrl) {
         setAuthorizationUrl(authUrl);
       } else {
@@ -38,7 +38,6 @@ export const FundWalletModal = () => {
         });
       }
     } catch (error: any) {
-      console.log("Error", error);
       Toast.show({
         type: "error",
         text1: "Error",
@@ -52,9 +51,10 @@ export const FundWalletModal = () => {
   if (authorizationUrl) {
     return (
       <Pay
+      close={close}
         amount={Number(amount)} 
-        email="tenant@gmail.com" 
         payStackKey="pk_test_bbfd7557d09d937608350e54c02212beeb7c0cfd"
+        reference={ref}
       />
     );
   }
@@ -82,6 +82,7 @@ export const FundWalletModal = () => {
           buttonStyle={styles.buttonStyle} 
           onPress={clickBtn}
           isLoading={loading}
+          disable={(!amount|| Number(amount) < 100) ? true : false}
         />
       </View>
     </View>

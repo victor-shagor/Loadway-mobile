@@ -2,9 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { BaseUrl } from "@src/utils/Base_url";
 
-axios.defaults.baseURL = BaseUrl;
+const axiosInstance = axios.create({
+  baseURL: BaseUrl,
+  headers: {
+      "Content-Type": "application/json",
+  },
+});
 
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   async (
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
@@ -26,4 +31,4 @@ axios.interceptors.request.use(
   }
 );
 
-export default axios;
+export default axiosInstance;

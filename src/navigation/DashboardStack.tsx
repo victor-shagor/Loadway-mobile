@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
-import Home from "@src/screens/Home";
+import Home from "@src/screens/home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Account from "../screens/account";

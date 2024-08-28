@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -11,10 +11,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Entypo } from "@expo/vector-icons/";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
-import { quickLinksArray, recentChatArray } from "@src/screens/Home/data";
+import { quickLinksArray, recentChatArray } from "@src/screens/home/data";
 import CustomModal from "@src/components/CustomModal";
 import BuyElectricity from "@src/screens/modals/electricity";
 import { renderIcon } from "@src/components/common/renderIcon";
+import { Modalize } from "react-native-modalize";
 
 export type RootStackParamList = {
   GateAccess: undefined;
@@ -30,6 +31,8 @@ type NavigationProp = NativeStackNavigationProp<
 
 const QuickLinks = () => {
   const navigation = useNavigation<NavigationProp>();
+
+  const modalizeRef = useRef<Modalize>(null);
 
   return (
     <View style={styles.container}>
@@ -48,6 +51,7 @@ const QuickLinks = () => {
             <>
               {item.href === "Electricity" ? (
                 <CustomModal
+                modalizeRef={modalizeRef}
                   triggerItem={
                     <>
                       <View style={styles.iconContainer}>

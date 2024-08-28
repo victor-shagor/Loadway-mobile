@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -18,6 +18,7 @@ import ChatModal from "@src/screens/modals/messages/chat";
 import EmptyMessage from "./emptyMessage";
 import CustomModal from "../CustomModal";
 import SearchInput from "./searchInput";
+import { Modalize } from "react-native-modalize";
 
 const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
   return (
@@ -59,6 +60,8 @@ const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
 };
 
 const Chat = () => {
+
+  const modalizeRef = useRef<Modalize>(null);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -81,6 +84,7 @@ const Chat = () => {
           />
 
           <CustomModal
+          modalizeRef={modalizeRef}
             triggerItem={
               <>
                 <AntDesign name="plus" size={15} color={appColors.white} />

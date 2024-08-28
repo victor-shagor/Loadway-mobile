@@ -4,7 +4,7 @@ import { ThemedText } from "@src/components/ThemedText";
 import {
   recentActivityArray,
   RecentActivityProps,
-} from "../../screens/Home/data";
+} from "../../screens/home/data";
 import QuickLinks from "./quickLinks";
 import { appColors } from "@src/constants/colors";
 import Cards from "./cards";

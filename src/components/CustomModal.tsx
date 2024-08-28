@@ -20,6 +20,9 @@ interface CustomModalProps {
   triggerItemStyle?: StyleProp<ViewStyle>;
   modalTitle?: string;
   modalContent: ReactNode;
+  onOpen?: ()=>void
+  onClose?: ()=>void
+  modalizeRef: any
 }
 
 const ModalButton = ({ ...rest }: TouchableOpacityProps) => {
@@ -31,11 +34,12 @@ const CustomModal = ({
   triggerItemStyle,
   modalTitle,
   modalContent,
+  modalizeRef
 }: CustomModalProps) => {
-  const modalizeRef = useRef<Modalize>(null);
+  // const modalizeRef = useRef<Modalize>(null);
 
   const onOpen = () => {
-    modalizeRef.current?.open();
+       modalizeRef.current?.open();
   };
 
   return (
