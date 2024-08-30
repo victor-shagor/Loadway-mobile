@@ -11,6 +11,10 @@ import Cards from "./cards";
 import PushNotifications from "./pushNotifications";
 import { User } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
+import useOnboardingContext from "@src/utils/Context";
+import PayBillModal from "../bills/PayBillModal";
+
+
 
 interface RecentActivityPropsWithIndex {
   prop: RecentActivityProps;
@@ -61,6 +65,7 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
 };
 
 const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
+
   return (
     <FlatList
       data={recentActivityArray}
@@ -70,7 +75,7 @@ const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
       keyExtractor={(item) => item.activityTitle}
       ListHeaderComponent={
         <View style={{ gap: 15 }}>
-          <Cards currentUser={currentUser} />
+          <Cards  />
           <PushNotifications />
           <QuickLinks />
 

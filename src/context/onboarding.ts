@@ -26,7 +26,10 @@ type OnboardingContextType = {
     code: string;
     newPassword: string;
   }) => void;
+  payBillModal: boolean;
+  setPayBillModal: (value: boolean) => void;
 };
+
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
 
 export default OnboardingContext;

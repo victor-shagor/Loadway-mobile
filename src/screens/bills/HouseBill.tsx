@@ -30,7 +30,8 @@ const HouseBill = () => {
             </View>
           </View>
         );
-      })}
+      })};
+      
       <View className=" absolute bottom-0">
         <View className=" flex-row gap-2 px-[24.7] mb-3">
           <Text className="text-[#3F3C31] font-medium text-[15px]">

@@ -11,7 +11,7 @@ export type User = {
   };
 
   export type Wallet = {
-    balance: number
+    balance: number 
   }
 
   export type Activity = {

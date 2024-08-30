@@ -7,7 +7,7 @@ import useOnboardingContext from "@src/utils/Context";
 import { ForgotPasswordBtnProps } from "@src/utils/Types";
 import axios from "axios";
 import { BaseUrl } from "@src/utils/Base_url";
-import { requestPasswordChange, ChangePassword } from "@src/utils/AuthRoutes";
+import { requestPasswordChange, ChangePassword } from "@src/utils/APIRoutes";
 import AuthInputs from "@src/utils/AuthInputValues";
 
 
