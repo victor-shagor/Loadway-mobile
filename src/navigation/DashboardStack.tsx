@@ -1,21 +1,33 @@
-import { StyleSheet, View } from "react-native";
+import React from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
+import {
+  CancelEdit,
+  GoToEditScreen,
+  SaveEditedChanges,
+  UserImage,
+} from "@src/components/account/utils";
 import Home from "@src/screens/home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
-import Account from "../screens/account";
+import Profile from "../screens/profile";
 import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
 import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
-import React from "react";
-
-
-
+import UserManagement from "@src/screens/userManagement";
+import Account from "@src/screens/account";
+import Settings from "@src/screens/settings";
+import EditProfile from "@src/components/account/editProfile";
+import NotificationsPreferences from "@src/components/settings/notifications";
+import Communication from "@src/components/settings/communication";
+import Security from "@src/components/settings/security";
+import AppPreference from "@src/components/settings/appPreference";
+import Support from "@src/components/settings/support";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -52,6 +64,7 @@ const TabNavigation = () => {
           tabBarActiveTintColor: appColors.white,
           tabBarLabel: () => null,
           tabBarStyle: styles.tabBarStyles,
+          headerTitleAlign: "center",
         }}
       >
         <Tab.Screen
@@ -73,7 +86,7 @@ const TabNavigation = () => {
                 <Octicons name="credit-card" size={size} color={color} />
               </CustomTabIcon>
             ),
-            headerTitleAlign: 'center'
+            headerTitleAlign: "center",
           }}
           name="Bills"
           component={Bills}
@@ -101,8 +114,8 @@ const TabNavigation = () => {
               </CustomTabIcon>
             ),
           }}
-          name="Account"
-          component={Account}
+          name="Profile"
+          component={Profile}
         />
       </Tab.Navigator>
     </Host>
@@ -110,6 +123,7 @@ const TabNavigation = () => {
 };
 
 const DashboardStack = () => {
+  const { height } = useWindowDimensions();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -118,7 +132,7 @@ const DashboardStack = () => {
         options={{ headerShown: false, title: "" }}
       />
 
-      <Stack.Group>
+      <Stack.Group screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
           name="Emergency"
           component={Emergency}
@@ -132,13 +146,73 @@ const DashboardStack = () => {
         <Stack.Screen
           name="HouseBill"
           component={HouseBill}
-          options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
+          options={{ title: "Housing  bills" }}
         />
         <Stack.Screen
           name="PaymentHistory"
           component={PaymentHistory}
-          options={{ title: "Payment History", headerTitleAlign: 'center' }}
+          options={{ title: "Payment History" }}
         />
+
+        <Stack.Group>
+          <Stack.Screen
+            name="Account"
+            component={Account}
+            options={{
+              headerStyle: { height: height * 0.15 },
+              headerTitle: () => <UserImage />,
+              headerRight: () => <GoToEditScreen />,
+            }}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+              title: "Edit Profile",
+              headerLeft: () => <CancelEdit />,
+              headerRight: () => <SaveEditedChanges />,
+            }}
+          />
+        </Stack.Group>
+
+        <Stack.Screen
+          name="UserManagement"
+          component={UserManagement}
+          options={{ title: "UserManagement" }}
+        />
+
+        <Stack.Group>
+          <Stack.Screen
+            name="Settings"
+            component={Settings}
+            options={{ title: "Settings" }}
+          />
+          <Stack.Screen
+            name="Notifications"
+            component={NotificationsPreferences}
+            options={{ title: "Notifications Preferences" }}
+          />
+          <Stack.Screen
+            name="Communication"
+            component={Communication}
+            options={{ title: "Communication Preferences" }}
+          />
+          <Stack.Screen
+            name="Security"
+            component={Security}
+            options={{ title: "Password & Security" }}
+          />
+          <Stack.Screen
+            name="AppPreferences"
+            component={AppPreference}
+            options={{ title: "App Preferences" }}
+          />
+          <Stack.Screen
+            name="Support"
+            component={Support}
+            options={{ title: "Help & Support" }}
+          />
+        </Stack.Group>
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -4,7 +4,6 @@ import {
   TouchableOpacityProps,
   StyleProp,
   ViewStyle,
-  Dimensions,
   View,
   StyleSheet,
 } from "react-native";
@@ -13,16 +12,14 @@ import { Portal } from "react-native-portalize";
 import { ThemedText } from "./ThemedText";
 import { appColors } from "@src/constants/colors";
 
-const screenHeight = Dimensions.get("window").height;
-
 interface CustomModalProps {
   triggerItem: ReactNode;
   triggerItemStyle?: StyleProp<ViewStyle>;
   modalTitle?: string;
   modalContent: ReactNode;
-  onOpen?: ()=>void
-  onClose?: ()=>void
-  modalizeRef: any
+  onOpen?: () => void;
+  onClose?: () => void;
+  modalizeRef: any;
 }
 
 const ModalButton = ({ ...rest }: TouchableOpacityProps) => {
@@ -34,12 +31,12 @@ const CustomModal = ({
   triggerItemStyle,
   modalTitle,
   modalContent,
-  modalizeRef
+  modalizeRef,
 }: CustomModalProps) => {
   // const modalizeRef = useRef<Modalize>(null);
 
   const onOpen = () => {
-       modalizeRef.current?.open();
+    modalizeRef.current?.open();
   };
 
   return (

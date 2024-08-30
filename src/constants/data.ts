@@ -6,7 +6,7 @@ import {
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
-import { RootStackParamList } from "@src/components/home/quickLinks";
+import { QuickLinksRootStackParamList } from "@src/components/home/quickLinks";
 import { ChatProps, ComplaintProps } from "@src/models/chat";
 
 export type IconTypes =
@@ -24,7 +24,7 @@ export type IconProvider =
 export interface QuicklinkProps {
   icon: IconTypes;
   name: string;
-  href: keyof RootStackParamList;
+  href: keyof QuickLinksRootStackParamList;
   iconProvider: IconProvider;
 }
 
@@ -41,11 +41,11 @@ export interface RecentActivityProps {
   activityTitle: string;
   activityDate: string;
   activityAmount?: string;
-};
+}
 
 export type transactionProps = {
   name: string;
-  href: keyof RootStackParamList;
+  href: keyof QuickLinksRootStackParamList;
   price: string;
   date: string;
   code?: string;
@@ -164,7 +164,6 @@ export const UserComplaints: ComplaintProps[] = [
   },
 ];
 
-
 export const HousingBills: QuicklinkProps[] = [
   {
     icon: "unlock",
@@ -223,41 +222,41 @@ export const transactionData: transactionProps[] = [
     name: "Electricity",
     href: "Electricity",
     price: "-N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
   {
     name: "Wallet funding",
     href: "Electricity",
     price: "+N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
   {
     name: "Electricity",
     href: "Electricity",
     price: "-N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
 ];
 export const HousingBillData: HousingBillsnProps[] = [
   {
     name: "Rent",
     price: "N2,500,000",
-    color: '#805566'
+    color: "#805566",
   },
   {
     name: "Security",
     price: "N500,000",
-    color: '#D4CAA6'
+    color: "#D4CAA6",
   },
   {
     name: "Estate Dues",
     price: "N16,000",
-    color: '#C4A485'
+    color: "#C4A485",
   },
   {
     name: "Utilities",
     price: "N300,000",
-    color: '#FEF2C6'
+    color: "#FEF2C6",
   },
 ];
 
@@ -268,7 +267,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Wallet funding",
@@ -276,7 +275,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Electricity",
@@ -284,7 +283,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Wallet funding",
@@ -292,6 +291,6 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
 ];

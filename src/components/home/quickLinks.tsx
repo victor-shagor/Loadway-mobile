@@ -17,7 +17,7 @@ import BuyElectricity from "@src/screens/modals/electricity";
 import { renderIcon } from "@src/components/common/renderIcon";
 import { Modalize } from "react-native-modalize";
 
-export type RootStackParamList = {
+export type QuickLinksRootStackParamList = {
   GateAccess: undefined;
   Emergency: undefined;
   Message: undefined;
@@ -25,8 +25,8 @@ export type RootStackParamList = {
 };
 
 type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  keyof RootStackParamList
+  QuickLinksRootStackParamList,
+  keyof QuickLinksRootStackParamList
 >;
 
 const QuickLinks = () => {
@@ -51,7 +51,7 @@ const QuickLinks = () => {
             <>
               {item.href === "Electricity" ? (
                 <CustomModal
-                modalizeRef={modalizeRef}
+                  modalizeRef={modalizeRef}
                   triggerItem={
                     <>
                       <View style={styles.iconContainer}>

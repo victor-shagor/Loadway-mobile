@@ -6,6 +6,7 @@ import { appColors } from "@src/constants/colors";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import useOnboardingContext from "@src/utils/Context";
+import React from "react";
 
 const Home = () => {
   useFocusEffect(

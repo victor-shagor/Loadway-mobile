@@ -8,6 +8,7 @@ import Onboarding from "../screens/Onboarding/onboarding";
 import { SafeAreaView } from "../components/layout/safeAreaView";
 import UserAuthentication from "./UserAuthentication";
 import { useOnboarding } from "@src/context/onboarding";
+import React from "react";
 
 export type RootStackParamList = {
   login: undefined;

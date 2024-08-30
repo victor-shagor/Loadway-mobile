@@ -1,13 +1,11 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import Login from "../screens/UserAuthentication.tsx/Login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword from "../screens/UserAuthentication.tsx/ForgotPassword";
 import UpdatePassword from "../screens/UserAuthentication.tsx/UpdatePassword";
 import DashboardStack from "./DashboardStack";
-import { SafeAreaView } from "@src/components/layout/safeAreaView";
 import { useOnboarding } from "@src/context/onboarding";
-
 
 export type AuthenticationStackParamList = {
   login: any;

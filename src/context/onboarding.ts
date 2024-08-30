@@ -1,7 +1,7 @@
 import { User } from "@src/models/User";
 import { createContext, useContext } from "react";
 
-type OnboardingContextType = {
+export type OnboardingContextType = {
   setIsFirstLaunch: (value: boolean) => void;
   isFirstLaunch: boolean | null;
   color: string;
