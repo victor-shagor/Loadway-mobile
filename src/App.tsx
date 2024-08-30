@@ -7,12 +7,14 @@ import Toast from "react-native-toast-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { User } from "./models/User";
 import OnboardingContext from "./context/onboarding";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const [color, setColor] = useState<string>("#CECAC3");
   const [login, setLogin] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [payBillModal, setPayBillModal] = useState<boolean>(false);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
     password: string;
@@ -50,10 +52,14 @@ export default function App() {
           setChangePasswordDetails,
           resetPassword,
           setResetPassword,
+          payBillModal,
+          setPayBillModal,
         }}
       >
         <SafeAreaProvider>
-          <RootNavigation />
+          <GestureHandlerRootView>
+            <RootNavigation />
+          </GestureHandlerRootView>
         </SafeAreaProvider>
       </OnboardingContext.Provider>
       <Toast />

@@ -17,7 +17,7 @@ import Messages from "../screens/message";
 import Profile from "../screens/profile";
 import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
-import HouseBill from "@src/screens/bills/HouseBill";
+// import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
 import UserManagement from "@src/screens/userManagement";
 import Account from "@src/screens/account";
@@ -136,18 +136,18 @@ const DashboardStack = () => {
         <Stack.Screen
           name="Emergency"
           component={Emergency}
-          options={{ title: "Emergency" }}
+          options={{ title: "Emergency",  headerTitleAlign: 'center' }}
         />
         <Stack.Screen
           name="GateAccess"
           component={GateAccess}
-          options={{ title: "Gate Access" }}
+          options={{ title: "Gate Access",  headerTitleAlign: 'center' }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="HouseBill"
           component={HouseBill}
-          options={{ title: "Housing  bills" }}
-        />
+          options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
+        /> */}
         <Stack.Screen
           name="PaymentHistory"
           component={PaymentHistory}

@@ -10,6 +10,7 @@ const PushNotifications = () => {
         <View style={{ gap: 8 }}>
           <ThemedText
             type="default"
+            className="py-3"
             style={{ color: appColors.lightGray, fontWeight: 600 }}
           >
             Push Notifications

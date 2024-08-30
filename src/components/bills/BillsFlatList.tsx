@@ -8,7 +8,6 @@ import {
 import React from "react";
 import { QuicklinkProps } from "@src/constants/data";
 import { renderIcon } from "../common/renderIcon";
-import { ThemedText } from "../ThemedText";
 import { appColors } from "@src/constants/colors";
 
 const Item = ({ item }: { item: QuicklinkProps }) => {
@@ -16,15 +15,18 @@ const Item = ({ item }: { item: QuicklinkProps }) => {
     <View className="">
       <View className="">
         <TouchableOpacity
-          className=" items-center px-4"
+          className=" items-center px-4 flex-row gap-[8%]"
           //   onPress={() => navigation.navigate(item.href)}
         >
           <View style={styles.iconContainer}>
             {renderIcon(item.icon, item.iconProvider, 24, appColors.orange)}
           </View>
-          <ThemedText type="small" style={{ fontWeight: 600, fontSize: 12 }}>
+          <View>
+            <Text 
+             className=" text-[#191508] text-[18px] font-semibold text-center">
             {item.name}
-          </ThemedText>
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -32,7 +34,6 @@ const Item = ({ item }: { item: QuicklinkProps }) => {
 };
 
 const BillsFlatList = ({ data }: { data: QuicklinkProps[] }) => {
-  console.log(data);
   return (
     <View 
      className="mb-5 flex-row justify-center items-center"
@@ -41,7 +42,7 @@ const BillsFlatList = ({ data }: { data: QuicklinkProps[] }) => {
         horizontal
         data={data}
         renderItem={({ item }) => <Item item={item} />}
-        className="bg-white rounded-xl py-5 mx-4 mt-3 "
+        className="bg-white rounded-xl py-5 mx-4 mt-3 shadow-sm shadow-slate-700"
       />
     </View>
   );
