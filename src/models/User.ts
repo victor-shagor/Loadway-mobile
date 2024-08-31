@@ -15,9 +15,6 @@ export type Wallet = {
   balance: number;
 };
 
-  export type Wallet = {
-    balance: number 
-  }
 
   export type Activity = {
     activityType: ActivityType;
