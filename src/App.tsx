@@ -15,7 +15,7 @@ export default function App() {
   const [color, setColor] = useState<string>("#CECAC3");
   const [login, setLogin] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [payBillModal, setPayBillModal] = useState<boolean>(false);
+  const [bills, setBills] = useState<boolean>(false);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
     password: string;
@@ -53,8 +53,8 @@ export default function App() {
           setChangePasswordDetails,
           resetPassword,
           setResetPassword,
-          payBillModal,
-          setPayBillModal,
+          bills,
+          setBills
         }}
       >
         <SafeAreaProvider>

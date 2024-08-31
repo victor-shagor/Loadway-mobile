@@ -1,6 +1,6 @@
 import DashboardHeader from "../../components/home/header";
 import RecentActivity from "../../components/home/recentActivity";
-import { ScrollView, StatusBar, View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { appColors } from "@src/constants/colors";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
@@ -13,7 +13,7 @@ const Home = () => {
       StatusBar.setBarStyle("light-content");
     }, [])
   );
-  const { currentUser, payBillModal } = useOnboardingContext();
+  const { currentUser } = useOnboardingContext();
   return (
     <>
       <View className="relative h-screen">
@@ -24,7 +24,7 @@ const Home = () => {
           <DashboardHeader currentUser={currentUser} />
           <RecentActivity currentUser={currentUser} />
           <View className="static bottom-[10%] left-0">
-            {payBillModal && <PayBillModal />}
+            {/* {payBillModal && <PayBillModal />} */}
           </View>
       </View>
     </>

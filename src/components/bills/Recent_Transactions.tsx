@@ -108,7 +108,7 @@ const Recent_Transactions = () => {
       {userTransaction.length > 0 ? (
         <View
           className=" p-5 mx-5  px-5 bg-white rounded-xl 
-     divide-y divide-slate-500 mt-5 mb-[10%]"
+     divide-y divide-slate-200 mt-5 mb-[10%]"
         >
           {userTransaction.map((item, index) => {
             return (

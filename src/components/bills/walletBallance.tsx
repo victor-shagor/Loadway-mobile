@@ -1,18 +1,21 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import images from "@src/constants/images";
 import Button from "../home/Button";
 import useOnboardingContext from "@src/utils/Context";
+import CustomModal from "../CustomModal";
+import FundWalletModal from "@src/screens/modals/fundWallet";
+import { Modalize } from "react-native-modalize";
 
 
 
 const WalletBallance = () => {
-
+  const walletRef = useRef<Modalize>(null);
   const { currentUser } = useOnboardingContext();
 
   return (
     <>
-    <View className="bg-[#050402] rounded-2xl m-[3%] h-[25vh] relative mt-0">
+    <View className="bg-[#050402] rounded-2xl m-[3%] h-[21vh] relative mt-0">
       <View>
         <Text
           className=" font-normal text-[16px] text-white 
@@ -26,12 +29,19 @@ const WalletBallance = () => {
           className=" font-semibold text-[28px] text-white
           px-[6%] pt-[4%] mb-[10%]"
         >
-          &#8358;{currentUser?.wallet?.balance ?? 0}
+          &#8358;{currentUser?.wallet?.balance.toLocaleString() ?? 0}
         </Text>
       </View>
       <View className=" flex-row gap-5 px-[9%] pt-[2%]">
-        <Button text="Fund Wallet" />
-        <Button text="Pay Bills" />
+      <CustomModal
+            modalTitle="Fund Wallet"
+            modalizeRef={walletRef}
+              triggerItem={
+                <Button text="Fund Wallet" />
+              }
+              modalContent={<FundWalletModal close={()=>walletRef.current?.close()}/>}
+            />
+        {/* <Button text="Pay Bills" /> */}
       </View>
     </View>
   </>

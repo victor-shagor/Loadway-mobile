@@ -8,6 +8,7 @@ import { BaseUrl } from "@src/utils/Base_url";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
 import axios from "axios";
 import { getUserDueBills } from "@src/utils/APIRoutes";
+import { formatCamelCaseToTitleCase } from "@src/utils/helper";
 
 export type HousingBillsProps = {
   id: string;
@@ -63,7 +64,7 @@ const HousingBills = ({
             return (
               <View
                 key={index}
-                className=" bg-white shadow-sm shadow-slate-700 flex-row
+                className=" bg-white shadow-sm flex-row
                   justify-between items-center mx-[5%] px-[10%] py-[5%] mb-[2%]
                    rounded-xl
                  "
@@ -74,7 +75,7 @@ const HousingBills = ({
                      text-left
                      "
                   >
-                    {billName}
+                    {formatCamelCaseToTitleCase(billName)}
                   </Text>
                   <View
                     className={` ${

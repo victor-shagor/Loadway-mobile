@@ -4,7 +4,6 @@ import { HousingBillData } from "@src/constants/data";
 import { appColors } from "@src/constants/colors";
 
 const HouseBill = () => {
-  console.log(Platform.OS);
   return (
     <View className=" mt-[10%] h-[80vh]">
       {HousingBillData.map((data, index) => {
