@@ -11,6 +11,10 @@ export type User = {
     chats: [],
   };
 
+export type Wallet = {
+  balance: number;
+};
+
   export type Wallet = {
     balance: number 
   }
@@ -27,4 +31,3 @@ export type User = {
     'WALLET' = 'WALLET',
     'PASSWORD_CHANGE' = 'PASSWORD_CHANGE',
   }
-  

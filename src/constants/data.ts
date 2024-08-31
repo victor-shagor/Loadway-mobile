@@ -6,7 +6,7 @@ import {
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
-import { RootStackParamList } from "@src/components/home/quickLinks";
+import { QuickLinksRootStackParamList } from "@src/components/home/quickLinks";
 import { ChatProps, ComplaintProps } from "@src/models/chat";
 
 export type IconTypes =
@@ -24,7 +24,7 @@ export type IconProvider =
 export interface QuicklinkProps {
   icon: IconTypes;
   name: string;
-  href: keyof RootStackParamList;
+  href: keyof QuickLinksRootStackParamList;
   iconProvider: IconProvider;
 }
 export interface HousingBillsProps {
@@ -50,7 +50,7 @@ export interface RecentActivityProps {
 
 export type transactionProps = {
   name: string;
-  href: keyof RootStackParamList;
+  href: keyof QuickLinksRootStackParamList;
   price: string;
   date: string;
   code?: string;
@@ -183,6 +183,26 @@ export const UserComplaints: ComplaintProps[] = [
   },
 ];
 
+export const HousingBills: QuicklinkProps[] = [
+  {
+    icon: "unlock",
+    name: "Rent",
+    href: "GateAccess",
+    iconProvider: "AntDesign",
+  },
+  {
+    icon: "alert-circle",
+    name: "Security",
+    href: "Emergency",
+    iconProvider: "Feather",
+  },
+  {
+    icon: "chat-question-outline",
+    name: "Estate Dues",
+    href: "Message",
+    iconProvider: "MaterialCommunityIcons",
+  },
+]
 export const QuickLinkBillsData: QuicklinkProps[] = [
   {
     icon: "zap",
@@ -290,6 +310,24 @@ export const paymentHistoryData: transactionProps[] = [
     date: "30.02.2023",
     code: "CS-123456",
     time: "10:00am",
+  },
+];
+
+export const getHelpData: getHelp[] = [
+  {
+    icon: "plus-circle-outline",
+    title: "Fire Station",
+    desc: "Find Nearest Fire Station",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#FAA08D",
+  },
+  {
+    icon: "shield-cross-outline",
+    title: "Police Station",
+    desc: "Locate Your Area Police ",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#A0808C",
+  },
   },
 ];
 

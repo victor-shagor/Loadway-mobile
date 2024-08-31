@@ -1,20 +1,18 @@
-import { View, Dimensions  } from "react-native";
-import {useState} from "react";
+import { View, Dimensions } from "react-native";
+import { useState } from "react";
 import OnboardingComponent from "@src/components/onboarding/OnboardingComponent";
+import React from "react";
 
 const Onboarding = () => {
-
-
   const [position, setPosition] = useState(0);
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
   const calculatedPosition = screenWidth * (position / 100);
-  console.log(calculatedPosition,screenWidth)
-
+  console.log(calculatedPosition, screenWidth);
 
   return (
-    <View 
-     style={{ position: 'relative', right: position , flexDirection: 'row'}}
-     >
+    <View
+      style={{ position: "relative", right: position, flexDirection: "row" }}
+    >
       <OnboardingComponent
         bigText={`Seamless living at ${"\n"} your tips`}
         smallText={`Effortlessly manage your house/estate dues, get timely reminders for rent and service charges`}

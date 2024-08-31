@@ -1,11 +1,10 @@
 // import "expo-router/entry"
-import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { registerRootComponent } from "expo";
 import RootNavigation from "./navigation";
 import Toast from "react-native-toast-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useState } from "react";
 import { User } from "./models/User";
 import OnboardingContext from "./context/onboarding";
 import { GestureHandlerRootView } from "react-native-gesture-handler";

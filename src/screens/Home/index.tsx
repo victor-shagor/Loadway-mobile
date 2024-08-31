@@ -1,10 +1,11 @@
 import DashboardHeader from "../../components/home/header";
 import RecentActivity from "../../components/home/recentActivity";
-import { StatusBar, View } from "react-native";
+import {  StatusBar, View } from "react-native";
 import { appColors } from "@src/constants/colors";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect } from "react";
 import useOnboardingContext from "@src/utils/Context";
+import React from "react";
 import { getBills } from "@src/api/bills";
 
 const Home = () => {
@@ -29,7 +30,6 @@ const Home = () => {
 
   const { currentUser } = useOnboardingContext();
 
-  console.log(currentUser)
   return (
     <>
       <View className="relative h-screen">

@@ -1,12 +1,8 @@
-import { SafeAreaView } from "../../components/layout/safeAreaView"
-import {Text} from 'react-native'
+import React from "react";
+import ViewProfile from "@src/components/account/viewProfiile";
 
-const Account = () =>{
-    return(
-    <SafeAreaView>
-        <Text>Welcome to Account</Text>
-    </SafeAreaView>
-    )
-}
+const Account = () => {
+  return <ViewProfile />;
+};
 
-export default Account
+export default Account;

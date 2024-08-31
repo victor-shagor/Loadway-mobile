@@ -4,7 +4,6 @@ import {
   TouchableOpacityProps,
   StyleProp,
   ViewStyle,
-  Dimensions,
   View,
   StyleSheet,
 } from "react-native";
@@ -12,8 +11,6 @@ import { Modalize } from "react-native-modalize";
 import { Portal } from "react-native-portalize";
 import { ThemedText } from "./ThemedText";
 import { appColors } from "@src/constants/colors";
-
-const screenHeight = Dimensions.get("window").height;
 
 interface CustomModalProps {
   triggerItem: ReactNode;
@@ -42,7 +39,7 @@ const CustomModal = ({
   // const modalizeRef = useRef<Modalize>(null);
 
   const onOpen = () => {
-       modalizeRef.current?.open();
+    modalizeRef.current?.open();
   };
 
   return (

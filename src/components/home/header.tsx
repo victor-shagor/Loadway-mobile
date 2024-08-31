@@ -1,15 +1,12 @@
 import React from "react";
 import { StyleSheet, View, Platform } from "react-native";
-import {  } from "expo-status-bar";
+import {} from "expo-status-bar";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
+import { capitalizedFirstLetter } from "@src/utils/capitalizedLetter";
 
-const capitalizedFirstLetter = (word: string)=>
-  word.charAt(0).toUpperCase()
-  + word.slice(1)
-
-const DashboardHeader = ({currentUser}: any) => {
+const DashboardHeader = ({ currentUser }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerItemsWrapper}>

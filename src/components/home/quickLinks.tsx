@@ -19,7 +19,7 @@ import { Modalize } from "react-native-modalize";
 import { User } from "@src/models/User";
 import EmptyState from "../common/emptyState";
 
-export type RootStackParamList = {
+export type QuickLinksRootStackParamList = {
   GateAccess: undefined;
   Emergency: undefined;
   Message: undefined;
@@ -27,8 +27,8 @@ export type RootStackParamList = {
 };
 
 type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  keyof RootStackParamList
+  QuickLinksRootStackParamList,
+  keyof QuickLinksRootStackParamList
 >;
 
 const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
@@ -54,7 +54,7 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
             <>
               {item.href === "Electricity" ? (
                 <CustomModal
-                modalizeRef={modalizeRef}
+                  modalizeRef={modalizeRef}
                   triggerItem={
                     <>
                       <View style={styles.iconContainer}>

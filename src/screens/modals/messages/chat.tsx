@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import CustomButton from "@src/components/CustomButton";
@@ -48,18 +47,6 @@ export const ChatModal = () => {
             textAlignVertical="top"
             spellCheck
           />
-
-          {/* <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue) => setSelectedValue(itemValue)}
-            // style={styles.input}
-            // mode="dropdown"
-          >
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="javascript" />
-            <Picker.Item label="Python" value="python" />
-            <Picker.Item label="C++" value="cpp" />
-          </Picker> */}
 
           <View style={{ gap: 10 }}>
             <TouchableOpacity

@@ -5,8 +5,8 @@ import {
   Entypo,
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
+import { QuickLinksRootStackParamList } from "../../components/home/quickLinks";
 import images from "@src/constants/images";
-import { RootStackParamList } from "../../components/home/quickLinks";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
@@ -23,7 +23,7 @@ export type IconProvider =
 export interface QuicklinkProps {
   icon: IconTypes;
   name: string;
-  href: keyof RootStackParamList;
+  href: keyof QuickLinksRootStackParamList;
   iconProvider: IconProvider;
 }
 
