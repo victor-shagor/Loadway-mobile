@@ -1,220 +1,71 @@
+import useOnboardingContext from "@src/utils/Context";
 import React, { useRef } from "react";
-import {
-  StyleSheet,
-  FlatList,
-  View,
-  ImageBackground,
-  ImageSourcePropType,
-  Dimensions,
-} from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { appColors } from "@src/constants/colors";
-import { ThemedText } from "@src/components/ThemedText";
-import images from "@src/constants/images";
-import CustomModal from "@src/components/CustomModal";
-import FundWalletModal from "../../screens/modals/fundWallet";
-import { User } from "@src/models/User";
+import { StyleSheet, View, Dimensions, Text } from "react-native";
+import Button from "./Button";
+import CustomModal from "../CustomModal";
 import { Modalize } from "react-native-modalize";
+import FundWalletModal from "@src/screens/modals/fundWallet";
+import PayBillModal from "../bills/PayBillModal";
+
 
 const { width: screenWidth } = Dimensions.get("window");
 
-interface DashboardCardProps {
-  cardTag: string;
-  amount: number;
-  date: string;
-  bgColor: string;
-  bgImage?: ImageSourcePropType | string;
-}
-
-const RenderedCard = (prop: DashboardCardProps) => {
-  const modalizeRef = useRef<Modalize>(null);
+const Cards = () => {
+  const { currentUser, bills } = useOnboardingContext();
+  const walletRef = useRef<Modalize>(null);
+  const billRef = useRef<Modalize>(null);
   return (
     <>
-      <View
-        style={[styles.renderCardWrapper, { backgroundColor: prop.bgColor }]}
-      >
-        <ImageBackground
-          source={prop.bgImage as ImageSourcePropType}
-          resizeMode="contain"
-          style={styles.renderCardImage}
-        >
-          <View style={styles.renderCardHeaderContainer}>
-            <View style={styles.renderCardHeader}>
-              <ThemedText
-                type="small"
-                style={{ color: appColors.white, fontWeight: 600 }}
-              >
-                {prop.cardTag}
-              </ThemedText>
-            </View>
-
-            <CustomModal
+      <View className="bg-[#050402] rounded-2xl">
+        <View>
+          <Text
+            className=" font-normal text-[16px] text-white 
+           px-[6%] pt-[5%]"
+          >
+            Wallet Balance
+          </Text>
+        </View>
+        <View>
+          <Text
+            className=" font-semibold text-[28px] text-white
+            px-[6%] pt-[4%] mb-[10%]"
+          >
+            &#8358;{currentUser?.wallet?.balance.toLocaleString() ?? 0}
+          </Text>
+        </View>
+        <View className=" flex-row gap-5 px-[9%] pt-[2%]">
+        <CustomModal
             modalTitle="Fund Wallet"
-            modalizeRef={modalizeRef}
+            modalizeRef={walletRef}
               triggerItem={
-                <>
-                  <AntDesign name="plus" size={15} color={appColors.white} />
-                  <ThemedText
-                    type="small"
-                    style={{ color: appColors.white, fontWeight: "600" }}
-                  >
-                    Fund Wallet
-                  </ThemedText>
-                </>
+                <Button text="Fund Wallet" />
               }
-              triggerItemStyle={[styles.renderCardHeader, styles.cardButton]}
-              modalContent={<FundWalletModal close={()=>modalizeRef.current?.close()}/>}
+              modalContent={<FundWalletModal close={()=>walletRef.current?.close()}/>}
             />
-          </View>
-
-          <View style={{ gap: 6 }}>
-            <ThemedText
-              type="title"
-              style={{ color: appColors.white, fontWeight: 800, fontSize: 18 }}
-            >
-              {prop.amount}
-            </ThemedText>
-            <ThemedText style={{ color: appColors.white, fontSize: 12 }}>
-              {prop.date}
-            </ThemedText>
-          </View>
-        </ImageBackground>
+            {bills.length && 
+              <CustomModal
+              modalTitle="Pay Bills"
+              modalizeRef={billRef}
+                triggerItem={
+                  <Button text="Pay Bills" />
+                }
+                modalContent={<PayBillModal close={()=>billRef.current?.close()}/>}
+              />
+            }
+            
+        </View>
+        <View className=" bg-[#310D05] mt-[5%] rounded-b-2xl">
+          <Text
+            className=" font-normal text-[14px] text-white text-center
+            py-2
+           "
+          >
+            Total amount of Due Bills: &#8358;{currentUser?.duesSum.toLocaleString() ?? 0}
+          </Text>
+        </View>
       </View>
     </>
   );
 };
-
-const Cards = ({ currentUser }: { currentUser: User | null }) => {
-  const [indexDot, setIndexDot] = React.useState(0);
-
-  const onChangeDot = (event: any) => {
-    setIndexDot(Math.ceil(event.nativeEvent.contentOffset.x / screenWidth));
-  };
-
-  const dot = [
-    {
-      text: "dot1",
-    },
-    {
-      text: "dot2",
-    },
-  ];
-
-  const date = new Date();
-  const formattedDate = date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-
-  const cardArray: DashboardCardProps[] = [
-    {
-      cardTag: "Wallet Balance",
-      amount: currentUser?.wallet?.balance || 0.0,
-      date: `as at ${formattedDate}`,
-      bgColor: appColors.wine,
-      bgImage: images.icons.dashboardCard1,
-    },
-    {
-      cardTag: "Due Bills",
-      amount: currentUser?.duesSum || 0.0,
-      date: `as at ${formattedDate}`,
-      bgColor: appColors.black,
-      bgImage: images.icons.dashboardCard1,
-    },
-  ];
-
-  const renderPagination = React.useMemo(() => {
-    return (
-      <View style={styles.wrapPagination}>
-        {dot.map((_, index) => {
-          return (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                {
-                  backgroundColor:
-                    indexDot === index
-                      ? appColors.deepWine
-                      : "rgba(0, 0, 0, 0.3)",
-                  width: indexDot === index ? 28 : 10,
-                },
-              ]}
-            />
-          );
-        })}
-      </View>
-    );
-  }, [dot?.length, indexDot]);
-
-  return (
-    <>
-      <FlatList
-        horizontal
-        data={cardArray}
-        renderItem={({ item }) => (
-          <RenderedCard
-            cardTag={item.cardTag}
-            amount={item.amount}
-            date={item.date}
-            bgColor={item.bgColor}
-            bgImage={item.bgImage}
-          />
-        )}
-        keyExtractor={(item) => item.cardTag}
-        decelerationRate="fast"
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled={true}
-        onMomentumScrollEnd={onChangeDot}
-      />
-      {renderPagination}
-    </>
-  );
-};
-
-const styles = StyleSheet.create({
-  renderCardWrapper: {
-    height: 140,
-    width: screenWidth * 0.85,
-    marginHorizontal: 10,
-    borderRadius: 15,
-  },
-  renderCardImage: {
-    flex: 1,
-    justifyContent: "space-around",
-    paddingHorizontal: 15,
-  },
-  renderCardHeaderContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  renderCardHeader: {
-    borderRadius: 100,
-    backgroundColor: appColors.orange,
-    paddingVertical: 5,
-    paddingHorizontal: 7,
-  },
-  cardButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-    backgroundColor: "rgba(0,0,0, 0.7)",
-  },
-
-  wrapPagination: {
-    flexDirection: "row",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 2,
-    marginBottom: 18,
-  },
-  dot: {
-    height: 5,
-    borderRadius: 5,
-  },
-});
 
 export default Cards;

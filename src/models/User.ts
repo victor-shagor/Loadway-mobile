@@ -8,15 +8,23 @@ export type User = {
     profilePicture: string;
     activities: Activity[];
     duesSum: number
+    chats: [],
   };
 
   export type Wallet = {
-    balance: number
+    balance: number 
   }
 
   export type Activity = {
-    activityType: string;
+    activityType: ActivityType;
     title: string;
     createdAt: string;
+  }
+
+  export enum ActivityType {
+    'COMPLAINT' = 'COMPLAINT',
+    'GATE_ACCESS' = 'GATE_ACCESS',
+    'WALLET' = 'WALLET',
+    'PASSWORD_CHANGE' = 'PASSWORD_CHANGE',
   }
   

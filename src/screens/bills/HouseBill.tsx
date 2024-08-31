@@ -4,7 +4,6 @@ import { HousingBillData } from "@src/constants/data";
 import { appColors } from "@src/constants/colors";
 
 const HouseBill = () => {
-  console.log(Platform.OS);
   return (
     <View className=" mt-[10%] h-[80vh]">
       {HousingBillData.map((data, index) => {
@@ -30,7 +29,8 @@ const HouseBill = () => {
             </View>
           </View>
         );
-      })}
+      })};
+      
       <View className=" absolute bottom-0">
         <View className=" flex-row gap-2 px-[24.7] mb-3">
           <Text className="text-[#3F3C31] font-medium text-[15px]">

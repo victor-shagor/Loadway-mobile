@@ -8,7 +8,7 @@ import useOnboardingContext from "@src/utils/Context";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import { BaseUrl } from "@src/utils/Base_url";
-import { LoginUser } from "@src/utils/AuthRoutes";
+import { LoginUser } from "@src/utils/APIRoutes";
 import { getCurrentUser } from "@src/api/user";
 
 const LoginButton = () => {

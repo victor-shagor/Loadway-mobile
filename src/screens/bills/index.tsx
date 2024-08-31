@@ -1,44 +1,61 @@
 import {} from "expo-status-bar";
-import { SafeAreaView } from "../../components/layout/safeAreaView";
-import { Text, View, StatusBar, Image, ScrollView } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-// import { View, StatusBar, ScrollView } from "react-native";
-// import { useFocusEffect } from "@react-navigation/native";
+import {
+  View,
+  StatusBar,
+  ScrollView,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import WalletBallance from "@src/components/bills/walletBallance";
-import BillsList from "@src/components/bills/BillsList";
-import { HousingBills, OtherBills, transactionData } from '@src/constants/data';
-import SectionTitle from "@src/components/bills/SectionTitle";
-import Transaction from "@src/components/bills/Transaction"
-import 'react-native-gesture-handler';
-import { transactionProps } from "@src/constants/data";
-
+import QuickLinkBills from "@src/components/bills/QuickLinkBills";
+import { QuickLinkBillsData } from "@src/constants/data";
+import Recent_Transactions from "@src/components/bills/Recent_Transactions";
+import "react-native-gesture-handler";
+import HousingBills from "@src/components/bills/HousingBills";
 
 const Bills = () => {
+
+
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle("light-content");
     }, [])
   );
+
   return (
-    <View className="mt-5">
+    <View className="relative h-screen">
       <ScrollView>
         <StatusBar barStyle="light-content" />
-        <View className="mb-5">
+        <View className="mb-5 mt-[5%]">
           <WalletBallance />
-          <BillsList title="Housing Bills" data={HousingBills} />
-          {/* <BillsList title="Others" data={OtherBills} /> */}
+        </View>
+        <View>
+          <QuickLinkBills title="Quick Links" data={QuickLinkBillsData} />
+        </View>
+        <View>
+          {/* <HousingBills title="List of Housing Bills" data={HousingBillsData} /> */}
+          <HousingBills title="List of Housing Bills" />
         </View>
         <View className="mb-40">
-           <SectionTitle title="Recent Transactions" />
-           <Transaction  />
+          <Recent_Transactions  />
         </View>
       </ScrollView>
     </View>
   );
 };
 
-export default Bills;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+});
 
-// 3A0427
-// 191508
+export default Bills;

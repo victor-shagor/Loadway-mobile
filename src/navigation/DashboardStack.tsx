@@ -10,7 +10,7 @@ import Messages from "../screens/message";
 import Account from "../screens/account";
 import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
-import HouseBill from "@src/screens/bills/HouseBill";
+// import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
 import React from "react";
 
@@ -122,18 +122,18 @@ const DashboardStack = () => {
         <Stack.Screen
           name="Emergency"
           component={Emergency}
-          options={{ title: "Emergency" }}
+          options={{ title: "Emergency",  headerTitleAlign: 'center' }}
         />
         <Stack.Screen
           name="GateAccess"
           component={GateAccess}
-          options={{ title: "Gate Access" }}
+          options={{ title: "Gate Access",  headerTitleAlign: 'center' }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="HouseBill"
           component={HouseBill}
           options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
-        />
+        /> */}
         <Stack.Screen
           name="PaymentHistory"
           component={PaymentHistory}

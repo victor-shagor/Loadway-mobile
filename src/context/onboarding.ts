@@ -1,3 +1,4 @@
+import { HousingBillsProps } from "@src/components/bills/HousingBills";
 import { User } from "@src/models/User";
 import { createContext, useContext } from "react";
 
@@ -26,7 +27,10 @@ type OnboardingContextType = {
     code: string;
     newPassword: string;
   }) => void;
+  bills: HousingBillsProps[];
+  setBills: (value: any) => void;
 };
+
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
 
 export default OnboardingContext;

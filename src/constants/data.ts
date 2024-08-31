@@ -27,6 +27,11 @@ export interface QuicklinkProps {
   href: keyof RootStackParamList;
   iconProvider: IconProvider;
 }
+export interface HousingBillsProps {
+  bill_type: string;
+  status: "ALREADY DUE" | "DUE IN A FEW DAYS";
+  amount: number;
+}
 
 export interface RecentChatProps {
   image: ImageProps;
@@ -41,7 +46,7 @@ export interface RecentActivityProps {
   activityTitle: string;
   activityDate: string;
   activityAmount?: string;
-};
+}
 
 export type transactionProps = {
   name: string;
@@ -51,6 +56,20 @@ export type transactionProps = {
   code?: string;
   time?: string;
 };
+
+export interface getHelp {
+  icon: IconTypes;
+  title: string;
+  desc: string;
+  iconProvider: IconProvider;
+  color: string;
+}
+export interface getHelpDataContact {
+  icon: IconTypes;
+  title: string;
+  iconProvider: IconProvider;
+}
+
 // export type paymentHistoryProps = {
 //   name: string;
 //   href: keyof RootStackParamList;
@@ -164,57 +183,35 @@ export const UserComplaints: ComplaintProps[] = [
   },
 ];
 
-
-export const HousingBills: QuicklinkProps[] = [
-  {
-    icon: "unlock",
-    name: "Rent",
-    href: "GateAccess",
-    iconProvider: "AntDesign",
-  },
-  {
-    icon: "alert-circle",
-    name: "Security",
-    href: "Emergency",
-    iconProvider: "Feather",
-  },
-  {
-    icon: "chat-question-outline",
-    name: "Estate Dues",
-    href: "Message",
-    iconProvider: "MaterialCommunityIcons",
-  },
+export const QuickLinkBillsData: QuicklinkProps[] = [
   {
     icon: "zap",
-    name: "Utilities",
+    name: "Buy Electricity",
     href: "Electricity",
     iconProvider: "Feather",
   },
 ];
-export const OtherBills: QuicklinkProps[] = [
+
+export const HousingBillsData: HousingBillsProps[] = [
   {
-    icon: "zap",
-    name: "Electricity",
-    href: "GateAccess",
-    iconProvider: "Feather",
+    bill_type: "Rent",
+    status: "ALREADY DUE",
+    amount: 2500000,
   },
   {
-    icon: "wifi",
-    name: "Internet",
-    href: "Emergency",
-    iconProvider: "AntDesign",
+    bill_type: "Security",
+    status: "DUE IN A FEW DAYS",
+    amount: 20000,
   },
   {
-    icon: "chat-question-outline",
-    name: "Airtime",
-    href: "Message",
-    iconProvider: "MaterialCommunityIcons",
+    bill_type: "Estate Dues",
+    status: "DUE IN A FEW DAYS",
+    amount: 16000,
   },
   {
-    icon: "satellite-variant",
-    name: "Cable Tv",
-    href: "Electricity",
-    iconProvider: "MaterialCommunityIcons",
+    bill_type: "Utilities",
+    status: "DUE IN A FEW DAYS",
+    amount: 300000,
   },
 ];
 
@@ -223,41 +220,41 @@ export const transactionData: transactionProps[] = [
     name: "Electricity",
     href: "Electricity",
     price: "-N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
   {
     name: "Wallet funding",
     href: "Electricity",
     price: "+N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
   {
     name: "Electricity",
     href: "Electricity",
     price: "-N20,000",
-    date: "Jan 01 2023, 11:00AM"
+    date: "Jan 01 2023, 11:00AM",
   },
 ];
 export const HousingBillData: HousingBillsnProps[] = [
   {
     name: "Rent",
     price: "N2,500,000",
-    color: '#805566'
+    color: "#805566",
   },
   {
     name: "Security",
     price: "N500,000",
-    color: '#D4CAA6'
+    color: "#D4CAA6",
   },
   {
     name: "Estate Dues",
     price: "N16,000",
-    color: '#C4A485'
+    color: "#C4A485",
   },
   {
     name: "Utilities",
     price: "N300,000",
-    color: '#FEF2C6'
+    color: "#FEF2C6",
   },
 ];
 
@@ -268,7 +265,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Wallet funding",
@@ -276,7 +273,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Electricity",
@@ -284,7 +281,7 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
   },
   {
     name: "Wallet funding",
@@ -292,6 +289,42 @@ export const paymentHistoryData: transactionProps[] = [
     price: "-N20,000",
     date: "30.02.2023",
     code: "CS-123456",
-    time: "10:00am"
+    time: "10:00am",
+  },
+];
+
+export const getHelpData: getHelp[] = [
+  {
+    icon: "plus-circle-outline",
+    title: "Fire Station",
+    desc: "Find Nearest Fire Station",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#FAA08D",
+  },
+  {
+    icon: "shield-cross-outline",
+    title: "Police Station",
+    desc: "Locate Your Area Police ",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#A0808C",
+  },
+  {
+    icon: "medical-bag",
+    title: "Medical Assistance",
+    desc: "Find Nearest Hospitals",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#FCDE71",
+  },
+];
+export const getHelpDataContact: getHelpDataContact[] = [
+  {
+    icon: "phone",
+    title: "Call your security",
+    iconProvider: "Feather",
+  },
+  {
+    icon: "copy",
+    title: "Call your property manager",
+    iconProvider: "Feather",
   },
 ];
