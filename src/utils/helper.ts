@@ -7,7 +7,6 @@ export function formatCamelCaseToTitleCase(str: string) {
     return result.trim();
 }
 
-
 export function formatTimestamp(timestamp: any) {
     const date = new Date(timestamp);
   
@@ -17,4 +16,4 @@ export function formatTimestamp(timestamp: any) {
   
     return `${day}, ${month} ${year}`;
   }
-  
+ 

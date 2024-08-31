@@ -15,6 +15,10 @@ export type Wallet = {
   balance: number;
 };
 
+  export type Wallet = {
+    balance: number 
+  }
+
   export type Activity = {
     activityType: ActivityType;
     title: string;
@@ -27,4 +31,3 @@ export type Wallet = {
     'WALLET' = 'WALLET',
     'PASSWORD_CHANGE' = 'PASSWORD_CHANGE',
   }
-  

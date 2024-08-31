@@ -72,7 +72,8 @@ const RecentActivityItem = ({ item, index, currentUser }: RecentActivityPropsWit
 const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
   const activities = currentUser?.activities || [];
 
-  
+ 
+  const { activities } = currentUser || {};
 
   return (
     <FlatList

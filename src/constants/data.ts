@@ -328,6 +328,24 @@ export const getHelpData: getHelp[] = [
     iconProvider: "MaterialCommunityIcons",
     color: "#A0808C",
   },
+  },
+];
+
+export const getHelpData: getHelp[] = [
+  {
+    icon: "plus-circle-outline",
+    title: "Fire Station",
+    desc: "Find Nearest Fire Station",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#FAA08D",
+  },
+  {
+    icon: "shield-cross-outline",
+    title: "Police Station",
+    desc: "Locate Your Area Police ",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#A0808C",
+  },
   {
     icon: "medical-bag",
     title: "Medical Assistance",
