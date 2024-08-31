@@ -6,16 +6,27 @@ import QuickLinks from "./quickLinks";
 import { appColors } from "@src/constants/colors";
 import Cards from "./cards";
 import PushNotifications from "./pushNotifications";
-import { User } from "@src/models/User";
+import { Activity, ActivityType, User } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
 import EmptyState from "../common/emptyState";
+import { formatTimestamp } from "@src/utils/helper";
 
 interface RecentActivityPropsWithIndex {
-  prop: RecentActivityProps;
+  item: Activity;
   index: number;
+  currentUser: User | null
 }
 
-const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
+const RecentActivityItem = ({ item, index, currentUser }: RecentActivityPropsWithIndex) => {
+  const activities = currentUser?.activities || [];
+  const icon = item.activityType === ActivityType.COMPLAINT ? 'chat-question-outline' : 'unlock'
+  const iconProvider = item.activityType === ActivityType.COMPLAINT ? 'MaterialCommunityIcons' : 'AntDesign'
+  const formatString = (input: string) => {
+    const words = input.toLowerCase().split('_');
+    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    return capitalizedWords.join(' ');
+  }
+  
   return (
     <View style={styles.renderActivityItem}>
       <View
@@ -24,7 +35,7 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
           {
             flex: 1,
             borderBottomWidth:
-              index !== recentActivityArray.length - 1 ? 1 : undefined,
+              index !== activities?.length - 1 ? 1 : undefined,
           },
         ]}
       >
@@ -38,20 +49,20 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
         >
           <View style={styles.iconContainer}>
             {renderIcon(
-              prop.activityIcon,
-              prop.iconProvider,
+              icon,
+              iconProvider,
               24,
               appColors.iconWine
             )}
           </View>
           <View style={{ gap: 3 }}>
-            <ThemedText type="small">{prop.activityTag}</ThemedText>
-            <ThemedText type="title">{prop.activityTitle}</ThemedText>
+            <ThemedText type="small">{formatString(item.activityType)}</ThemedText>
+            <ThemedText type="title">{item.title}</ThemedText>
           </View>
         </View>
 
         <View style={{ gap: 2 }}>
-          <ThemedText type="default">{prop.activityDate}</ThemedText>
+          <ThemedText type="default">{formatTimestamp(item.createdAt)}</ThemedText>
         </View>
       </View>
     </View>
@@ -59,13 +70,17 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
 };
 
 const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
-  const { activities } = currentUser || {};
+  const activities = currentUser?.activities || [];
+
+  
 
   return (
     <FlatList
       data={activities}
       renderItem={({ item, index }) => (
-        <RecentActivityItem prop={item} index={index} />
+        <View style={{marginBottom: index === activities?.length -1 ? 30 : 0}}>
+        <RecentActivityItem item={item} index={index} currentUser={currentUser}/>
+        </View>
       )}
       keyExtractor={(item) => item.title}
       ListHeaderComponent={
@@ -108,6 +123,7 @@ const styles = StyleSheet.create({
   recentActivityHeader: {
     color: appColors.lightGray,
     fontWeight: "600",
+    marginBottom: 5
   },
   iconContainer: {
     backgroundColor: appColors.iconGray,
