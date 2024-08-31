@@ -5,173 +5,132 @@ import {
   Pressable,
   ScrollView,
   Alert,
-  FlatList,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { HousingBillsProps } from "./HousingBills";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
-import axios from "axios";
+import { getUserDueBills, payUserBills, createHeaders } from "@src/utils/APIRoutes";
+import { formatCamelCaseToTitleCase } from "@src/utils/helper";
 import { BaseUrl } from "@src/utils/Base_url";
-import { getUserDueBills } from "@src/utils/APIRoutes";
-import { createHeaders } from "@src/utils/APIRoutes";
-import { payUserBills } from "@src/utils/APIRoutes";
-import useOnboardingContext from "@src/utils/Context";
 
+const BillItem = ({ data, isSelected, onPress }: {
+  data: HousingBillsProps;
+  isSelected: boolean;
+  onPress: () => void;
+}) => {
+  const { billName, amountDue } = data;
 
+  return (
+    <TouchableOpacity onPress={onPress} key={data.id}>
+      <View className="flex-row justify-between mb-5">
+        <View className="flex-row">
+          <View
+            className={`w-4 h-4 mt-1 rounded-full border-2 ${isSelected ? "border-red-600 bg-red-600" : "border-gray-300"}`}
+          />
+          <Text className="text-gray-900 font-semibold text-16 pl-5">
+            {formatCamelCaseToTitleCase(billName)}
+          </Text>
+        </View>
+        <View>
+          <Text className="text-gray-900 font-semibold text-16">
+            ₦{amountDue.toLocaleString()}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
-const PayAllBillCTAComponent = () => {
-  const [housingBillsData, setHousingBillsData] = useState<
-    HousingBillsProps[] | []
-  >([]);
+const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
+  const [housingBillsData, setHousingBillsData] = useState<HousingBillsProps[]>([]);
+  const [selectedBillIds, setSelectedBillIds] = useState<string[]>([]);
 
-  const billsElement = useRef(null);
-  const [bills, setBills] = useState<string[]>([]);
-  const [isActive, setIsActive] = useState<boolean>(false);
-
-
-  const selectBillsHandler = (id: string) => {
-    setIsActive(!isActive);
-    setBills((prevSelectedBills: string[]) =>
-      prevSelectedBills.includes(id)
-        ? prevSelectedBills.filter((billId) => billId !== id)
-        : [...prevSelectedBills, id]
+  const toggleBillSelection = (id: string) => {
+    setSelectedBillIds((prev) =>
+      prev.includes(id) ? prev.filter((billId) => billId !== id) : [...prev, id]
     );
   };
 
-  const selectAllHandler = () => {
-    if (bills.length === housingBillsData.length) {
-      setBills([]);
+  const toggleSelectAll = () => {
+    if (selectedBillIds.length === housingBillsData.length) {
+      setSelectedBillIds([]);
     } else {
-      const allBillIds = housingBillsData.map((bill) => bill.id);
-      setBills(allBillIds);
+      setSelectedBillIds(housingBillsData.map((bill) => bill.id));
     }
   };
-  const {  setPayBillModal } = useOnboardingContext();
 
-  const payBillsApiRequest = async ()=>{
-      try {
-        const url = `${BaseUrl}${payUserBills}`;
-        const headers = await createHeaders();
-        const payload = {
-          bills
-        };
-        if (bills.length > 0) {
-          const response = await axios.post(url, payload, {headers});
-          if (response.status === 201) {
-            setPayBillModal(false);
-          }
-        }else{
-          Alert.alert('Please select a bill');
-        }
-      } catch (error) {
-        console.log(error)
-        Alert.alert('An error occurred. Please try again');
+  const handlePayBills = async () => {
+    if (selectedBillIds.length === 0) {
+      Alert.alert("Please select at least one bill to pay.");
+      return;
+    }
+
+    try {
+      const url = `${BaseUrl}${payUserBills}`;
+      const headers = await createHeaders();
+      const payload = { bills: selectedBillIds };
+
+      const response = await axios.post(url, payload, { headers });
+      if (response.status === 201) {
+        close();
       }
-  }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("An error occurred. Please try again.");
+    }
+  };
 
   useEffect(() => {
-    const getUserTransactions = async () => {
+    const fetchUserBills = async () => {
       try {
         const userAccessToken = await getAccessToken();
-        const headers = {
-          Authorization: userAccessToken,
-        };
+        const headers = { Authorization: userAccessToken };
         const url = `${BaseUrl}${getUserDueBills}`;
-        const response = await axios.get<{
-          data: HousingBillsProps[] | [];
-        }>(url, { headers });
-        const transactions: HousingBillsProps[] = response.data.data;
-        setHousingBillsData(transactions);
+        const response = await axios.get<{ data: HousingBillsProps[] }>(url, { headers });
+
+        setHousingBillsData(response.data.data);
       } catch (error) {
-        Alert.alert(
-          "An Error ocurred. Failed to fetch user transaction." + error
-        );
-        console.log("An error occured." + error);
+        console.error("Failed to fetch user transactions: ", error);
+        Alert.alert("An error occurred while fetching your bills.");
       }
     };
-    getUserTransactions();
+
+    fetchUserBills();
   }, []);
 
   return (
-    <>
-      <ScrollView>
-        <View className="w-screen h-[52vh] px-[5%] py-[5%] relative">
-          <View className="mb-[5%]">
-            <Pressable className=" flex-row" onPress={selectAllHandler}>
-              <View
-                className=" w-[5%] h-[80%] mt-[0.3vh] rounded-full border-2 border-[#31312F26]"
-                style={{
-                  borderColor:
-                    bills.length === housingBillsData.length
-                      ? "#CD3617"
-                      : "#31312F26",
-                  backgroundColor:
-                    bills.length === housingBillsData.length
-                      ? "#CD3617"
-                      : "transparent",
-                }}
-              ></View>
-              <Text className="text-[##151107] font-semibold text-[16px] pl-[5%]">
-                Select All
-              </Text>
-            </Pressable>
-          </View>
-          {housingBillsData.map((data, index) => {
-            const { billName, amountDue, id } = data;
-
-            const isSelected = bills.includes(id);
-
-            // Define styles based on selection state
-            const backgroundColor = isSelected ? "#CD3617" : "#F0F0F0"; // Change colors as needed
-            const borderColor = isSelected ? "#CD3617" : "#31312F26";
-
-            return (
-              <TouchableOpacity
-                // className=" flex-row"
-                onPress={() => selectBillsHandler(id)}
-                key={index}
-              >
-                <View className="flex-row justify-between mb-[5%]">
-                  <View className=" flex-row">
-                    <View
-                      className=" w-[5vw] h-[2.5vh] mt-[0.3vh] rounded-full
-                   border-2 border-[#31312F26] bg-red-300"
-                      id={id}
-                      ref={billsElement}
-                      style={{ backgroundColor, borderColor }}
-                    ></View>
-                    <Text className="text-[##151107] font-semibold text-[16px] pl-[5%]">
-                      {billName}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text className="text-[##151107] font-semibold text-[16px]">
-                      ₦{amountDue.toLocaleString()}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-          <View
-            className=" fixed top-[5%] w-full mx-[1%]
-           bg-[#F6411B] rounded-xl"
-          >
-            <TouchableOpacity onPress={payBillsApiRequest}>
-              <View>
-                <Text
-                  className=" text-center py-[4%] text-white text-[16px]
-                  font-medium
-                "
-                >
-                  Pay Bills
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+    <ScrollView>
+      <View className="w-screen px-5 py-5 mb-10">
+        <View className="mb-5">
+          <Pressable className="flex-row" onPress={toggleSelectAll}>
+            <View
+              className={`w-4 h-4 mt-1 rounded-full border-2 ${selectedBillIds.length === housingBillsData.length ? "border-red-600 bg-red-600" : "border-gray-300"}`}
+            />
+            <Text className="text-gray-900 font-semibold text-16 pl-5">
+              Select All
+            </Text>
+          </Pressable>
         </View>
-      </ScrollView>
-    </>
+        {housingBillsData.map((bill) => (
+          <BillItem
+            key={bill.id}
+            data={bill}
+            isSelected={selectedBillIds.includes(bill.id)}
+            onPress={() => toggleBillSelection(bill.id)}
+          />
+        ))}
+        <View className="fixed top-5 w-full mx-1 bg-red-600 rounded-xl">
+          <TouchableOpacity onPress={handlePayBills}>
+            <View>
+              <Text className="text-center py-4 text-white text-16 font-medium">
+                Pay Bills
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 

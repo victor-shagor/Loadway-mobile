@@ -6,7 +6,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import useOnboardingContext from "@src/utils/Context";
 import React from "react";
-import PayBillModal from "@src/components/bills/PayBillModal";
 
 const Home = () => {
   useFocusEffect(
@@ -14,7 +13,7 @@ const Home = () => {
       StatusBar.setBarStyle("light-content");
     }, [])
   );
-  const { currentUser, payBillModal } = useOnboardingContext();
+  const { currentUser } = useOnboardingContext();
   return (
     <>
       <View className="relative h-screen">
@@ -25,7 +24,7 @@ const Home = () => {
           <DashboardHeader currentUser={currentUser} />
           <RecentActivity currentUser={currentUser} />
           <View className="static bottom-[10%] left-0">
-            {payBillModal && <PayBillModal />}
+            {/* {payBillModal && <PayBillModal />} */}
           </View>
       </View>
     </>
