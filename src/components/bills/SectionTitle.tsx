@@ -33,36 +33,41 @@ const SectionTitle = ({
     }
   };
 
-
   return (
     <View>
       <View className=" flex-row justify-between px-[8vw]">
         <Text className=" text-[#66635A] font-semibold text-lg">{title}</Text>
         {title !== "Quick Links" ? (
-          <Pressable
-            disabled={payAllColor === "#CD3617" ? false : true}
-          >
-            {name === 'Pay all' ?  <CustomModal
-            modalTitle="Pay Bills"
-            modalizeRef={billRef}
-              triggerItem={
+          <Pressable disabled={payAllColor === "#CD3617" ? false : true}>
+            {name === "Pay all" ? (
+              <>
+                <CustomModal
+                  triggerDisabled={payAllColor === "#CD3617" ? false : true}
+                  modalTitle="Pay Bills"
+                  modalizeRef={billRef}
+                  triggerItem={
+                    <Text
+                      className="font-medium text-base"
+                      style={{ color: payAllColor }}
+                    >
+                      {name}
+                    </Text>
+                  }
+                  modalContent={
+                    <PayBillModal close={() => billRef.current?.close()} />
+                  }
+                />
+              </>
+            ) : (
+              <TouchableOpacity onPress={navigationHandler}>
                 <Text
-                className="font-medium text-base"
-                style={{ color: payAllColor }}
-              >
-                {name}
-              </Text>
-              }
-              modalContent={<PayBillModal close={()=>billRef.current?.close()}/>}
-            />:
-            <TouchableOpacity onPress={navigationHandler}>
-              <Text
-                className="font-medium text-base"
-                style={{ color: payAllColor }}
-              >
-                {name}
-              </Text>
-            </TouchableOpacity>}
+                  className="font-medium text-base"
+                  style={{ color: payAllColor }}
+                >
+                  {name}
+                </Text>
+              </TouchableOpacity>
+            )}
           </Pressable>
         ) : null}
       </View>

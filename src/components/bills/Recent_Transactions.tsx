@@ -5,8 +5,8 @@ import { appColors } from "@src/constants/colors";
 import Empty_bills_or_transaction from "./Empty_bills_or_transaction";
 import { BaseUrl } from "@src/utils/Base_url";
 import { getCurrentUser } from "@src/utils/APIRoutes";
-import axios from "axios";
 import SectionTitle from "./SectionTitle";
+import axiosInstance from "@src/api/axiosClient";
 
 export type forWhatProps = "payment_history" | "recent_transaction";
 export type transactionDataProps = {
@@ -50,9 +50,6 @@ const Item = ({ item }: { item: transactionDataProps }) => {
   const formattedTime = date.toISOString().split("T")[1].split(".")[0];
   const NewDate = `${formattedDate}, ${formattedTime}`;
 
-  console.log(`Formatted Date: ${formattedDate}`);
-  console.log(`Formatted Time: ${formattedTime}`);
-
   return (
     <View className=" flex-row justify-between py-5">
       <View
@@ -86,16 +83,14 @@ const Recent_Transactions = () => {
   useEffect(() => {
     const getUserTransactions = async () => {
       try {
-        const url = `${BaseUrl}${getCurrentUser}`;
-        const response = await axios.get<{
+        const response = await axiosInstance.get<{
           data: { transactions: transactionDataProps[] | [] };
-        }>(url);
+        }>(`${getCurrentUser}`);
         const transactions: transactionDataProps[] =
           response.data.data.transactions;
         setUserTransaction(transactions);
       } catch (error) {
         Alert.alert("An Error ocurred. Failed to fetch user transaction.");
-        console.log("An error occured." + error);
       }
     };
     getUserTransactions();

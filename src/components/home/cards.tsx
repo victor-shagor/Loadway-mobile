@@ -11,7 +11,7 @@ import PayBillModal from "../bills/PayBillModal";
 const { width: screenWidth } = Dimensions.get("window");
 
 const Cards = () => {
-  const { currentUser } = useOnboardingContext();
+  const { currentUser, bills } = useOnboardingContext();
   const walletRef = useRef<Modalize>(null);
   const billRef = useRef<Modalize>(null);
   return (
@@ -42,14 +42,17 @@ const Cards = () => {
               }
               modalContent={<FundWalletModal close={()=>walletRef.current?.close()}/>}
             />
-            <CustomModal
-            modalTitle="Pay Bills"
-            modalizeRef={billRef}
-              triggerItem={
-                <Button text="Pay Bills" />
-              }
-              modalContent={<PayBillModal close={()=>billRef.current?.close()}/>}
-            />
+            {bills.length && 
+              <CustomModal
+              modalTitle="Pay Bills"
+              modalizeRef={billRef}
+                triggerItem={
+                  <Button text="Pay Bills" />
+                }
+                modalContent={<PayBillModal close={()=>billRef.current?.close()}/>}
+              />
+            }
+            
         </View>
         <View className=" bg-[#310D05] mt-[5%] rounded-b-2xl">
           <Text

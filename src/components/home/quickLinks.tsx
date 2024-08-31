@@ -16,6 +16,8 @@ import CustomModal from "@src/components/CustomModal";
 import BuyElectricity from "@src/screens/modals/electricity";
 import { renderIcon } from "@src/components/common/renderIcon";
 import { Modalize } from "react-native-modalize";
+import { User } from "@src/models/User";
+import EmptyState from "../common/emptyState";
 
 export type RootStackParamList = {
   GateAccess: undefined;
@@ -29,10 +31,11 @@ type NavigationProp = NativeStackNavigationProp<
   keyof RootStackParamList
 >;
 
-const QuickLinks = () => {
+const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
   const navigation = useNavigation<NavigationProp>();
 
   const modalizeRef = useRef<Modalize>(null);
+  const { chats } = currentUser || {};
 
   return (
     <View style={styles.container}>
@@ -105,12 +108,17 @@ const QuickLinks = () => {
       <View style={{ gap: 8, marginBottom: 20 }}>
         <ThemedText
           type="default"
-          style={{ color: appColors.lightGray, fontWeight: 600 }}
-        >
+          style={{ color: appColors.lightGray, fontWeight: 600 }}>
           Recent Chats
         </ThemedText>
 
-        <FlatList
+        {(!chats || chats.length === 0) && (
+            <View >
+            <EmptyState text="No recent chat yet" />
+            </View>
+          )}
+
+        {(chats && chats?.length>0 )&& <FlatList
           data={recentChatArray}
           renderItem={({ item }) => (
             <View style={[styles.quickLinksContainer, { marginBottom: 8 }]}>
@@ -134,6 +142,7 @@ const QuickLinks = () => {
           keyExtractor={(item) => item.name}
           scrollEnabled={false}
         />
+        }
       </View>
     </View>
   );
