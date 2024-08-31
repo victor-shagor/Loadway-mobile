@@ -14,7 +14,7 @@ export default function App() {
   const [color, setColor] = useState<string>("#CECAC3");
   const [login, setLogin] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [bills, setBills] = useState<boolean>(false);
+  const [bills, setBills] = useState<any>([]);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
     password: string;

@@ -9,6 +9,7 @@ import { getAccessToken } from "@src/utils/RetrieveAccessToken";
 import axios from "axios";
 import { getUserDueBills } from "@src/utils/APIRoutes";
 import { formatCamelCaseToTitleCase } from "@src/utils/helper";
+import useOnboardingContext from "@src/utils/Context";
 
 export type HousingBillsProps = {
   id: string;
@@ -24,36 +25,13 @@ const HousingBills = ({
 }: {
   title: SectionTitleProps;
 }) => {
-  const [housingBillsData, setHousingBillsData] = useState<
-  HousingBillsProps[] | []
-  >([]);
+
+
+  const { bills: housingBillsData } = useOnboardingContext();
   
   const color = housingBillsData.length > 0 ? "#CD3617" : "#D1D0CE";
 
-  useEffect(() => {
-    const getUserTransactions = async () => {
-      try {
-        const userAccessToken = await getAccessToken();
-        const headers = {
-          Authorization: userAccessToken,
-        };
-        const url = `${BaseUrl}${getUserDueBills}`;
-        console.log(url);
-        const response = await axios.get<{
-          data: HousingBillsProps[] | [],
-        }>(url, { headers });
-        const transactions: HousingBillsProps[] = response.data.data;
-        setHousingBillsData(transactions);
-        console.log(response.data.data)
-      } catch (error) {
-        Alert.alert(
-          "An Error ocurred. Failed to fetch user transaction." + error
-        );
-        console.log("An error occured." + error);
-      }
-    };
-    getUserTransactions();
-  }, []);
+
   return (
     <View>
       <SectionTitle title={title} payAllColor={color} />

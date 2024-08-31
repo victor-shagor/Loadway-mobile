@@ -15,12 +15,12 @@ const GetHelp = ({data}:{data: getHelp[]}) => {
           return(
             <View 
              className=' flex-row gap-[3%] bg-[#D4D4D429] my-[1.5%] p-[4%]
-              item-center mx-[6%] rounded-lg shadow-sm shadow-slate-500
+              item-center mx-[6%] rounded-lg
              '
              key={index}
              >
               <View style={{ backgroundColor: color}}
-              className=' w-[12vw] h-[6vh] flex-row justify-center
+              className=' w-10 h-10 flex-row justify-center
                items-center rounded-full
               '
               >

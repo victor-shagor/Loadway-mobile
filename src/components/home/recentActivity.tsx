@@ -1,20 +1,14 @@
 import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
-import {
-  recentActivityArray,
-  RecentActivityProps,
-} from "../../screens/home/data";
+import { recentActivityArray, RecentActivityProps } from "../../screens/home/data";
 import QuickLinks from "./quickLinks";
 import { appColors } from "@src/constants/colors";
 import Cards from "./cards";
 import PushNotifications from "./pushNotifications";
 import { User } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
-import useOnboardingContext from "@src/utils/Context";
-import PayBillModal from "../bills/PayBillModal";
-
-
+import EmptyState from "../common/emptyState";
 
 interface RecentActivityPropsWithIndex {
   prop: RecentActivityProps;
@@ -65,23 +59,30 @@ const RecentActivityItem = ({ prop, index }: RecentActivityPropsWithIndex) => {
 };
 
 const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
+  const { activities } = currentUser || {};
 
   return (
     <FlatList
-      data={recentActivityArray}
+      data={activities}
       renderItem={({ item, index }) => (
         <RecentActivityItem prop={item} index={index} />
       )}
-      keyExtractor={(item) => item.activityTitle}
+      keyExtractor={(item) => item.title}
       ListHeaderComponent={
         <View style={{ gap: 15 }}>
-          <Cards  />
+          <Cards />
           <PushNotifications />
-          <QuickLinks />
+          <QuickLinks currentUser={currentUser}/>
 
           <ThemedText type="default" style={styles.recentActivityHeader}>
             Recent Activity
           </ThemedText>
+
+          {(!activities || activities.length === 0) && (
+            <View style={{ marginBottom: 10 }}>
+            <EmptyState text="No recent activity yet" />
+            </View>
+          )}
         </View>
       }
       contentContainerStyle={{ padding: 10, paddingBottom: 100 }}
@@ -106,8 +107,7 @@ const styles = StyleSheet.create({
   },
   recentActivityHeader: {
     color: appColors.lightGray,
-    fontWeight: 600,
-    marginBottom: 8,
+    fontWeight: "600",
   },
   iconContainer: {
     backgroundColor: appColors.iconGray,

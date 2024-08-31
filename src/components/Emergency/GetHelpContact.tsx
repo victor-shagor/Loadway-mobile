@@ -13,7 +13,6 @@ const GetHelpContact = () => {
         return (
           <View key={index} 
            className=" mb-[5%] bg-[#D4D4D429] rounded-lg mx-[6%] py-[6%]
-            shadow-sm shadow-slate-500
            ">
             <Text 
              className=" text-[#000000] font-medium text-[18px] mb-[6%]

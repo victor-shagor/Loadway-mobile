@@ -2,10 +2,9 @@ import { View, Text, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import AllTransactions from "@src/components/bills/AllTransactions";
 import { transactionDataProps } from "@src/components/bills/Recent_Transactions";
-import { BaseUrl } from "@src/utils/Base_url";
 import { getAllTransactions } from "@src/utils/APIRoutes";
-import axios from "axios";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
+import axiosInstance from "@src/api/axiosClient";
 
 
 const PaymentHistory = () => {
@@ -20,15 +19,10 @@ const PaymentHistory = () => {
       try {
         const pagination = "?page=1&limit=2000";
         const userAccessToken = await  getAccessToken();
-        const headers = {
-          Authorization:
-            userAccessToken
-        };
-        const url = `${BaseUrl}${getAllTransactions}${pagination}`;
-        console.log(url);
-        const response = await axios.get<{
+        const url = `${getAllTransactions}${pagination}`;
+        const response = await axiosInstance.get<{
             data: { data: transactionDataProps[] | [] };
-        }>(url, { headers });
+        }>(url);
         const transactions: transactionDataProps[] =
           response.data.data.data;
         setUserTransaction(transactions);
@@ -36,7 +30,6 @@ const PaymentHistory = () => {
         Alert.alert(
           "An Error ocurred. Failed to fetch user transaction." + error
         );
-        console.log("An error occured." + error);
       }
     };
     getUserTransactions();

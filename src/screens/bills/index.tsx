@@ -4,9 +4,10 @@ import {
   StatusBar,
   ScrollView,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import WalletBallance from "@src/components/bills/walletBallance";
 import QuickLinkBills from "@src/components/bills/QuickLinkBills";
 import { QuickLinkBillsData } from "@src/constants/data";
@@ -16,9 +17,6 @@ import HousingBills from "@src/components/bills/HousingBills";
 
 const Bills = () => {
 
-  useEffect(()=>{
-
-  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -61,6 +59,3 @@ const styles = StyleSheet.create({
 });
 
 export default Bills;
-
-// 3A0427
-// 191508

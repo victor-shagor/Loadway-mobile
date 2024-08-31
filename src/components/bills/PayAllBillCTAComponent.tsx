@@ -6,13 +6,15 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { HousingBillsProps } from "./HousingBills";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
 import { getUserDueBills, payUserBills, createHeaders } from "@src/utils/APIRoutes";
 import { formatCamelCaseToTitleCase } from "@src/utils/helper";
 import { BaseUrl } from "@src/utils/Base_url";
+import useOnboardingContext from "@src/utils/Context";
+import Toast from "react-native-toast-message";
+import { getBills, payBills } from "@src/api/bills";
 
 const BillItem = ({ data, isSelected, onPress }: {
   data: HousingBillsProps;
@@ -43,7 +45,9 @@ const BillItem = ({ data, isSelected, onPress }: {
 };
 
 const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
-  const [housingBillsData, setHousingBillsData] = useState<HousingBillsProps[]>([]);
+
+  const { bills: housingBillsData, setBills } = useOnboardingContext();
+
   const [selectedBillIds, setSelectedBillIds] = useState<string[]>([]);
 
   const toggleBillSelection = (id: string) => {
@@ -62,42 +66,31 @@ const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
 
   const handlePayBills = async () => {
     if (selectedBillIds.length === 0) {
-      Alert.alert("Please select at least one bill to pay.");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please select at least one bill to pay.",
+      });
       return;
     }
 
     try {
-      const url = `${BaseUrl}${payUserBills}`;
-      const headers = await createHeaders();
-      const payload = { bills: selectedBillIds };
-
-      const response = await axios.post(url, payload, { headers });
-      if (response.status === 201) {
+      const status = await payBills()
+      if (status === 201) {
+        const newBills = await getBills()
+        setBills(newBills)
         close();
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Bill Paid Successfully",
+        });
       }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("An error occurred. Please try again.");
+    } catch (error: any) {
+      const msg = error.response?.data?.message || 'An error occurred. Please try again.'
+      Alert.alert(msg);
     }
   };
-
-  useEffect(() => {
-    const fetchUserBills = async () => {
-      try {
-        const userAccessToken = await getAccessToken();
-        const headers = { Authorization: userAccessToken };
-        const url = `${BaseUrl}${getUserDueBills}`;
-        const response = await axios.get<{ data: HousingBillsProps[] }>(url, { headers });
-
-        setHousingBillsData(response.data.data);
-      } catch (error) {
-        console.error("Failed to fetch user transactions: ", error);
-        Alert.alert("An error occurred while fetching your bills.");
-      }
-    };
-
-    fetchUserBills();
-  }, []);
 
   return (
     <ScrollView>
@@ -112,7 +105,7 @@ const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
             </Text>
           </Pressable>
         </View>
-        {housingBillsData.map((bill) => (
+        {housingBillsData?.map((bill) => (
           <BillItem
             key={bill.id}
             data={bill}
@@ -120,8 +113,8 @@ const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
             onPress={() => toggleBillSelection(bill.id)}
           />
         ))}
-        <View className="fixed top-5 w-full mx-1 bg-red-600 rounded-xl">
-          <TouchableOpacity onPress={handlePayBills}>
+        <View className={`fixed top-5 w-full mx-1 ${housingBillsData?.length?`bg-red-500`:`bg-gray-200`} rounded-xl`}>
+          <TouchableOpacity onPress={handlePayBills} disabled={housingBillsData?.length? false : true}>
             <View>
               <Text className="text-center py-4 text-white text-16 font-medium">
                 Pay Bills
