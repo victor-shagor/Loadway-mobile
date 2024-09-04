@@ -28,6 +28,7 @@ import Communication from "@src/components/settings/communication";
 import Security from "@src/components/settings/security";
 import AppPreference from "@src/components/settings/appPreference";
 import Support from "@src/components/settings/support";
+import UserNotifications from "@src/screens/notifications";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -124,6 +125,7 @@ const TabNavigation = () => {
 
 const DashboardStack = () => {
   const { height } = useWindowDimensions();
+  
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -136,12 +138,12 @@ const DashboardStack = () => {
         <Stack.Screen
           name="Emergency"
           component={Emergency}
-          options={{ title: "Emergency",  headerTitleAlign: 'center' }}
+          options={{ title: "Emergency", headerTitleAlign: "center" }}
         />
         <Stack.Screen
           name="GateAccess"
           component={GateAccess}
-          options={{ title: "Gate Access",  headerTitleAlign: 'center' }}
+          options={{ title: "Gate Access", headerTitleAlign: "center" }}
         />
         {/* <Stack.Screen
           name="HouseBill"
@@ -152,6 +154,12 @@ const DashboardStack = () => {
           name="PaymentHistory"
           component={PaymentHistory}
           options={{ title: "Payment History" }}
+        />
+
+        <Stack.Screen
+          name="UserNotifications"
+          component={UserNotifications}
+          options={{ title: "Notifications" }}
         />
 
         <Stack.Group>
@@ -181,6 +189,7 @@ const DashboardStack = () => {
           options={{ title: "UserManagement" }}
         />
 
+        {/* PROFILE SETTINGS */}
         <Stack.Group>
           <Stack.Screen
             name="Settings"
@@ -241,4 +250,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
 export default DashboardStack;

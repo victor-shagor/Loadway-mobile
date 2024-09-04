@@ -1,35 +1,12 @@
 import React from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
-import Chat from "../../components/message/chat";
-import Complaints from "../../components/message/complaints";
+import { Tab, CustomTabLabel } from "../message";
+import GeneralNotifications from "@src/components/notifications/general";
+import UserAlerts from "@src/components/notifications/alerts";
 
-export const Tab = createMaterialTopTabNavigator();
-
-export const CustomTabLabel = ({
-  children,
-  active,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-}) => {
-  return (
-    <View
-      style={[
-        styles.tabBarItemStyle,
-        {
-          backgroundColor: active ? appColors.white : "transparent",
-        },
-      ]}
-    >
-      {children}
-    </View>
-  );
-};
-
-const Messages = () => {
+const UserNotifications = () => {
   const { height } = useWindowDimensions();
 
   return (
@@ -41,8 +18,8 @@ const Messages = () => {
       sceneContainerStyle={{ padding: 12 }}
     >
       <Tab.Screen
-        name="Chat"
-        component={Chat}
+        name="Notifications"
+        component={GeneralNotifications}
         options={{
           tabBarLabel: ({ focused }) => (
             <CustomTabLabel active={focused}>
@@ -50,15 +27,15 @@ const Messages = () => {
                 type="title"
                 style={{ color: focused ? appColors.orange : appColors.black }}
               >
-                Chat
+                General
               </ThemedText>
             </CustomTabLabel>
           ),
         }}
       />
       <Tab.Screen
-        name="Complaint"
-        component={Complaints}
+        name="Alerts"
+        component={UserAlerts}
         options={{
           tabBarLabel: ({ focused }) => (
             <CustomTabLabel active={focused}>
@@ -66,7 +43,7 @@ const Messages = () => {
                 type="title"
                 style={{ color: focused ? appColors.orange : appColors.black }}
               >
-                Complaint
+                Alerts
               </ThemedText>
             </CustomTabLabel>
           ),
@@ -82,14 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: appColors.gray,
     margin: 10,
   },
-  tabBarItemStyle: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    width: 175,
-    borderRadius: 8,
-    padding: 4,
-  },
 });
 
-export default Messages;
+export default UserNotifications;
