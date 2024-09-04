@@ -25,7 +25,13 @@ const images = {
   wallet:{
     walletIcon: require("@src/assets/icons/wallet.png"),
     bitcoin: require("@src/assets/gif/bitcoin.gif"),
-  }
+  },
+  gateAccess:{
+    avatar:  require("@src/assets/icons/cso.png"),
+  },
+  newRequest:{
+    avatar:  require("@src/assets/icons/cso.png"),
+  },
 };
 
 export default images;

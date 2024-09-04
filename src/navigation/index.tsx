@@ -21,6 +21,8 @@ export type AuthenticationStackParamList = {
   updatepassword: any;
 };
 
+
+
 const RootNavigation = () => {
   const context = useOnboarding();
 

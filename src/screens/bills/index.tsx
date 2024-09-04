@@ -14,6 +14,7 @@ import { QuickLinkBillsData } from "@src/constants/data";
 import Recent_Transactions from "@src/components/bills/Recent_Transactions";
 import "react-native-gesture-handler";
 import HousingBills from "@src/components/bills/HousingBills";
+import React from "react";
 
 const Bills = () => {
 
