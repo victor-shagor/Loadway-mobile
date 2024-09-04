@@ -3,6 +3,7 @@ import {
   Feather,
   MaterialCommunityIcons,
   Entypo,
+  FontAwesome,
 } from "@expo/vector-icons/";
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
@@ -13,13 +14,15 @@ export type IconTypes =
   | keyof typeof AntDesign.glyphMap
   | keyof typeof Feather.glyphMap
   | keyof typeof MaterialCommunityIcons.glyphMap
-  | keyof typeof Entypo.glyphMap;
+  | keyof typeof Entypo.glyphMap
+  | keyof typeof FontAwesome.glyphMap;
 
 export type IconProvider =
   | "AntDesign"
   | "Feather"
   | "MaterialCommunityIcons"
-  | "Entypo";
+  | "Entypo"
+  | "FontAwesome";
 
 export interface QuicklinkProps {
   icon: IconTypes;
@@ -202,7 +205,7 @@ export const HousingBills: QuicklinkProps[] = [
     href: "Message",
     iconProvider: "MaterialCommunityIcons",
   },
-]
+];
 export const QuickLinkBillsData: QuicklinkProps[] = [
   {
     icon: "zap",

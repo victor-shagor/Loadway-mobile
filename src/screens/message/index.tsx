@@ -3,8 +3,8 @@ import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
-import Chat from "../../components/message/chat";
-import Complaints from "../../components/message/complaints";
+import Chat from "@src/components/message/chat";
+import Complaints from "@src/components/message/complaints";
 
 export const Tab = createMaterialTopTabNavigator();
 

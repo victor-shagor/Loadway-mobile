@@ -22,10 +22,14 @@ const images = {
     cso: require("@src/assets/icons/cso.png"),
     complaint: require("@src/assets/icons/complaint-image.png"),
   },
-  wallet:{
+  wallet: {
     walletIcon: require("@src/assets/icons/wallet.png"),
     bitcoin: require("@src/assets/gif/bitcoin.gif"),
-  }
+  },
+  notification: {
+    security: require("@src/assets/icons/securityModaIImage.jpeg"),
+    leakage: require("@src/assets/icons/leakageModalImage.jpeg"),
+  },
 };
 
 export default images;

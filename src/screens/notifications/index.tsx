@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import { Tab, CustomTabLabel } from "../message";
