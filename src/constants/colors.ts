@@ -14,4 +14,5 @@ export const appColors = {
   pendingBrown: "rgba(254, 242, 198, 0.70)",
   closedGreen: "rgba(27, 246, 65, 0.18)",
   modalBackground: "rgba(212, 212, 212, 0.15)",
+  offWhite: '#7676801F',
 };

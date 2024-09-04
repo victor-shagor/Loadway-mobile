@@ -1,10 +1,16 @@
 import React from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
+
 import {
   CancelEdit,
   GoToEditScreen,
@@ -28,6 +34,8 @@ import Communication from "@src/components/settings/communication";
 import Security from "@src/components/settings/security";
 import AppPreference from "@src/components/settings/appPreference";
 import Support from "@src/components/settings/support";
+import NewRequest from "@src/screens/NewRequest";
+import { renderIcon } from "@src/components/common/renderIcon";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,6 +43,10 @@ const Stack = createStackNavigator();
 export type BillsStackParamList = {
   HouseBill: any;
   PaymentHistory: any;
+};
+
+export type NewRequestStackParamList = {
+  newrequest: any;
 };
 
 const CustomTabIcon = ({
@@ -136,12 +148,33 @@ const DashboardStack = () => {
         <Stack.Screen
           name="Emergency"
           component={Emergency}
-          options={{ title: "Emergency",  headerTitleAlign: 'center' }}
+          options={{ title: "Emergency", headerTitleAlign: "center" }}
         />
         <Stack.Screen
           name="GateAccess"
           component={GateAccess}
-          options={{ title: "Gate Access",  headerTitleAlign: 'center' }}
+          options={{
+            title: "Gate Access",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => alert("I can do All things through christ")} // Should be removed or edited. 
+                style={{ marginRight: 15 }}
+              >
+                {renderIcon(
+                  "filter-variant",
+                  "MaterialCommunityIcons",
+                  28,
+                  appColors.black
+                )}
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="newrequest"
+          component={NewRequest}
+          options={{ title: "New Request", headerTitleAlign: "center" }}
         />
         {/* <Stack.Screen
           name="HouseBill"
