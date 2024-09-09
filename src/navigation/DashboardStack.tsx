@@ -36,6 +36,7 @@ import AppPreference from "@src/components/settings/appPreference";
 import Support from "@src/components/settings/support";
 import NewRequest from "@src/screens/NewRequest";
 import { renderIcon } from "@src/components/common/renderIcon";
+import UserNotifications from "@src/screens/notifications";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -136,6 +137,7 @@ const TabNavigation = () => {
 
 const DashboardStack = () => {
   const { height } = useWindowDimensions();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -161,7 +163,7 @@ const DashboardStack = () => {
             headerTintColor: appColors.black,
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => alert("I can do All things through christ")} // Should be removed or edited. 
+                onPress={() => alert("I can do All things through christ")} // Should be removed or edited.
                 style={{ marginRight: 15 }}
               >
                 {renderIcon(
@@ -191,6 +193,12 @@ const DashboardStack = () => {
           options={{ title: "Payment History" }}
         />
 
+        <Stack.Screen
+          name="UserNotifications"
+          component={UserNotifications}
+          options={{ title: "Notifications" }}
+        />
+
         <Stack.Group>
           <Stack.Screen
             name="Account"
@@ -218,6 +226,7 @@ const DashboardStack = () => {
           options={{ title: "UserManagement" }}
         />
 
+        {/* PROFILE SETTINGS */}
         <Stack.Group>
           <Stack.Screen
             name="Settings"
@@ -278,4 +287,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
 export default DashboardStack;

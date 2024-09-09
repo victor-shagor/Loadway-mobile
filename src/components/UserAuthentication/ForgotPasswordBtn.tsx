@@ -10,7 +10,6 @@ import { BaseUrl } from "@src/utils/Base_url";
 import { requestPasswordChange, ChangePassword } from "@src/utils/APIRoutes";
 import AuthInputs from "@src/utils/AuthInputValues";
 
-
 const ForgotPasswordBtn = ({
   bg_color,
   border_color,
@@ -22,8 +21,7 @@ const ForgotPasswordBtn = ({
 }: ForgotPasswordBtnProps) => {
   const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
-    const { currentUser } = useOnboardingContext();
-    
+  const { currentUser } = useOnboardingContext();
 
   const { setLogin } = useOnboardingContext();
   const inputValue = AuthInputs();
@@ -34,8 +32,7 @@ const ForgotPasswordBtn = ({
     }
   };
 
-
-  const navigateTo = (route: 'login' | 'forgotpassword' | "updatepassword") => {
+  const navigateTo = (route: "login" | "forgotpassword" | "updatepassword") => {
     navigation.navigate(route);
   };
 
@@ -56,21 +53,25 @@ const ForgotPasswordBtn = ({
     }
   };
 
-  const handleResetPassword = async (initialLogin=false) => {
+  const handleResetPassword = async (initialLogin = false) => {
     try {
       const url = `${BaseUrl}${ChangePassword}`;
       const payload = inputValue.resetPassword;
-      const response = await axios.patch(url, {...payload, email: currentUser?.email, initialLogin});
+      const response = await axios.patch(url, {
+        ...payload,
+        email: currentUser?.email,
+        initialLogin,
+      });
       if (response.data.success) {
         setLogin(true);
       } else {
         console.log("An error occurred");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error resetting password:", error.response);
     }
   };
-  
+
   const CancelBtnHandler = async () => {
     if (type === "modal" && action === "cancelModal") {
       closeModal();
@@ -86,7 +87,6 @@ const ForgotPasswordBtn = ({
       handleResetPassword(true);
     }
   };
-  
 
   return (
     <View className="relative">

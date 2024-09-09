@@ -23,7 +23,7 @@ const ResetPasswordModal = ({
             <View className=" bg-[#FFFFFF] rounded-2xl">
               <Image source={images.onboarding.illustration} className=" m-5"/>
               <CustomText
-                heading="Forgot password?"
+                heading="Forgot Password?"
                 sub_heading="Enter your email address and we will send you reset instructions."
               />
               <EmailInput action='changePassword' />
@@ -41,7 +41,7 @@ const ResetPasswordModal = ({
                   bg_color="#F6411B"
                   border_color="#F6411B"
                   text_color="#FFFFFF"
-                  text={"send"}
+                  text={"Send"}
                   type="modal"
                   action="sendEmailToBackend"
                 />

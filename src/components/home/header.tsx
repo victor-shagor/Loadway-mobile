@@ -1,12 +1,21 @@
 import React from "react";
-import { StyleSheet, View, Platform } from "react-native";
-import {} from "expo-status-bar";
+import { StyleSheet, View, Platform, TouchableOpacity } from "react-native";
 import { Feather, FontAwesome } from "@expo/vector-icons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { User } from "@src/models/User";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import { capitalizedFirstLetter } from "@src/utils/capitalizedLetter";
 
-const DashboardHeader = ({ currentUser }: any) => {
+type NavigationProp = NativeStackNavigationProp<
+  { UserNotifications: undefined },
+  keyof { UserNotifications: undefined }
+>;
+
+const DashboardHeader = ({ currentUser }: { currentUser: User }) => {
+  const { navigate } = useNavigation<NavigationProp>();
+
   return (
     <View style={styles.container}>
       <View style={styles.headerItemsWrapper}>
@@ -21,10 +30,13 @@ const DashboardHeader = ({ currentUser }: any) => {
             Welcome to your zen
           </ThemedText>
         </View>
-        <View style={styles.notificationIconContainer}>
+        <TouchableOpacity
+          onPress={() => navigate("UserNotifications")}
+          style={styles.notificationIconContainer}
+        >
           <FontAwesome name="bell-o" size={24} color={appColors.white} />
           <View style={styles.notification} />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -22,7 +22,7 @@ const images = {
     cso: require("@src/assets/icons/cso.png"),
     complaint: require("@src/assets/icons/complaint-image.png"),
   },
-  wallet:{
+  wallet: {
     walletIcon: require("@src/assets/icons/wallet.png"),
     bitcoin: require("@src/assets/gif/bitcoin.gif"),
   },
