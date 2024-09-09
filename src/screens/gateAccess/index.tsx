@@ -1,11 +1,12 @@
-import React from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import React, { useCallback } from "react";
+import { StatusBar, StyleSheet, View, useWindowDimensions } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import All from "@src/components/GateAccess/All";
 import Upcoming from "@src/components/GateAccess/Upcoming";
 import Completed from "@src/components/GateAccess/Completed";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 
@@ -34,12 +35,17 @@ const CustomTabLabel = ({
 
 const GetAccessUI = () => {
   const { height } = useWindowDimensions();
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBarStyle("dark-content");
+    }, [])
+  );
 
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarIndicatorStyle: { display: "none" },
-        tabBarStyle: [styles.tabScreenStyles, { height: height * 0.05 }],
+        tabBarStyle: [styles.tabScreenStyles],
       }}
       sceneContainerStyle={{ padding: 12 }}
     >

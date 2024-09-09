@@ -29,7 +29,7 @@ const WalletBallance = () => {
           className=" font-semibold text-[28px] text-white
           px-[6%] pt-[4%] mb-[10%]"
         >
-          &#8358;{currentUser?.wallet?.balance.toLocaleString() ?? 0}
+          &#8358;{currentUser?.wallet?.balance.toLocaleString("en-US") ?? 0}
         </Text>
       </View>
       <View className=" flex-row gap-5 px-[9%] pt-[2%]">

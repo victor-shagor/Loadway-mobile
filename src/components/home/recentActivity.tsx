@@ -10,6 +10,7 @@ import { Activity, ActivityType, User } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
 import EmptyState from "../common/emptyState";
 import { formatTimestamp } from "@src/utils/helper";
+import useOnboardingContext from "@src/utils/Context";
 
 interface RecentActivityPropsWithIndex {
   item: Activity;
@@ -69,14 +70,15 @@ const RecentActivityItem = ({ item, index, currentUser }: RecentActivityPropsWit
   );
 };
 
-const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
+const RecentActivity = () => {
+  const { currentUser } = useOnboardingContext();
   const activities = currentUser?.activities || [];
 
   return (
     <FlatList
       data={activities}
       renderItem={({ item, index }) => (
-        <View style={{marginBottom: index === activities?.length -1 ? 30 : 0}}>
+        <View style={{marginBottom: index === activities?.length -1 ? 30 : 0 }}>
         <RecentActivityItem item={item} index={index} currentUser={currentUser}/>
         </View>
       )}
@@ -92,7 +94,7 @@ const RecentActivity = ({ currentUser }: { currentUser: User | null }) => {
           </ThemedText>
 
           {(!activities || activities.length === 0) && (
-            <View style={{ marginBottom: 10 }}>
+            <View style={{ marginBottom: 30 }}>
             <EmptyState text="No recent activity yet" />
             </View>
           )}
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: appColors.white,
     borderColor: appColors.gray,
+    borderRadius: 10,
     minHeight: 70,
     padding: 10,
   },

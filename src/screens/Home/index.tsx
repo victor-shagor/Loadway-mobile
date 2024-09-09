@@ -38,7 +38,7 @@ const Home = () => {
             backgroundColor={appColors.black}
           />
           <DashboardHeader currentUser={currentUser} />
-          <RecentActivity currentUser={currentUser} />
+          <RecentActivity />
           <View className="static bottom-[10%] left-0">
           </View>
       </View>

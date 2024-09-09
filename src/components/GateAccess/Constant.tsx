@@ -10,37 +10,52 @@ import ChatModal from "@src/screens/modals/messages/chat";
 import { appColors } from "@src/constants/colors";
 
 export type GateAccessDataProps = {
-  image: ImageProps | undefined;
-  name: string;
-  date: string | undefined;
+  firstName: string;
+  lastName: string;
+  createdAt: string | undefined;
   status: string;
   code: string;
 };
-const Constant = ({ image, name, status, date, code }: GateAccessDataProps) => {
-  const modalizeRef = useRef<Modalize>(null);
-
+const Constant = ({
+  firstName,
+  lastName,
+  status,
+  createdAt,
+  code,
+}: GateAccessDataProps) => {
+  const initials = `${firstName?.charAt(0)}${lastName?.charAt(0)}`;
+  const formatDate = (timestamp: any) => {
+    const date = new Date(timestamp);
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Intl.DateTimeFormat('en-US', options).format(date).replace(',', '');
+  };
+  
   return (
-      <View className="mb-[4vh] flex-row justify-between">
-        <View className="flex-row gap-5">
-          <Image source={image} className=" w-[10vw] h-[5vh]" />
-          <View>
-            <Text className=" font-semibold text-[#191508] text-[16px] mb-1">
-              {name}
-            </Text>
-            <Text className=" text-[#66635A] font-medium text-[12px]">
-              {status}
-            </Text>
-          </View>
+    <View className="mb-[4vh] flex-row justify-between">
+      <View className="flex-row gap-5">
+        <View className="w-[10vw] h-[5vh] rounded-full bg-[#D6D6D666] justify-center items-center">
+          <Text className="text-[#66635A] text-[18px] font-semibold">
+            {initials.toUpperCase()}
+          </Text>
         </View>
         <View>
-          <Text className=" text-[#66635A] font-medium text-[12px] mb-3">
-            {date}
+          <Text className=" font-semibold text-[#191508] text-[16px] mb-1">
+            {firstName} {lastName}
           </Text>
-          <View className="bg-[#D9CCD14D] rounded-lg px-4 py-1">
-            <Text className="text-[#3F3C31] font-bold text-[14px]">{code}</Text>
-          </View>
+          <Text className=" text-[#66635A] font-medium text-[12px]">
+            {status}
+          </Text>
         </View>
       </View>
+      <View>
+        <Text className=" text-[#66635A] font-medium text-[12px] mb-3">
+          {formatDate(createdAt)}
+        </Text>
+        <View className="bg-[#D9CCD14D] rounded-lg px-4 py-1">
+          <Text className="text-[#3F3C31] font-bold text-[14px]">{code}</Text>
+        </View>
+      </View>
+    </View>
   );
 };
 

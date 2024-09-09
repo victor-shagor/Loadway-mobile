@@ -21,7 +21,7 @@ const Bills = () => {
 
   useFocusEffect(
     useCallback(() => {
-      StatusBar.setBarStyle("light-content");
+      StatusBar.setBarStyle("dark-content");
     }, [])
   );
 

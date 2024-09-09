@@ -15,6 +15,7 @@ import { BaseUrl } from "@src/utils/Base_url";
 import useOnboardingContext from "@src/utils/Context";
 import Toast from "react-native-toast-message";
 import { getBills, payBills } from "@src/api/bills";
+import { getCurrentUser } from "@src/api/user";
 
 const BillItem = ({ data, isSelected, onPress }: {
   data: HousingBillsProps;
@@ -36,7 +37,7 @@ const BillItem = ({ data, isSelected, onPress }: {
         </View>
         <View>
           <Text className="text-gray-900 font-semibold text-16">
-            ₦{amountDue.toLocaleString()}
+            ₦{amountDue.toLocaleString("en-US")}
           </Text>
         </View>
       </View>
@@ -46,7 +47,7 @@ const BillItem = ({ data, isSelected, onPress }: {
 
 const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
 
-  const { bills: housingBillsData, setBills } = useOnboardingContext();
+  const { bills: housingBillsData, setBills, setCurrentUser } = useOnboardingContext();
 
   const [selectedBillIds, setSelectedBillIds] = useState<string[]>([]);
 
@@ -73,12 +74,15 @@ const PayAllBillCTAComponent = ({ close }: { close: () => void }) => {
       });
       return;
     }
-
     try {
-      const status = await payBills()
+      const status = await payBills({
+        bills: selectedBillIds
+      })
       if (status === 201) {
         const newBills = await getBills()
         setBills(newBills)
+        const user = await getCurrentUser()
+        setCurrentUser(user)
         close();
         Toast.show({
           type: "success",

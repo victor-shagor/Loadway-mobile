@@ -9,7 +9,7 @@ export const getBills = async () => {
   return response.data.data;
 };
 
-export const payBills = async () => {
-    const response = await axios.post(`${payUserBills}`);
+export const payBills = async (data: any) => {
+    const response = await axios.post(`${payUserBills}`, data);
     return response.status;
   };

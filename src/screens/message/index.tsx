@@ -36,7 +36,7 @@ const Messages = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarIndicatorStyle: { display: "none" },
-        tabBarStyle: [styles.tabScreenStyles, { height: height * 0.05 }],
+        tabBarStyle: [styles.tabScreenStyles],
       }}
       sceneContainerStyle={{ padding: 12 }}
     >
