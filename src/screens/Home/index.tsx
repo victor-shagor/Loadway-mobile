@@ -30,11 +30,15 @@ const Home = () => {
 
   return (
     <>
-      <View className="relative min-h-screen">
-        <StatusBar barStyle="light-content" backgroundColor={appColors.black} />
-        <DashboardHeader currentUser={currentUser as User} />
-        <RecentActivity currentUser={currentUser} />
-        <View className="static bottom-[10%] left-0"></View>
+      <View className="relative h-screen">
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor={appColors.black}
+          />
+          <DashboardHeader currentUser={currentUser as User} />
+          <RecentActivity />
+          <View className="static bottom-[10%] left-0">
+          </View>
       </View>
     </>
   );

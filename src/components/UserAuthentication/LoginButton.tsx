@@ -30,7 +30,6 @@ const LoginButton = () => {
       }
       const url = `${BaseUrl}${LoginUser}`;
       const payload = loginDetails;
-      console.log(payload)
       const response = await axios.post(url, payload);
       await AsyncStorage.setItem(
         "accessToken",

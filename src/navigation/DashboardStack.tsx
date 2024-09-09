@@ -150,7 +150,8 @@ const DashboardStack = () => {
         <Stack.Screen
           name="Emergency"
           component={Emergency}
-          options={{ title: "Emergency", headerTitleAlign: "center" }}
+          options={{ title: "Emergency", headerTitleAlign: "center", headerBackTitleVisible: false,
+            headerTintColor: appColors.black }}
         />
         <Stack.Screen
           name="GateAccess"
@@ -158,6 +159,8 @@ const DashboardStack = () => {
           options={{
             title: "Gate Access",
             headerTitleAlign: "center",
+            headerBackTitleVisible: false,
+            headerTintColor: appColors.black,
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => alert("I can do All things through christ")} // Should be removed or edited.
@@ -176,7 +179,8 @@ const DashboardStack = () => {
         <Stack.Screen
           name="newrequest"
           component={NewRequest}
-          options={{ title: "New Request", headerTitleAlign: "center" }}
+          options={{ title: "New Request", headerTitleAlign: "center", headerBackTitleVisible: false,
+            headerTintColor: appColors.black }}
         />
         {/* <Stack.Screen
           name="HouseBill"

@@ -48,6 +48,21 @@ export const FundWalletModal = ({close}: {close: ()=> void}) => {
     }
   };
 
+  const handleChange = (value: string) => {
+    // Remove any commas before updating the state
+    const rawValue = value.replace(/,/g, '');
+
+    // Only allow numeric values
+    if (!isNaN(Number(rawValue))) {
+      setAmount(rawValue);
+    }
+  };
+
+  const formatAmount = (value: string) => {
+    // Add commas to the number
+    return value ? Number(value).toLocaleString('en-US') : '';
+  };
+
   if (authorizationUrl) {
     return (
       <Pay
@@ -73,8 +88,8 @@ export const FundWalletModal = ({close}: {close: ()=> void}) => {
           inputMode="numeric"
           style={[styles.input]}
           spellCheck
-          value={amount}
-          onChangeText={(value)=>setAmount(value)}
+          value={formatAmount(amount)}
+          onChangeText={handleChange}
         />
         </View>
         <CustomButton 

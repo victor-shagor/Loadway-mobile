@@ -5,21 +5,44 @@ import {
   Image,
   TouchableOpacity,
   Button,
-  Alert
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import images from "@src/constants/images";
 import { renderIcon } from "../common/renderIcon";
 import { appColors } from "@src/constants/colors";
+import { useNavigation } from "@react-navigation/native";
 
 const AccessSent = ({
   modalVisible,
   setModalVisible,
+  access,
+  handleAddToFrequent,
 }: {
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
+  access: any;
+  handleAddToFrequent: () => void;
 }) => {
-  console.log("Hello world");
+  const [loading, setLoading] = useState(false);
+  const {navigate} = useNavigation();
+
+  const navigateToRequests = () => {
+    navigate("GateAccess");
+  };
+
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      await handleAddToFrequent();
+      setModalVisible(false);
+      navigateToRequests();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View>
       <Modal visible={modalVisible} transparent animationType="slide">
@@ -39,7 +62,10 @@ const AccessSent = ({
                 </Text>
                 <TouchableOpacity
                   className=" absolute right-[5]"
-                  onPress={() => setModalVisible(false)}
+                  onPress={() => {
+                    setModalVisible(false);
+                    navigateToRequests();
+                  }}
                 >
                   {renderIcon(
                     "close",
@@ -66,19 +92,25 @@ const AccessSent = ({
                     />
                   </View>
                   <Text className="text-[#191508] text-[16px] font-semibold text-center mt-2">
-                    John Davis
+                    {access?.firstName} {access?.lastName}
                   </Text>
                   <Text className="text-[#66635A] text-[15px] font-medium text-center my-2">
-                    08098765432
+                    {access?.phoneNumber}
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity className="bg-[#F6411B] mx-3 py-2 rounded-lg mb-[10%] mt-[20%]">
-                <Button
-                  title="Add to frequent list"
-                  color="#FFFFFF"
-                  onPress={() => Alert.alert('Added to frequent list')}
-                />
+              <TouchableOpacity
+                className="bg-[#F6411B] mx-3 py-4 rounded-lg mb-[10%] mt-[20%]"
+                disabled={loading}
+                onPress={onSubmit}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text className="text-white text-center font-semibold">
+                    Add to frequent list
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

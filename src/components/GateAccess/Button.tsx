@@ -16,14 +16,14 @@ const Button = () => {
 
   return (
       <View
-          className="bg-[#F6411B] w-[30vw] py-[1.5vh]
+          className="bg-[#F6411B] w-[45vw] py-[1.5vh]
        rounded-3xl absolute bottom-[30vh] right-5"
         >
           <TouchableOpacity className="flex-row justify-center items-center"
           onPress={()=>navigation.navigate('newrequest')}
           >
             <AntDesign name="plus" size={15} color={appColors.white} />
-            <ThemedText style={{ color: appColors.white }}>New Chat</ThemedText>
+            <ThemedText style={{ color: appColors.white, marginLeft: 5 }}>Create Request</ThemedText>
           </TouchableOpacity>
         </View>
   )

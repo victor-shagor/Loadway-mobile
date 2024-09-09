@@ -16,4 +16,18 @@ export function formatTimestamp(timestamp: any) {
   
     return `${day}, ${month} ${year}`;
   }
+
+  export const formatNarration = (input: string): string => {
+    if(!input){
+      return ''
+    }
+    // Split the string based on camel case pattern or uppercase letters
+    const formatted = input.replace(/([a-z])([A-Z])/g, "$1 $2");
+  
+    // Capitalize each word in the split string
+    return formatted
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
  

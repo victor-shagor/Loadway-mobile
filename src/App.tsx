@@ -8,12 +8,15 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { User } from "./models/User";
 import OnboardingContext from "./context/onboarding";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import RequestContext from "./context/gateRequest";
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const [color, setColor] = useState<string>("#CECAC3");
   const [login, setLogin] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [frequents, setFrequent] = useState<any>([]);
+  const [refetch, setRefetch] = useState<any>(false);
   const [bills, setBills] = useState<any>([]);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
@@ -56,11 +59,13 @@ export default function App() {
           setBills
         }}
       >
+        <RequestContext.Provider value={{frequents, setFrequent, refetch, setRefetch}}>
         <SafeAreaProvider>
           <GestureHandlerRootView>
             <RootNavigation />
           </GestureHandlerRootView>
         </SafeAreaProvider>
+        </RequestContext.Provider>
       </OnboardingContext.Provider>
       <Toast />
     </>

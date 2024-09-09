@@ -3,6 +3,7 @@ import React from "react";
 import { renderIcon } from "../common/renderIcon";
 import { appColors } from "@src/constants/colors";
 import { transactionDataProps } from "./Recent_Transactions";
+import { formatNarration } from "@src/utils/helper";
 
 const Item = ({ item }: { item: transactionDataProps }) => {
   const color =
@@ -40,10 +41,10 @@ const Item = ({ item }: { item: transactionDataProps }) => {
       </View>
       <View className=" pl-5  w-[40vw]">
         <Text className=" text-[#191508] text-[16px] font-semibold pb-1">
-          {item.narration}
+          {formatNarration(item.narration)}
         </Text>
         <Text className=" text-[#66635A] text-[12px] font-medium">
-          {item.reference}
+          {item.reference?.substring(0, 5)||''}
         </Text>
         <Text
           className=" text-[#66635A] text-[10px] font-medium 
@@ -55,7 +56,7 @@ const Item = ({ item }: { item: transactionDataProps }) => {
       </View>
       <View>
         <Text className="" style={{ color }}>
-          &#8358;{item.amount.toLocaleString()}
+          &#8358;{item.amount.toLocaleString("en-US")}
         </Text>
       </View>
     </View>

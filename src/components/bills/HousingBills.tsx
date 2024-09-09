@@ -77,7 +77,7 @@ const HousingBills = ({
                 </View>
                 <View>
                   <Text className=" font-medium text-[#050402] text-[14px]">
-                    &#8358;{amountDue.toLocaleString()}
+                    &#8358;{amountDue.toLocaleString("en-US")}
                   </Text>
                 </View>
               </View>

@@ -1,46 +1,51 @@
-import { View, ScrollView } from "react-native";
-import React from "react";
+import { View, ScrollView, Text } from "react-native";
+import React, { useEffect, useState } from "react";
 import Constant from "./Constant";
 import Button from "./Button";
-import images from "@src/constants/images";
-
+import { getGateRequests } from "@src/api/gateRequest";
+import { useRequestContext } from "@src/context/gateRequest";
 
 const Upcoming = () => {
-  const TemporaryData = [
-    {
-      id: 1,
-      name: "David John",
-      status: "Upcoming",
-      date: "03, May 2023",
-      code: "122ABC",
-      image: images.gateAccess.avatar,
-    },
-    {
-      id: 2,
-      name: "John Cena",
-      status: "Upcoming",
-      date: "13, May 2023",
-      code: "262ABC",
-      image: images.gateAccess.avatar,
-    },
-  ];
+  const [requests, setRequest] = useState([]);
+
+  const { refetch } = useRequestContext()
+
+  useEffect(() => {
+    (async () => {
+      const data = await getGateRequests("PENDING");
+      setRequest(data);
+    })();
+  }, [refetch]);
 
   return (
     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
       <View className="relative h-screen flex-1">
-        {TemporaryData.map((data) => {
-          const { id, name, status, date, code, image } = data;
-          return (
-            <Constant
-              key={id}
-              name={name}
-              status={status}
-              date={date}
-              code={code}
-              image={image}
-            />
-          );
-        })}
+        {!requests.length && (
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+          >
+            <Text style={{ fontWeight: "700" }}>No requests yet</Text>
+          </View>
+        )}
+        {requests.length > 0 &&
+          requests.map((data) => {
+            const { id, firstName, lastName, createdAt, accessCode, status } = data;
+            return (
+              <Constant
+                key={id}
+                firstName={firstName}
+                lastName={lastName}
+                status={status}
+                createdAt={createdAt}
+                code={accessCode}
+              />
+            );
+          })}
         <Button />
       </View>
     </ScrollView>
