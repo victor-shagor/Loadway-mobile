@@ -70,8 +70,8 @@ const ReportEmergency = () => {
             </View>
           );
         })}
-        <ReportEmergencyModal />
-        {/* <CustomModal
+        {/* <ReportEmergencyModal /> */}
+        <CustomModal
             modalizeRef={modalizeRefForReport}
             triggerItem={
               <>
@@ -84,7 +84,7 @@ const ReportEmergency = () => {
             triggerItemStyle={styles.modalTriggerStyle}
             modalTitle="Report"
             modalContent={<ReportEmergencyModal />}
-          /> */}
+          />
       </View>
     </ScrollView>
   );
