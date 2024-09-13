@@ -1,29 +1,112 @@
-import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
-import React, { useCallback } from "react";
-import GetHelp from "@src/components/Emergency/GetHelp";
-import { getHelpData } from "@src/constants/data";
-import CustomText from "@src/components/Emergency/CustomText";
-import GetHelpContact from "@src/components/Emergency/GetHelpContact";
-import { useFocusEffect } from "@react-navigation/native";
 
-const Emergency = () => {
+
+import React, { useCallback } from "react";
+import { StatusBar, StyleSheet, View, useWindowDimensions } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { appColors } from "@src/constants/colors";
+import { ThemedText } from "@src/components/ThemedText";
+import { useFocusEffect } from "@react-navigation/native";
+import EmergencyContact from "@src/components/Emergency/EmergencyContact";
+import ReportEmergency from "@src/components/Emergency/ReportEmergency";
+
+
+
+
+
+const Tab = createMaterialTopTabNavigator();
+
+const CustomTabLabel = ({
+  children,
+  active,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+}) => {
+  return (
+    <View
+      style={[
+        styles.tabBarItemStyle,
+        {
+          backgroundColor: active ? appColors.white : "transparent",
+        },
+      ]}
+    >
+      {children}
+    </View>
+  );
+};
+
+const EmergencyUI = () => {
+  const { height } = useWindowDimensions();
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle("dark-content");
     }, [])
   );
+
   return (
-    <ScrollView>
-      <View className=" bg-white h-screen">
-        <CustomText />
-        <GetHelp data={getHelpData} />
-        <CustomText />
-        <GetHelpContact />
-      </View>
-    </ScrollView>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarIndicatorStyle: { display: "none" },
+        tabBarStyle: [styles.tabScreenStyles],
+      }}
+      sceneContainerStyle={{ padding: 12 }}
+    >
+      <Tab.Screen
+        name="emergency_contact"
+        component={EmergencyContact}
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <CustomTabLabel active={focused}>
+              <ThemedText
+                type="title"
+                style={{ color: focused ? appColors.orange : appColors.black }}
+              >
+                Emergency Contact
+              </ThemedText>
+            </CustomTabLabel>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="report_emergency"
+        component={ReportEmergency}
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <CustomTabLabel active={focused}>
+              <ThemedText
+                type="title"
+                style={{ color: focused ? appColors.orange : appColors.black }}
+              >
+                Report Emergency
+              </ThemedText>
+            </CustomTabLabel>
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
-export default Emergency;
+const styles = StyleSheet.create({
+  tabScreenStyles: {
+    borderRadius: 10,
+    backgroundColor: appColors.offWhite,
+    margin: 10,
+  },
+  tabBarItemStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    width: 189,
+    borderRadius: 8,
+    padding: 6,
+    paddingVertical: 9,
+    fontWeight: 600,
+    fontSize: 8,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default EmergencyUI;
+
+

@@ -59,9 +59,11 @@ const PassWordManagement = ({
               />
             </View>
           )}
-         {type !== "updatepasword" && <View className=" my-6">
-            <EmailInput action="resetpassword" />
-          </View>}
+          {type !== "updatepasword" && (
+            <View className=" my-6">
+              <PasswordInput action="resetpassword" />
+            </View>
+          )}
           {/* <View className="">
             <View className=" flex-row">
               <CustomCheckBox text="Atleast 8 characters" width={45} />
@@ -73,7 +75,7 @@ const PassWordManagement = ({
             </View>
           </View> */}
           <View className=" my-2">
-            <PasswordInput action="resetpassword" />
+            <PasswordInput action="resetpassword" placeholder="Confirm Password" />
           </View>
           <View className=" flex-row mt-10">
             <ForgotPasswordBtn

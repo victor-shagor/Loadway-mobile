@@ -66,6 +66,7 @@ export interface getHelp {
   desc: string;
   iconProvider: IconProvider;
   color: string;
+  id: number;
 }
 export interface getHelpDataContact {
   icon: IconTypes;
@@ -318,6 +319,15 @@ export const paymentHistoryData: transactionProps[] = [
 
 export const getHelpData: getHelp[] = [
   {
+    id: 1,
+    icon: "shield-cross-outline",
+    title: "Building Security",
+    desc: "Complain Building Office",
+    iconProvider: "MaterialCommunityIcons",
+    color: "#F2D8C0",
+  },
+  {
+    id: 2,
     icon: "plus-circle-outline",
     title: "Fire Station",
     desc: "Find Nearest Fire Station",
@@ -325,6 +335,7 @@ export const getHelpData: getHelp[] = [
     color: "#FAA08D",
   },
   {
+    id: 3,
     icon: "shield-cross-outline",
     title: "Police Station",
     desc: "Locate Your Area Police ",
@@ -332,6 +343,7 @@ export const getHelpData: getHelp[] = [
     color: "#A0808C",
   },
   {
+    id: 4,
     icon: "medical-bag",
     title: "Medical Assistance",
     desc: "Find Nearest Hospitals",

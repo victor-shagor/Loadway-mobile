@@ -2,32 +2,16 @@ import React, { useState } from "react";
 import {
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
-  Image,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { EvilIcons } from "@expo/vector-icons";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import CustomButton from "@src/components/CustomButton";
+import SelectImage from "@src/components/common/SelectImage";
+
 
 export const ChatModal = () => {
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  // const [selectedValue, setSelectedValue] = useState("");
-
-  const selectImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setSelectedFile(result.assets[0].uri);
-    }
-  };
+  
 
   return (
     <View style={styles.container}>
@@ -48,24 +32,7 @@ export const ChatModal = () => {
             spellCheck
           />
 
-          <View style={{ gap: 10 }}>
-            <TouchableOpacity
-              onPress={() => selectImage()}
-              style={[styles.input, styles.imagePicker]}
-            >
-              <ThemedText style={{ color: appColors.lightGray }}>
-                Attachment
-              </ThemedText>
-              <EvilIcons name="image" size={24} color={appColors.lightGray} />
-            </TouchableOpacity>
-
-            {selectedFile && (
-              <Image
-                source={{ uri: selectedFile }}
-                style={styles.selectedImage}
-              />
-            )}
-          </View>
+         <SelectImage />
         </View>
         <CustomButton value={"Submit"} />
       </View>

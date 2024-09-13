@@ -17,14 +17,20 @@ export const EmailInput = ({ action }: { action: string }) => {
         email: value,
       };
       inputValue.setChangePasswordDetails(NewChangePasswordDetails);
-    } else if (action === "resetpassword") {
       const NewRestPasswordDetails = {
         ...inputValue.resetPassword,
         email: value,
       };
-      console.log(NewRestPasswordDetails);
       inputValue.setResetPassword(NewRestPasswordDetails);
-    }
+    } 
+    // else if (action === "resetpassword") {
+    //   const NewRestPasswordDetails = {
+    //     ...inputValue.resetPassword,
+    //     email: value,
+    //   };
+    //   console.log(NewRestPasswordDetails);
+    //   inputValue.setResetPassword(NewRestPasswordDetails);
+    // }
   };
 
   return (
@@ -44,14 +50,17 @@ export const EmailInput = ({ action }: { action: string }) => {
   );
 };
 
-export const PasswordInput = ({ action }: { action: string }) => {
+export const PasswordInput = ({ action, placeholder }: { action: string; placeholder?: string; }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  
   const changeVisibilty = () => {
     setShowPassword((prev) => !showPassword);
   };
   const inputValue = AuthInputs();
 
   const { setLoginDetails, loginDetails } = useOnboardingContext();
+
+  const placeHolderText = placeholder || 'Password';
 
   const setPasswordValue = (value: string) => {
     if (action === "setLoginEmail") {
@@ -70,7 +79,7 @@ export const PasswordInput = ({ action }: { action: string }) => {
   return (
     <View className=" relative">
       <TextInput
-        placeholder="Password"
+        placeholder={placeHolderText}
         placeholderTextColor={"black"}
         secureTextEntry={showPassword}
         autoComplete="password"

@@ -37,6 +37,7 @@ import Support from "@src/components/settings/support";
 import NewRequest from "@src/screens/NewRequest";
 import { renderIcon } from "@src/components/common/renderIcon";
 import UserNotifications from "@src/screens/notifications";
+import EmergencyUI from "../screens/emergency";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -149,7 +150,7 @@ const DashboardStack = () => {
       <Stack.Group screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
           name="Emergency"
-          component={Emergency}
+          component={EmergencyUI}
           options={{ title: "Emergency", headerTitleAlign: "center", headerBackTitleVisible: false,
             headerTintColor: appColors.black }}
         />
