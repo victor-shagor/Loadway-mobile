@@ -15,5 +15,6 @@ export const appColors = {
   closedGreen: "rgba(27, 246, 65, 0.18)",
   modalBackground: "rgba(212, 212, 212, 0.15)",
   offWhite: '#7676801F',
-  nero: '#191919'
+  nero: '#191919',
+  CornflowerBlue: '#6495ed',
 };

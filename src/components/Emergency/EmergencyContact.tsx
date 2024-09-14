@@ -35,7 +35,7 @@ const EmergencyContact = () => {
         <GetHelp data={getHelpData} />
         <CustomText text="Emergency Contact"/>
         <GetHelpContact />
-        <View className="  absolute right-[5vw]"
+        <View className="  absolute right-[10vw]"
         style={{ bottom: position}}
         >
           <CustomModal
