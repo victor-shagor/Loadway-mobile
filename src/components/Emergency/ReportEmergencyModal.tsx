@@ -8,11 +8,11 @@ import CustomButton from "@src/components/CustomButton";
 
 const ReportEmergencyModal = () => {
   return (
-    <ScrollView>
+    <ScrollView className=" flex-1 mb-[12vh]">
       <ThemedText
         type="title"
         style={{ color: appColors.nero }}
-        className="text-[18px] font-semibold ml-[5vw]"
+        className="text-[18px] font-semibold ml-[5vw] mt-[2vh]"
       >
         Report Emergency
       </ThemedText>

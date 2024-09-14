@@ -4,17 +4,15 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Dimensions
 } from "react-native";
 import { renderIcon } from "../common/renderIcon";
 import React, { useRef } from "react";
 import CustomModal from "../CustomModal";
 import { Modalize } from "react-native-modalize";
 import { ThemedText } from "@src/components/ThemedText";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
-import { UserChats } from "@src/constants/data";
-import { ChatRenderItemProps } from "@src/models/chat";
-import ChatModal from "@src/screens/modals/messages/chat";
 import ReportEmergencyModal from "./ReportEmergencyModal";
 
 const ReportEmergency = () => {
@@ -35,9 +33,12 @@ const ReportEmergency = () => {
 
   const modalizeRefForReport = useRef<Modalize>(null);
 
+  const { height } = Dimensions.get('window');
+  const position = height/3;
+
   return (
     <ScrollView className=" flex-1">
-      <View className=" w-screen ml-[-2.5vw] mb-[10vh]">
+      <View className=" w-screen ml-[-2.5vw] mb-[2vh] relative h-screen">
         {temporaryData.map((item, index) => {
           const { title, desc, time, riskLevel } = item;
 
@@ -71,7 +72,10 @@ const ReportEmergency = () => {
           );
         })}
         {/* <ReportEmergencyModal /> */}
-        <CustomModal
+        <View className="  absolute right-[5vw]"
+        style={{ bottom: position}}
+        >
+          <CustomModal
             modalizeRef={modalizeRefForReport}
             triggerItem={
               <>
@@ -85,6 +89,7 @@ const ReportEmergency = () => {
             modalTitle="Report"
             modalContent={<ReportEmergencyModal />}
           />
+        </View>
       </View>
     </ScrollView>
   );
