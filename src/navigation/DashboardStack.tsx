@@ -140,6 +140,7 @@ const DashboardStack = () => {
   const { height } = useWindowDimensions();
 
   return (
+    <Host>
     <Stack.Navigator>
       <Stack.Screen
         name="Main"
@@ -262,6 +263,7 @@ const DashboardStack = () => {
         </Stack.Group>
       </Stack.Group>
     </Stack.Navigator>
+    </Host>
   );
 };
 
