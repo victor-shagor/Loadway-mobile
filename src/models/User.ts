@@ -7,7 +7,7 @@ export type User = {
   email: string;
   profilePicture: string;
   activities: Activity[];
-  address: string; // This is required on edit profile page
+  address: string;
   duesSum: number;
   chats: [];
 };

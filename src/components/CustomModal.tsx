@@ -17,10 +17,10 @@ interface CustomModalProps {
   triggerItemStyle?: StyleProp<ViewStyle>;
   modalTitle?: string;
   modalContent: ReactNode;
-  onOpen?: ()=>void
-  onClose?: ()=>void
-  modalizeRef: any
-  triggerDisabled?: boolean
+  onOpen?: () => void;
+  onClose?: () => void;
+  modalizeRef: any;
+  triggerDisabled?: boolean;
 }
 
 const ModalButton = ({ ...rest }: TouchableOpacityProps) => {
@@ -33,8 +33,7 @@ const CustomModal = ({
   modalTitle,
   modalContent,
   modalizeRef,
-  triggerDisabled = false
-  
+  triggerDisabled = false,
 }: CustomModalProps) => {
   // const modalizeRef = useRef<Modalize>(null);
 

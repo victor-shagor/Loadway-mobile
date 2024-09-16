@@ -20,17 +20,10 @@ export type HousingBillsProps = {
   status: string;
   dueDate: string;
 };
-const HousingBills = ({
-  title,
-}: {
-  title: SectionTitleProps;
-}) => {
-
-
+const HousingBills = ({ title }: { title: SectionTitleProps }) => {
   const { bills: housingBillsData } = useOnboardingContext();
-  
-  const color = housingBillsData.length > 0 ? "#CD3617" : "#D1D0CE";
 
+  const color = housingBillsData.length > 0 ? "#CD3617" : "#D1D0CE";
 
   return (
     <View>

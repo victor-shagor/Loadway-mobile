@@ -8,7 +8,7 @@ import {
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
 import { QuickLinksRootStackParamList } from "@src/components/home/quickLinks";
-import { ChatProps, ComplaintProps } from "@src/models/chat";
+import { ChatProps, ComplaintProps } from "@src/models/messaging";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
@@ -168,21 +168,6 @@ export const UserChats: ChatProps[] = [
     message:
       "A very long message from user2. lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis officiis aliquam adipisci tempore hic obcaecati laboriosam, eveniet corporis. Ratione quam dolores voluptate beatae nam! Esse sit quidem distinctio sint. Vero.",
     time: "1hr",
-  },
-];
-
-export const UserComplaints: ComplaintProps[] = [
-  {
-    name: "Leak in the kitchen",
-    image: images.user.complaint,
-    time: "1hr",
-    state: "PENDING",
-  },
-  {
-    name: "Leak in the kitchen2",
-    image: images.user.complaint,
-    time: "1hr",
-    state: "CLOSED",
   },
 ];
 

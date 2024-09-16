@@ -2,8 +2,25 @@ import React from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { appColors } from "@src/constants/colors";
+import { ComplaintAPIProps, ComplaintProps } from "@src/models/messaging";
+import { ComplaintStateProps } from "./complaints";
 
-const SearchInput = () => {
+interface SearchProps {
+  searchArrayCopy: ComplaintProps[];
+  updateSearchedArray: (updates: Partial<ComplaintStateProps>) => void;
+}
+
+const SearchInput = ({ searchArrayCopy, updateSearchedArray }: SearchProps) => {
+  const searchedComplaint = (value: string) => {
+    const newSearched = searchArrayCopy?.filter((item) =>
+      item.title.toLowerCase().includes(value.toLowerCase())
+    );
+
+    updateSearchedArray({
+      data: { complaints: newSearched as ComplaintProps[] },
+    });
+  };
+
   return (
     <View style={styles.searchInputContainer}>
       <View style={styles.searchInput}>
@@ -15,10 +32,10 @@ const SearchInput = () => {
         />
         <TextInput
           keyboardType={"default"}
-          onSubmitEditing={(event) => console.log(event.nativeEvent.text)}
+          onSubmitEditing={(event) => searchedComplaint(event.nativeEvent.text)}
           placeholder={"Search"}
           placeholderTextColor={appColors.deepGray}
-          onChangeText={(e) => console.log(e)}
+          onChangeText={(text) => searchedComplaint(text)}
           style={{ flex: 1 }}
         />
       </View>

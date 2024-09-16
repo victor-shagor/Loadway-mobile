@@ -8,14 +8,31 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
-// import { Picker } from "@react-native-picker/picker";
+import { createComplaints } from "@src/api/complaints";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import CustomButton from "@src/components/CustomButton";
+import { updateState } from "@src/utils/updateState";
+import { ToastNotification } from "@src/utils/toastMessage";
+import { useOnboarding } from "@src/context/onboarding";
 
-export const ComplaintModal = () => {
+export const ComplaintModal = ({
+  handleCloseModal,
+}: {
+  handleCloseModal: () => void;
+}) => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [complaintFormData, setComplaintsFormData] = useState({
+    title: "",
+    description: "",
+    status: false,
+  });
+
+  const handleUpdateComplaints = (
+    updates: Partial<{ title: string; description: string; status: boolean }>
+  ) => {
+    setComplaintsFormData((prev) => updateState(prev, updates));
+  };
 
   const selectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -27,6 +44,42 @@ export const ComplaintModal = () => {
 
     if (!result.canceled) {
       setSelectedFile(result.assets[0].uri);
+    }
+  };
+
+  const postComplaint = async () => {
+    if (
+      !selectedFile ||
+      !complaintFormData.title ||
+      !complaintFormData.description
+    ) {
+      ToastNotification("error", "Cannot make empty complaints");
+      return;
+    }
+
+    handleUpdateComplaints({ status: true });
+
+    const files = [selectedFile];
+
+    const payload = {
+      personnel: "PROPERTY_MANAGER",
+      title: complaintFormData.title,
+      description: complaintFormData.description,
+      attachment: files,
+    };
+
+    try {
+      const response = await createComplaints(payload);
+      ToastNotification(
+        "success",
+        "Successfully. Pull down to refresh complaints"
+      );
+      handleCloseModal();
+    } catch (error) {
+      console.log(error);
+      ToastNotification("error", "An error occurred");
+    } finally {
+      handleUpdateComplaints({ status: false });
     }
   };
 
@@ -43,6 +96,7 @@ export const ComplaintModal = () => {
             placeholder="Title"
             placeholderTextColor={appColors.lightGray}
             style={styles.input}
+            onChangeText={(text) => handleUpdateComplaints({ title: text })}
           />
 
           <TextInput
@@ -54,19 +108,10 @@ export const ComplaintModal = () => {
             numberOfLines={4}
             textAlignVertical="top"
             spellCheck
+            onChangeText={(text) =>
+              handleUpdateComplaints({ description: text })
+            }
           />
-
-          {/* <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue) => setSelectedValue(itemValue)}
-            // style={styles.input}
-            // mode="dropdown"
-          >
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="javascript" />
-            <Picker.Item label="Python" value="python" />
-            <Picker.Item label="C++" value="cpp" />
-          </Picker> */}
 
           <View style={{ gap: 10 }}>
             <TouchableOpacity
@@ -87,7 +132,12 @@ export const ComplaintModal = () => {
             )}
           </View>
         </View>
-        <CustomButton value={"Submit"} />
+        <CustomButton
+          value={"Submit"}
+          disable={complaintFormData.status}
+          isLoading={complaintFormData.status}
+          onPress={postComplaint}
+        />
       </View>
     </View>
   );
