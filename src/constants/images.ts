@@ -26,11 +26,15 @@ const images = {
     walletIcon: require("@src/assets/icons/wallet.png"),
     bitcoin: require("@src/assets/gif/bitcoin.gif"),
   },
-  gateAccess:{
-    avatar:  require("@src/assets/icons/cso.png"),
+  gateAccess: {
+    avatar: require("@src/assets/icons/cso.png"),
   },
-  newRequest:{
-    avatar:  require("@src/assets/icons/cso.png"),
+  newRequest: {
+    avatar: require("@src/assets/icons/cso.png"),
+  },
+  notification: {
+    leakage: require("@src/assets/icons/leakageModalImage.jpeg"),
+    security: require("@src/assets/icons/securityModaIImage.jpeg"),
   },
   notification:{
     leakage:  require("@src/assets/icons/leakageModalImage.jpeg"),
