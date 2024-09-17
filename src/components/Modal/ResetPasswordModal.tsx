@@ -43,6 +43,7 @@ const ResetPasswordModal = ({
                   text_color="#FFFFFF"
                   text={"Send"}
                   type="modal"
+                  setModalVisible={setModalVisible}
                   action="sendEmailToBackend"
                 />
               </View>

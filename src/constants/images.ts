@@ -32,6 +32,10 @@ const images = {
   newRequest:{
     avatar:  require("@src/assets/icons/cso.png"),
   },
+  notification:{
+    leakage:  require("@src/assets/icons/leakageModalImage.jpeg"),
+    security:  require("@src/assets/icons/securityModaIImage.jpeg"),
+  },
 };
 
 export default images;

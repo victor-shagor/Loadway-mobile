@@ -1,26 +1,59 @@
-import { View, Text } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { getHelpDataContact } from "@src/constants/data";
 import { renderIcon } from "../common/renderIcon";
 import EmergencyButton from "./EmergencyButton";
+import chunkArray from "@src/utils/chunkArray";
+
 
 const GetHelpContact = () => {
-  return (
-    <View>
-      {getHelpDataContact.map((data, index) => {
-        const { title, iconProvider } = data;
+  const temporaryData = [
+    {
+      id: 1,
+      name: "Dad",
+      image: require("@src/assets/icons/dad.png"),
+    },
+    {
+      id: 2,
+      name: "Mum",
+      image: require("@src/assets/icons/mom.png"),
+    },
+  ];
 
-        return (
-          <View key={index} 
-           className=" mb-[5%] bg-[#D4D4D429] rounded-lg mx-[6%] py-[6%]
-           ">
-            <Text 
-             className=" text-[#000000] font-medium text-[18px] mb-[6%]
-             px-[8%] pb-2
-             ">
-              {title}
-            </Text>
-            <View className=" flex-row gap-5 px-[9%] pt-[2%]">
+
+  const rows = chunkArray(temporaryData, 2);
+
+  return (
+    <View className=" mt-[2vh]">
+      {rows.map((row, rowIndex) => (
+        <View className=" flex-row justify-center items-center w-screen ml-[-5vw]" key={rowIndex}>
+          {row.map((data, index) => {
+            const { id, name, image } = data;
+
+            return (
+              <TouchableOpacity
+                key={index}
+                className=" mb-[5%] bg-[#FFFEFE] rounded-lg mx-[3vw] py-[6%] shadow-md
+           shadow-[#2C2C2C26] w-[35vw] flex-row justify-center items-center
+           "
+              >
+                <Image source={image} />
+                <Text className=" text-[##3F3C31] text-[16px] font-bold px-[2vw]">
+                  {name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+};
+
+export default GetHelpContact;
+
+{
+  /* <View className=" flex-row gap-5 px-[9%] pt-[2%]">
               <EmergencyButton
                 text="Call Now"
                 icon={'phone'}
@@ -33,12 +66,5 @@ const GetHelpContact = () => {
                 iconProvider={iconProvider}
                 color="#000000"
               />
-            </View>
-          </View>
-        );
-      })}
-    </View>
-  );
-};
-
-export default GetHelpContact;
+            </View> */
+}

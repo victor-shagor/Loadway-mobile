@@ -9,6 +9,7 @@ import axios from "axios";
 import { BaseUrl } from "@src/utils/Base_url";
 import { requestPasswordChange, ChangePassword } from "@src/utils/APIRoutes";
 import AuthInputs from "@src/utils/AuthInputValues";
+import Toast from "react-native-toast-message";
 
 const ForgotPasswordBtn = ({
   bg_color,
@@ -38,16 +39,30 @@ const ForgotPasswordBtn = ({
 
   const handleSendEmail = async () => {
     try {
+      if (!inputValue.changePasswordDetails.email) {
+        return Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Enter email",
+        });
+      }
       const url = `${BaseUrl}${requestPasswordChange}`;
       const payload = inputValue.changePasswordDetails;
       const response = await axios.post(url, payload);
       if (response.data.success) {
+        closeModal();
         navigateTo("forgotpassword");
       } else {
         console.log("An error occurred");
       }
     } catch (error) {
+      console.log(inputValue.changePasswordDetails.email)
       console.error("Error sending email:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "An error occured, please try again.",
+      });
     } finally {
       closeModal();
     }
@@ -57,6 +72,7 @@ const ForgotPasswordBtn = ({
     try {
       const url = `${BaseUrl}${ChangePassword}`;
       const payload = inputValue.resetPassword;
+      console.log(payload)
       const response = await axios.patch(url, {
         ...payload,
         email: currentUser?.email,
@@ -68,6 +84,7 @@ const ForgotPasswordBtn = ({
         console.log("An error occurred");
       }
     } catch (error: any) {
+      console.log(inputValue.resetPassword)
       console.error("Error resetting password:", error.response);
     }
   };

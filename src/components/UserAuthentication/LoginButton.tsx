@@ -26,6 +26,12 @@ const LoginButton = () => {
     try {
       setLoading(true);
       if (!loginDetails.email && !loginDetails.password) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Enter email or password",
+        });
+        setLoading(false);
         return console.log("Show error screen");
       }
       const url = `${BaseUrl}${LoginUser}`;
@@ -48,6 +54,7 @@ const LoginButton = () => {
       // console.log(response.data.data.firstLogin);
     } catch (error: any) {
       console.log("Error", error.response);
+      console.log("Error", 'An error occured');
       setLoading(false);
       Toast.show({
         type: "error",
@@ -62,7 +69,7 @@ const LoginButton = () => {
     <View className=" mx-5 bg-[#F6411B] h-[50px] rounded-lg">
       <TouchableOpacity onPress={clickBtn} disabled={loading}>
         <View className="bg-[#F6411B] h-full flex-row justify-center items-center rounded-lg">
-          <Text className=" font-semibold text-center text-white">Sign in</Text>
+          <Text className=" font-semibold text-center text-white">Sign in </Text>
           {loading && (
             <ActivityIndicator
               size="small"
