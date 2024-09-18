@@ -160,7 +160,7 @@ export const UserChats: ChatProps[] = [
     name: "User1",
     image: images.user.propertyManager,
     message: "Sent a document",
-    time: "1hr",
+    time: "12hr",
     messageCount: "1",
   },
   {
@@ -169,6 +169,7 @@ export const UserChats: ChatProps[] = [
     message:
       "A very long message from user2. lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis officiis aliquam adipisci tempore hic obcaecati laboriosam, eveniet corporis. Ratione quam dolores voluptate beatae nam! Esse sit quidem distinctio sint. Vero.",
     time: "1hr",
+    messageCount: "10",
   },
 ];
 

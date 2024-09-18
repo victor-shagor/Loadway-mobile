@@ -38,6 +38,7 @@ import NewRequest from "@src/screens/NewRequest";
 import { renderIcon } from "@src/components/common/renderIcon";
 import UserNotifications from "@src/screens/notifications";
 import EmergencyUI from "../screens/emergency";
+import ChatRoom from "@src/screens/message/ChatRoom";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -141,128 +142,148 @@ const DashboardStack = () => {
 
   return (
     <Host>
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Main"
-        component={TabNavigation}
-        options={{ headerShown: false, title: "" }}
-      />
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={TabNavigation}
+          options={{ headerShown: false, title: "" }}
+        />
 
-      <Stack.Group screenOptions={{ headerTitleAlign: "center" }}>
-        <Stack.Screen
-          name="Emergency"
-          component={EmergencyUI}
-          options={{ title: "Emergency", headerTitleAlign: "center", headerBackTitleVisible: false,
-            headerTintColor: appColors.black }}
-        />
-        <Stack.Screen
-          name="GateAccess"
-          component={GateAccess}
-          options={{
-            title: "Gate Access",
-            headerTitleAlign: "center",
-            headerBackTitleVisible: false,
-            headerTintColor: appColors.black,
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => alert("I can do All things through christ")} // Should be removed or edited.
-                style={{ marginRight: 15 }}
-              >
-                {renderIcon(
-                  "filter-variant",
-                  "MaterialCommunityIcons",
-                  28,
-                  appColors.black
-                )}
-              </TouchableOpacity>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="newrequest"
-          component={NewRequest}
-          options={{ title: "New Request", headerTitleAlign: "center", headerBackTitleVisible: false,
-            headerTintColor: appColors.black }}
-        />
-        {/* <Stack.Screen
+        <Stack.Group screenOptions={{ headerTitleAlign: "center" }}>
+          <Stack.Screen
+            name="Emergency"
+            component={EmergencyUI}
+            options={{
+              title: "Emergency",
+              headerTitleAlign: "center",
+              headerBackTitleVisible: false,
+              headerTintColor: appColors.black,
+            }}
+          />
+
+          <Stack.Screen
+            name="ChatRoom"
+            component={ChatRoom}
+            options={{
+              title: "David Schlepp",
+              headerTitleAlign: "center",
+              headerBackTitleVisible: false,
+              headerTintColor: appColors.black,
+            }}
+          />
+
+          <Stack.Screen
+            name="GateAccess"
+            component={GateAccess}
+            options={{
+              title: "Gate Access",
+              headerTitleAlign: "center",
+              headerBackTitleVisible: false,
+              headerTintColor: appColors.black,
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => alert("I can do All things through christ")} // Should be removed or edited.
+                  style={{ marginRight: 15 }}
+                >
+                  {renderIcon(
+                    "filter-variant",
+                    "MaterialCommunityIcons",
+                    28,
+                    appColors.black
+                  )}
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="newrequest"
+            component={NewRequest}
+            options={{
+              title: "New Request",
+              headerTitleAlign: "center",
+              headerBackTitleVisible: false,
+              headerTintColor: appColors.black,
+            }}
+          />
+          {/* <Stack.Screen
           name="HouseBill"
           component={HouseBill}
           options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
         /> */}
-        <Stack.Screen
-          name="PaymentHistory"
-          component={PaymentHistory}
-          options={{ title: "Payment History" }}
-        />
-
-        <Stack.Screen
-          name="UserNotifications"
-          component={UserNotifications}
-          options={{ title: "Notifications" }}
-        />
-
-        <Stack.Group>
           <Stack.Screen
-            name="Account"
-            component={Account}
-            options={{
-              headerStyle: { height: height * 0.15 },
-              headerTitle: () => <UserImage />,
-              headerRight: () => <GoToEditScreen />,
-            }}
+            name="PaymentHistory"
+            component={PaymentHistory}
+            options={{ title: "Payment History" }}
           />
+
           <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
-            options={{
-              title: "Edit Profile",
-              headerLeft: () => <CancelEdit />,
-              headerRight: () => <SaveEditedChanges />,
-            }}
+            name="UserNotifications"
+            component={UserNotifications}
+            options={{ title: "Notifications" }}
           />
+
+          <Stack.Group>
+            <Stack.Screen
+              name="Account"
+              component={Account}
+              options={{
+                headerStyle: { height: height * 0.15 },
+                headerTitle: () => <UserImage />,
+                headerRight: () => <GoToEditScreen />,
+              }}
+            />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{
+                title: "Edit Profile",
+                headerLeft: () => <CancelEdit />,
+                headerRight: () => <SaveEditedChanges />,
+              }}
+            />
+          </Stack.Group>
+
+          <Stack.Screen
+            name="UserManagement"
+            component={UserManagement}
+            options={{ title: "UserManagement" }}
+          />
+
+          {/* PROFILE SETTINGS */}
+          <Stack.Group>
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+              options={{ title: "Settings" }}
+            />
+            <Stack.Screen
+              name="Notifications"
+              component={NotificationsPreferences}
+              options={{ title: "Notifications Preferences" }}
+            />
+            <Stack.Screen
+              name="Communication"
+              component={Communication}
+              options={{ title: "Communication Preferences" }}
+            />
+            <Stack.Screen
+              name="Security"
+              component={Security}
+              options={{ title: "Password & Security" }}
+            />
+            <Stack.Screen
+              name="AppPreferences"
+              component={AppPreference}
+              options={{ title: "App Preferences" }}
+            />
+            <Stack.Screen
+              name="Support"
+              component={Support}
+              options={{ title: "Help & Support" }}
+            />
+          </Stack.Group>
         </Stack.Group>
-
-        <Stack.Screen
-          name="UserManagement"
-          component={UserManagement}
-          options={{ title: "UserManagement" }}
-        />
-
-        {/* PROFILE SETTINGS */}
-        <Stack.Group>
-          <Stack.Screen
-            name="Settings"
-            component={Settings}
-            options={{ title: "Settings" }}
-          />
-          <Stack.Screen
-            name="Notifications"
-            component={NotificationsPreferences}
-            options={{ title: "Notifications Preferences" }}
-          />
-          <Stack.Screen
-            name="Communication"
-            component={Communication}
-            options={{ title: "Communication Preferences" }}
-          />
-          <Stack.Screen
-            name="Security"
-            component={Security}
-            options={{ title: "Password & Security" }}
-          />
-          <Stack.Screen
-            name="AppPreferences"
-            component={AppPreference}
-            options={{ title: "App Preferences" }}
-          />
-          <Stack.Screen
-            name="Support"
-            component={Support}
-            options={{ title: "Help & Support" }}
-          />
-        </Stack.Group>
-      </Stack.Group>
-    </Stack.Navigator>
+      </Stack.Navigator>
     </Host>
   );
 };
