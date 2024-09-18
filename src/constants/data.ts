@@ -157,18 +157,19 @@ export const recentActivityArray: RecentActivityProps[] = [
 
 export const UserChats: ChatProps[] = [
   {
-    name: "User1",
+    name: "Security",
     image: images.user.propertyManager,
-    message: "Sent a document",
-    time: "1hr",
+    message: "Sent a document...",
+    time: "3hr",
     messageCount: "1",
   },
   {
-    name: "User2",
+    name: "Property Manager",
     image: images.user.cso,
     message:
       "A very long message from user2. lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis officiis aliquam adipisci tempore hic obcaecati laboriosam, eveniet corporis. Ratione quam dolores voluptate beatae nam! Esse sit quidem distinctio sint. Vero.",
     time: "1hr",
+    messageCount: "10",
   },
 ];
 

@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -16,51 +17,62 @@ import { UserChats } from "@src/constants/data";
 import { ChatRenderItemProps } from "@src/models/chat";
 import ChatModal from "@src/screens/modals/messages/chat";
 import EmptyMessage from "./emptyMessage";
-import CustomModal from "../CustomModal";
 import SearchInput from "./searchInput";
 import { Modalize } from "react-native-modalize";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+export type paramList = {
+  ChatRoom: any;
+};
 
 const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
-  return (
-    <View style={styles.chatMessageContainer}>
-      <Image source={chatProps.image} style={{ width: 50, height: 50 }} />
-      <View
-        style={[
-          styles.chatMessage,
-          {
-            borderBottomWidth: index !== UserChats.length - 1 ? 1 : 0,
-            borderBottomColor: appColors.gray,
-          },
-        ]}
-      >
-        <View style={{ gap: 2, flex: 1 }}>
-          <ThemedText type="title">{chatProps.name}</ThemedText>
-          <ThemedText
-            style={{ width: "100%", maxWidth: "80%" }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {chatProps.message}
-          </ThemedText>
-        </View>
+  const naviagtion = useNavigation<StackNavigationProp<paramList>>();
 
-        <View style={{ alignItems: "center", gap: 10 }}>
-          <ThemedText type="small">{chatProps.time}</ThemedText>
-          {chatProps.messageCount && (
-            <View style={styles.messageCountContainer}>
-              <ThemedText style={{ color: appColors.white }}>
-                {chatProps.messageCount}
-              </ThemedText>
-            </View>
-          )}
+  return (
+    <TouchableOpacity onPress={()=>naviagtion.navigate('ChatRoom')}>
+      <View style={styles.chatMessageContainer}>
+        <Image source={chatProps.image} style={{ width: 50, height: 50 }} />
+        <View
+          style={[
+            styles.chatMessage,
+            {
+              borderBottomWidth: index !== UserChats.length - 1 ? 1 : 0,
+              borderBottomColor: appColors.gray,
+            },
+          ]}
+        >
+          <View style={{ gap: 2, flex: 1 }}>
+            <ThemedText type="title">{chatProps.name}</ThemedText>
+            <ThemedText
+              style={{ width: "100%", maxWidth: "80%" }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {chatProps.message}
+            </ThemedText>
+          </View>
+
+          <View style={{ alignItems: "center", gap: 10 }}>
+            <ThemedText type="small">{chatProps.time}</ThemedText>
+            {chatProps.messageCount && (
+              <View
+                style={styles.messageCountContainer}
+                className="w-[6.5vw] h-[3vh] rounded-full"
+              >
+                <ThemedText style={{ color: appColors.white }} className="text-[12px]">
+                  {chatProps.messageCount}
+                </ThemedText>
+              </View>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const Chat = () => {
-
   const modalizeRef = useRef<Modalize>(null);
   return (
     <KeyboardAvoidingView
@@ -77,25 +89,10 @@ const Chat = () => {
             keyExtractor={(item) => item.name}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
-              <EmptyMessage message={"You have no messages"} />
+              <EmptyMessage message={"You have no messages"} /> // Shouldn't be empty since it is defined and constant. Rght?
             }
             ListHeaderComponent={<SearchInput />}
             ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
-          />
-
-          <CustomModal
-          modalizeRef={modalizeRef}
-            triggerItem={
-              <>
-                <AntDesign name="plus" size={15} color={appColors.white} />
-                <ThemedText style={{ color: appColors.white }}>
-                  New Chat
-                </ThemedText>
-              </>
-            }
-            triggerItemStyle={styles.modalTriggerStyle}
-            modalTitle="New Chat"
-            modalContent={<ChatModal />}
           />
         </>
       </TouchableWithoutFeedback>
@@ -123,9 +120,6 @@ const styles = StyleSheet.create({
   },
   messageCountContainer: {
     backgroundColor: appColors.orange,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -23,7 +23,6 @@ import Messages from "../screens/message";
 import Profile from "../screens/profile";
 import Emergency from "../screens/emergency";
 import GateAccess from "../screens/gateAccess";
-// import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
 import UserManagement from "@src/screens/userManagement";
 import Account from "@src/screens/account";
@@ -38,6 +37,7 @@ import NewRequest from "@src/screens/NewRequest";
 import { renderIcon } from "@src/components/common/renderIcon";
 import UserNotifications from "@src/screens/notifications";
 import EmergencyUI from "../screens/emergency";
+import ChatRoom from "@src/screens/message/ChatRoom";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -153,6 +153,12 @@ const DashboardStack = () => {
           name="Emergency"
           component={EmergencyUI}
           options={{ title: "Emergency", headerTitleAlign: "center", headerBackTitleVisible: false,
+            headerTintColor: appColors.black }}
+        />
+        <Stack.Screen
+          name="ChatRoom"
+          component={ChatRoom}
+          options={{ title: "David Schlepp", headerTitleAlign: "center", headerBackTitleVisible: false,
             headerTintColor: appColors.black }}
         />
         <Stack.Screen
