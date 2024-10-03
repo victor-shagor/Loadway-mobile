@@ -9,6 +9,19 @@ export interface ChatProps {
   messageCount?: string;
   state?: string;
 }
+
+export interface Chats {
+  id: string;
+  recipientId: string;
+  userName: string;
+  propertyName: string;
+  adminRole: string;
+  adminName: string;
+  message: string;
+  messageCount: string;
+  lastMessage: string
+  unread: number
+}
 export interface ComplaintProps {
   attachment: string[];
   createdAt: string;
@@ -26,7 +39,7 @@ export interface ComplaintProps {
 
 export interface ChatRenderItemProps {
   index: number;
-  chatProps: ChatProps;
+  chatProps: Chats;
 }
 export interface ComplaintRenderItemProps {
   index: number;

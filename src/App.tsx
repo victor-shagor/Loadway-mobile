@@ -1,5 +1,5 @@
 // import "expo-router/entry"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { registerRootComponent } from "expo";
 import RootNavigation from "./navigation";
@@ -9,6 +9,13 @@ import { User } from "./models/User";
 import OnboardingContext from "./context/onboarding";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RequestContext from "./context/gateRequest";
+import ChatContext from "./context/chats";
+import io from 'socket.io-client'
+
+export const socket = io('http://192.168.1.6:3007', {
+  transports: ['websocket'],
+});
+
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
@@ -18,6 +25,8 @@ export default function App() {
   const [frequents, setFrequent] = useState<any>([]);
   const [refetch, setRefetch] = useState<any>(false);
   const [bills, setBills] = useState<any>([]);
+  const [chats, setChats] = useState<any>([]);
+  const [messages, setMessages] = useState<any>([]);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
     password: string;
@@ -36,6 +45,22 @@ export default function App() {
     code: "",
     newPassword: "",
   });
+
+  useEffect(() => {
+    if(currentUser){
+      socket.connect();
+      // Optionally, listen for a connection event
+      socket.on('connect', () => {
+        console.log('Connected to WebSocket server', socket.id);
+        socket.emit('identify', {userId: currentUser?.id})
+      });
+  
+      return () => {
+        // Clean up the socket connection when the app is closed
+        socket.disconnect();
+      };
+    }
+  }, [currentUser?.id]);
 
   return (
     <>
@@ -60,11 +85,13 @@ export default function App() {
         }}
       >
         <RequestContext.Provider value={{frequents, setFrequent, refetch, setRefetch}}>
+        <ChatContext.Provider value={{chats, setChats, messages, setMessages}}>
         <SafeAreaProvider>
           <GestureHandlerRootView>
             <RootNavigation />
           </GestureHandlerRootView>
         </SafeAreaProvider>
+        </ChatContext.Provider>
         </RequestContext.Provider>
       </OnboardingContext.Provider>
       <Toast />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -39,6 +39,8 @@ import { renderIcon } from "@src/components/common/renderIcon";
 import UserNotifications from "@src/screens/notifications";
 import EmergencyUI from "../screens/emergency";
 import ChatRoom from "@src/screens/message/ChatRoom";
+import { io } from "socket.io-client";
+import useOnboardingContext from "@src/utils/Context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -137,9 +139,33 @@ const TabNavigation = () => {
   );
 };
 
+// export const socket = io('http://192.168.1.4:3007', {
+//   transports: ['websocket'],
+// });
+
 const DashboardStack = () => {
   const { height } = useWindowDimensions();
 
+  // const {currentUser} = useOnboardingContext()
+
+  // useEffect(() => {
+  //   // Connect to the socket
+  //   if(currentUser){
+  //     socket.connect();
+
+  //     // Optionally, listen for a connection event
+  //     socket.on('connect', () => {
+  //       console.log('Connected to WebSocket server:', socket.id);
+  //       socket.emit('identify', currentUser?.id)
+  //     });
+  
+  //     return () => {
+  //       // Clean up the socket connection when the app is closed
+  //       socket.disconnect();
+  //     };
+  //   }
+  // }, [currentUser?.id]);
+ 
   return (
     <Host>
       <Stack.Navigator>
@@ -180,19 +206,19 @@ const DashboardStack = () => {
               headerTitleAlign: "center",
               headerBackTitleVisible: false,
               headerTintColor: appColors.black,
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => alert("I can do All things through christ")} // Should be removed or edited.
-                  style={{ marginRight: 15 }}
-                >
-                  {renderIcon(
-                    "filter-variant",
-                    "MaterialCommunityIcons",
-                    28,
-                    appColors.black
-                  )}
-                </TouchableOpacity>
-              ),
+              // headerRight: () => (
+              //   <TouchableOpacity
+              //     onPress={() => {}} // Should be removed or edited.
+              //     style={{ marginRight: 15 }}
+              //   >
+              //     {renderIcon(
+              //       "filter-variant",
+              //       "MaterialCommunityIcons",
+              //       28,
+              //       appColors.black
+              //     )}
+              //   </TouchableOpacity>
+              // ),
             }}
           />
           <Stack.Screen
