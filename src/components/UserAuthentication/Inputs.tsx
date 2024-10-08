@@ -6,12 +6,19 @@ import AuthInputs from "@src/utils/AuthInputValues";
 
 export const EmailInput = ({ action }: { action: string }) => {
   const inputValue = AuthInputs();
+  const { currentUser, setCurrentUser } = useOnboardingContext();
 
   const setEmailValue = (value: string) => {
     if (action === "setLoginEmail") {
       const newLoginDetails = { ...inputValue.loginDetails, email: value };
       inputValue.setLoginDetails(newLoginDetails);
     } else if (action === "changePassword") {
+      const NewCurrentUser = {
+        ...currentUser,
+        email: value,
+      };
+      setCurrentUser(NewCurrentUser);
+      // ....... Edited 
       const NewChangePasswordDetails = {
         ...inputValue.changePasswordDetails,
         email: value,
@@ -22,6 +29,7 @@ export const EmailInput = ({ action }: { action: string }) => {
         email: value,
       };
       inputValue.setResetPassword(NewRestPasswordDetails);
+      console.log(currentUser?.email, inputValue.changePasswordDetails, inputValue.resetPassword, 'Logs')
     } 
     // else if (action === "resetpassword") {
     //   const NewRestPasswordDetails = {
