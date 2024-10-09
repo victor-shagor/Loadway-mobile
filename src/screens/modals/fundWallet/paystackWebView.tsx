@@ -29,8 +29,7 @@ export default function Pay({amount, payStackKey, reference, close}: {amount: nu
           onSuccess={async(response) => {
               const url = `/transaction/verify/${response.data.transactionRef.reference}`;
             const res = await axios.get(url);
-            console.log(res.data.success)
-            if (res.data.success) {
+            if (res.data?.success) {
               setCurrentUser({...currentUser, wallet: {balance: Number(currentUser?.wallet?.balance||0) + amount}})
               close()
               Toast.show({

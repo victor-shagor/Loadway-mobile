@@ -8,6 +8,7 @@ export const getAllTransactions = `/transaction/credit`;
 export const getUserDueBills = `/user/due_bills`;
 export const payUserBills = `/user/bills/pay`;
 export const getComplaints = `/complaints`;
+export const notifiaction = `/notifications`;
 
 // export const headers = {
 //     Authorization:

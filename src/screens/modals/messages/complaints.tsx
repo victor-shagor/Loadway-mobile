@@ -15,11 +15,12 @@ import CustomButton from "@src/components/CustomButton";
 import { updateState } from "@src/utils/updateState";
 import { ToastNotification } from "@src/utils/toastMessage";
 import { useOnboarding } from "@src/context/onboarding";
+import { useUploadImage } from "@src/hooks/imageUpload";
 
 export const ComplaintModal = ({
-  handleCloseModal,
+  handleCreateComplaint,
 }: {
-  handleCloseModal: () => void;
+  handleCreateComplaint: (payload:any) => void;
 }) => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [complaintFormData, setComplaintsFormData] = useState({
@@ -27,6 +28,7 @@ export const ComplaintModal = ({
     description: "",
     status: false,
   });
+  const uploadImage = useUploadImage('/file-upload');
 
   const handleUpdateComplaints = (
     updates: Partial<{ title: string; description: string; status: boolean }>
@@ -49,7 +51,6 @@ export const ComplaintModal = ({
 
   const postComplaint = async () => {
     if (
-      !selectedFile ||
       !complaintFormData.title ||
       !complaintFormData.description
     ) {
@@ -59,24 +60,23 @@ export const ComplaintModal = ({
 
     handleUpdateComplaints({ status: true });
 
-    const files = [selectedFile];
-
-    const payload = {
-      personnel: "PROPERTY_MANAGER",
-      title: complaintFormData.title,
-      description: complaintFormData.description,
-      attachment: files,
-    };
+    
 
     try {
-      const response = await createComplaints(payload);
-      ToastNotification(
-        "success",
-        "Successfully. Pull down to refresh complaints"
-      );
-      handleCloseModal();
-    } catch (error) {
-      console.log(error);
+      let uploadedFile = null;
+      if (selectedFile) {
+        uploadedFile = await uploadImage(selectedFile); // Upload a single image
+      }
+      const payload = {
+        personnel: "PROPERTY_MANAGER",
+        title: complaintFormData.title,
+        description: complaintFormData.description,
+        attachment: [uploadedFile.url],
+      };
+
+      handleCreateComplaint(payload);
+    } catch (error:any) {
+      // console.log(error.response.data);
       ToastNotification("error", "An error occurred");
     } finally {
       handleUpdateComplaints({ status: false });

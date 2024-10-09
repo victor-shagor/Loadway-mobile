@@ -21,6 +21,9 @@ export type AuthenticationStackParamList = {
   updatepassword: any;
 };
 
+export const navigationRef = React.createRef<any>();
+
+export const navigate = (name: string, params: any) =>  navigationRef.current?.navigate(name, params);
 
 
 const RootNavigation = () => {
@@ -88,7 +91,7 @@ const RootNavigation = () => {
     //   <DashboardStack />
     // </NavigationContainer>
     // <SafeAreaView>
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {/* {isFirstLaunch ? (
           <Onboarding />
         ) : (

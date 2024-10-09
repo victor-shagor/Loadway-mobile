@@ -8,6 +8,10 @@ import { useCallback, useEffect } from "react";
 import useOnboardingContext from "@src/utils/Context";
 import { getBills } from "@src/api/bills";
 import { User } from "@src/models/User";
+import { getAllNotifications } from "@src/api/notifications";
+import { set } from "date-fns";
+import { getChats } from "@src/api/chats";
+import { useChatContext } from "@src/context/chats";
 
 const Home = () => {
   useFocusEffect(
@@ -16,17 +20,24 @@ const Home = () => {
     }, [])
   );
 
-  const { currentUser, setBills } = useOnboardingContext();
+  const { currentUser, setBills, setAlertNotifications, setGeneralNotifications } = useOnboardingContext();
+  const { setChats } = useChatContext();
 
   useEffect(() => {
     const getUserBills = async () => {
       try {
         const bills = await getBills();
         setBills(bills);
+        const [alert, general, chats] = await Promise.all([getAllNotifications({ category: "Alert" }),  getAllNotifications({ category: "General" }), getChats()]);
+       setAlertNotifications(alert.data);
+        setGeneralNotifications(general.data);
+        setChats(chats);
       } catch (error) {}
     };
     getUserBills();
   }, []);
+
+  
 
   return (
     <>

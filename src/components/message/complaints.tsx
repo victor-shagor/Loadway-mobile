@@ -10,10 +10,11 @@ import {
   Keyboard,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Modalize } from "react-native-modalize";
-import { getAllComplaints } from "@src/api/complaints";
+import { createComplaints, getAllComplaints } from "@src/api/complaints";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
 import {
@@ -27,6 +28,8 @@ import CustomModal from "../CustomModal";
 import EmptyMessage from "./emptyMessage";
 import SearchInput from "./searchInput";
 import images from "@src/constants/images";
+import ViewComplaint from "./viewComplaint";
+import { useRoute } from "@react-navigation/native";
 
 export interface ComplaintStateProps {
   isLoading: boolean;
@@ -38,11 +41,20 @@ const ComplaintRenderItem = ({
   index,
   complaintsArray,
 }: ComplaintRenderItemProps) => {
+  const attachmentUrl = complainProps.attachment?.[0] || '';
+  // const handlePress = () => {
+
+  // }
   return (
     <View style={styles.chatMessageContainer}>
       <Image
-        source={{ uri: complainProps.user.profilePicture }}
-        style={{ width: 50, height: 50 }}
+        source={
+          attachmentUrl
+            ? { uri: attachmentUrl,
+              }
+            : images.complaint.repair
+        }
+        style={{ width: 50, height: 50, borderRadius: 25 }}
       />
 
       <View
@@ -92,30 +104,60 @@ const ComplaintRenderItem = ({
 
 const Complaints = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [search, setSearch] = useState("");
+  const [triggerItem, setTriggerItem] = useState({} as ComplaintProps);
   const [complaints, setComplaints] = useState<ComplaintStateProps>({
     isLoading: false,
     data: null,
   });
-  const [filteredComplaints, setFilteredComplaints] = useState<
-    ComplaintProps[]
-  >([]);
   const modalizeRef = useRef<Modalize>(null);
+  const clickModalizeRef = useRef<Modalize>(null);
 
   const handleCloseModal = () => {
     modalizeRef.current?.close();
   };
 
+  const { params } = useRoute();
+
+  const modalItem = params?.item;
+
+
+  useEffect(() => {
+    if (modalItem) {
+      setTriggerItem(modalItem);
+      clickModalizeRef.current?.open();
+    }
+    return () => {
+      setTriggerItem({} as ComplaintProps);
+    }
+  },[modalItem])
+
   const handleUpdateComplaints = (updates: Partial<ComplaintStateProps>) => {
     setComplaints((prev) => updateState(prev, updates));
   };
 
+  const handleCreateComplaint = async (payload: any) => {
+    try {
+      const response = await createComplaints(payload);
+      setComplaints({
+        ...complaints,
+        data: {
+          ...complaints.data,
+          complaints: [response, ...(complaints.data?.complaints || [])],
+        },
+      });
+      handleCloseModal();
+    } catch (error:any) {
+      handleCloseModal();
+      // console.log(error.response.data);
+    }
+  };
+
   const getComplaints = useCallback(async () => {
     handleUpdateComplaints({ isLoading: true });
-
     try {
-      const response = await getAllComplaints();
+      const response = await getAllComplaints(search);
       handleUpdateComplaints({ data: response });
-      setFilteredComplaints(response.complaints as ComplaintProps[]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -127,9 +169,8 @@ const Complaints = () => {
     setRefreshing(true);
 
     try {
-      const response = await getAllComplaints();
+      const response = await getAllComplaints(search);
       handleUpdateComplaints({ data: response });
-      setFilteredComplaints(response.complaints as ComplaintProps[]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -141,6 +182,8 @@ const Complaints = () => {
     getComplaints();
   }, []);
 
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -151,13 +194,18 @@ const Complaints = () => {
           <FlatList
             data={complaints.data?.complaints}
             renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={()=>{
+                setTriggerItem(item)
+                clickModalizeRef.current?.open()
+              }}>
               <ComplaintRenderItem
-                complainProps={item}
-                index={index}
-                complaintsArray={
-                  complaints.data?.complaints as ComplaintProps[]
-                }
-              />
+              complainProps={item}
+              index={index}
+              complaintsArray={
+                complaints.data?.complaints as ComplaintProps[]
+              }
+            />
+            </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={
@@ -177,12 +225,7 @@ const Complaints = () => {
               />
             }
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={
-              <SearchInput
-                searchArrayCopy={filteredComplaints as ComplaintProps[]}
-                updateSearchedArray={handleUpdateComplaints}
-              />
-            }
+            ListHeaderComponent={<SearchInput setSearch={setSearch} />}
             ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
           />
 
@@ -199,7 +242,14 @@ const Complaints = () => {
             triggerItemStyle={styles.modalTriggerStyle}
             modalTitle="Make Complaints"
             modalContent={
-              <ComplaintModal handleCloseModal={handleCloseModal} />
+              <ComplaintModal handleCreateComplaint={handleCreateComplaint} />
+            }
+          />
+          <CustomModal
+            modalizeRef={clickModalizeRef}
+            modalTitle="Complaint"
+            modalContent={
+              <ViewComplaint complaint={triggerItem}/>
             }
           />
         </>

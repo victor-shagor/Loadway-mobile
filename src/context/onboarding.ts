@@ -15,6 +15,10 @@ export type OnboardingContextType = {
   setChangePasswordDetails: (value: { email: string }) => void;
   currentUser: User | null;
   setCurrentUser: (value: any) => void;
+  generalNotifications: any[];
+  setGeneralNotifications: (value: any) => void;
+  alertNotifications: any[];
+  setAlertNotifications: (value: any) => void;
   resetPassword: {
     email: string;
     initialLogin: boolean;

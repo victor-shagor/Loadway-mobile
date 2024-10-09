@@ -18,6 +18,11 @@ import useOnboardingContext from "@src/utils/Context";
 import { Chats } from "@src/models/messaging";
 import { socket } from "@src/App";
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export type ChatRoomIndividualChatProps = {
   last?: boolean;
@@ -55,7 +60,6 @@ const ChatRoom = () => {
   const [initialScrollDone, setInitialScrollDone] = useState(false);
 
   const handleSubmit = () => {
-    console.log(text);
     const data = {
       recipientId,
       message: text,

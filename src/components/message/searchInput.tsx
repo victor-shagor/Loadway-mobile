@@ -6,20 +6,10 @@ import { ComplaintAPIProps, ComplaintProps } from "@src/models/messaging";
 import { ComplaintStateProps } from "./complaints";
 
 interface SearchProps {
-  searchArrayCopy: ComplaintProps[];
-  updateSearchedArray: (updates: Partial<ComplaintStateProps>) => void;
+  setSearch: (text:string)=> void;
 }
 
-const SearchInput = ({ searchArrayCopy, updateSearchedArray }: SearchProps) => {
-  const searchedComplaint = (value: string) => {
-    const newSearched = searchArrayCopy?.filter((item) =>
-      item.title.toLowerCase().includes(value.toLowerCase())
-    );
-
-    updateSearchedArray({
-      data: { complaints: newSearched as ComplaintProps[] },
-    });
-  };
+const SearchInput = ({ setSearch }: SearchProps) => {
 
   return (
     <View style={styles.searchInputContainer}>
@@ -32,10 +22,9 @@ const SearchInput = ({ searchArrayCopy, updateSearchedArray }: SearchProps) => {
         />
         <TextInput
           keyboardType={"default"}
-          onSubmitEditing={(event) => searchedComplaint(event.nativeEvent.text)}
           placeholder={"Search"}
           placeholderTextColor={appColors.deepGray}
-          onChangeText={(text) => searchedComplaint(text)}
+          onChangeText={(text) => setSearch(text)}
           style={{ flex: 1 }}
         />
       </View>

@@ -11,8 +11,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RequestContext from "./context/gateRequest";
 import ChatContext from "./context/chats";
 import io from 'socket.io-client'
+import { socketUrl } from "./utils/Base_url";
 
-export const socket = io('http://192.168.1.6:3007', {
+export const socket = io(socketUrl, {
   transports: ['websocket'],
 });
 
@@ -26,6 +27,8 @@ export default function App() {
   const [refetch, setRefetch] = useState<any>(false);
   const [bills, setBills] = useState<any>([]);
   const [chats, setChats] = useState<any>([]);
+  const [generalNotifications, setGeneralNotifications] = useState<any>([]);
+  const [alertNotifications, setAlertNotifications] = useState<any>([]);
   const [messages, setMessages] = useState<any>([]);
   const [loginDetails, setLoginDetails] = useState<{
     email: string;
@@ -81,7 +84,11 @@ export default function App() {
           resetPassword,
           setResetPassword,
           bills,
-          setBills
+          setBills,
+          alertNotifications,
+          setAlertNotifications,
+          generalNotifications,
+          setGeneralNotifications,
         }}
       >
         <RequestContext.Provider value={{frequents, setFrequent, refetch, setRefetch}}>

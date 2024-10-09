@@ -1,63 +1,73 @@
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import { StyleSheet, View, FlatList, SectionList } from "react-native";
 import { ThemedText } from "../ThemedText";
-import {
-  generalNotification,
-  maintainanceNotification,
-} from "@src/screens/notifications/data";
-import {
-  Divider,
-  RenderedGeneralNotification,
-  RenderedMaintainanceNotification,
-} from "./renderedNotification";
-
-const MaintenanceNotifications = () => {
-  return (
-    <FlatList
-      data={maintainanceNotification}
-      renderItem={({ item }) => (
-        <RenderedMaintainanceNotification item={item} />
-      )}
-      keyExtractor={(_item, index) => JSON.stringify(index)}
-      contentContainerStyle={{ flex: 1 }}
-      scrollEnabled={false}
-    />
-  );
-};
+import { getAllNotifications } from "@src/api/notifications";
+import useOnboardingContext from "@src/utils/Context";
+import { useFocusEffect } from "@react-navigation/native";
+import { RenderedGeneralNotification } from "./renderedNotification";
+import { format } from "date-fns"; // Import date-fns for date formatting
 
 const GeneralNotifications = () => {
+  const { generalNotifications, setGeneralNotifications } = useOnboardingContext();
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchNot = async () => {
+        try {
+          const newNot = await getAllNotifications({ category: "General" });
+          setGeneralNotifications(newNot.data);
+        } catch (error: any) {
+          // console.log(error.response.data);
+        }
+      };
+
+      fetchNot();
+    }, [setGeneralNotifications])
+  );
+
+  // Group notifications by date
+  const groupedNotifications = useMemo(() => {
+    if (!generalNotifications || !generalNotifications.length) return [];
+    const grouped = generalNotifications.reduce((acc, notification) => {
+      const date = format(new Date(notification.createdAt),  "MMM dd, yyyy"); // Format the date
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(notification);
+      return acc;
+    }, {});
+  
+    // Convert grouped object to an array of sections
+    return Object.entries(grouped).map(([date, notifications]) => ({
+      title: date,
+      data: notifications as any[], // Provide the correct type for the data property
+    }));
+  }, [generalNotifications]);
+
   return (
-    <FlatList
-      data={generalNotification}
+    <SectionList
+      sections={groupedNotifications}
+      keyExtractor={(item, index) => JSON.stringify(index)}
       renderItem={({ item }) => <RenderedGeneralNotification item={item} />}
-      keyExtractor={(_item, index) => JSON.stringify(index)}
-      contentContainerStyle={{ flex: 1 }}
-      ListHeaderComponent={
-        <View style={styles.dayContainer}>
-          <ThemedText style={{ flex: 0.3 }}>Today</ThemedText>
-          <Divider />
+      renderSectionHeader={({ section: { title } }) => (
+        <View style={styles.headerContainer}>
+          <ThemedText style={styles.headerText}>{title}</ThemedText>
         </View>
-      }
-      ListHeaderComponentStyle={{ marginBottom: 8 }}
-      ListFooterComponent={
-        <>
-          <View style={[styles.dayContainer, { marginVertical: 8 }]}>
-            <ThemedText style={{ flex: 0.3 }}>Feb 3, 2023</ThemedText>
-            <Divider />
-          </View>
-          <MaintenanceNotifications />
-        </>
-      }
-      ListFooterComponentStyle={{ marginTop: 8 }}
+      )}
+      contentContainerStyle={{ flexGrow: 1 }}
+      stickySectionHeadersEnabled={false} // Disable sticky headers if needed
     />
   );
 };
 
 const styles = StyleSheet.create({
-  dayContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+  headerContainer: {
+    padding: 10,
+    backgroundColor: "#f4f4f4", // Adjust the background color
+  },
+  headerText: {
+    // fontWeight: "bold",
+    fontSize: 16,
   },
 });
 

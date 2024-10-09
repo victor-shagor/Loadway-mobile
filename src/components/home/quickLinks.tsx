@@ -18,6 +18,9 @@ import { renderIcon } from "@src/components/common/renderIcon";
 import { Modalize } from "react-native-modalize";
 import { User } from "@src/models/User";
 import EmptyState from "../common/emptyState";
+import { useChatContext } from "@src/context/chats";
+import InitialsAvatar from "../common/initialAvatar";
+import { navigate } from "@src/navigation";
 
 export type QuickLinksRootStackParamList = {
   GateAccess: undefined;
@@ -35,7 +38,7 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
   const navigation = useNavigation<NavigationProp>();
 
   const modalizeRef = useRef<Modalize>(null);
-  const { chats } = currentUser || {};
+  const { chats } = useChatContext();
 
   return (
     <View style={styles.container}>
@@ -119,16 +122,17 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
           )}
 
         {(chats && chats?.length>0 )&& <FlatList
-          data={recentChatArray}
-          renderItem={({ item }) => (
-            <View style={[styles.quickLinksContainer, { marginBottom: 8 }]}>
+          data={chats}
+          renderItem={({ item }) => {
+            return (
+            <TouchableOpacity onPress={()=> navigate('ChatRoom', {chatId: item.id, recipientId: item.recipientId})} style={[styles.quickLinksContainer, { marginBottom: 8 }]} key={item.id}>
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
               >
-                <Image source={item.image} style={{ width: 50, height: 50 }} />
+                <InitialsAvatar initials={item.adminRole === 'SECURITY' ? 'S' : 'PM'}/>
                 <View style={{ gap: 2 }}>
-                  <ThemedText type="title">{item.name}</ThemedText>
-                  <ThemedText>{item.itemSent}</ThemedText>
+                  <ThemedText type="title">{item.adminRole}</ThemedText>
+                  <ThemedText>{item.lastMessage}</ThemedText>
                 </View>
               </View>
 
@@ -137,8 +141,8 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
                 size={20}
                 color={appColors.black}
               />
-            </View>
-          )}
+            </TouchableOpacity>
+          )}}
           keyExtractor={(item) => item.name}
           scrollEnabled={false}
         />
