@@ -239,7 +239,7 @@ const DashboardStack = () => {
         token = (
           await Notifications.getExpoPushTokenAsync()
         ).data;
-        console.log(token);
+        // console.log(token);
         await updateCurrentUser({pushNotificationsToken: token})
       } catch (e) {
         console.log(e)
