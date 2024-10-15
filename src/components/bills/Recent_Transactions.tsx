@@ -10,22 +10,7 @@ import axiosInstance from "@src/api/axiosClient";
 import useOnboardingContext from "@src/utils/Context";
 import { formatNarration } from "@src/utils/helper";
 import { ThemedText } from "../ThemedText";
-
-export type forWhatProps = "payment_history" | "recent_transaction";
-export type transactionDataProps = {
-  id: string;
-  userId: string;
-  reference: string;
-  amount: number;
-  chargeBack: number;
-  type: string;
-  category: string;
-  narration: string;
-  status: string;
-  metadata: {};
-  createdAt: string;
-  updatedAt: string;
-};
+import { transactionDataProps } from "@src/models/transactions";
 
 const Item = ({ item }: { item: transactionDataProps }) => {
   const color =

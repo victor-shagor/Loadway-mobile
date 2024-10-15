@@ -1,10 +1,10 @@
 import { View, Text, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import AllTransactions from "@src/components/bills/AllTransactions";
-import { transactionDataProps } from "@src/components/bills/Recent_Transactions";
 import { getAllTransactions } from "@src/utils/APIRoutes";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
 import axiosInstance from "@src/api/axiosClient";
+import { transactionDataProps } from "@src/models/transactions";
 
 const PaymentHistory = () => {
   const [userTransaction, setUserTransaction] = useState<
