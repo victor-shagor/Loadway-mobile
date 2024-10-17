@@ -7,6 +7,7 @@ import { formatNarration } from "@src/utils/helper";
 import CustomModal from "../CustomModal";
 import { transactionDataProps } from "@src/models/transactions";
 import ItemInvoiceModal from "./InvoiceModal";
+import { ThemedText } from "../ThemedText";
 
 const Item = ({ item }: { item: transactionDataProps }) => {
   const modalizeRef = useRef<Modalize>(null);
@@ -37,43 +38,45 @@ const Item = ({ item }: { item: transactionDataProps }) => {
   const NewDate = `${formattedDate}, ${formattedTime}`;
 
   return (
-    <CustomModal
-      modalizeRef={modalizeRef}
-      triggerItem={
-        <View className=" flex-row justify-between py-5 gap-4">
-          <View
-            className="flex-[0.1] items-center justify-center rotate-45 p-3 rounded-2xl"
-            style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
-          >
-            {renderIcon(icon, "AntDesign", 24, color)}
-          </View>
+    <>
+      <CustomModal
+        modalizeRef={modalizeRef}
+        triggerItem={
+          <View className=" flex-row justify-between py-5 gap-4">
+            <View
+              className="flex-[0.1] items-center justify-center rotate-45 p-3 rounded-2xl"
+              style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
+            >
+              {renderIcon(icon, "AntDesign", 24, color)}
+            </View>
 
-          <View className="flex-[0.7]">
-            <Text className=" text-[#191508] text-[16px] text-left font-semibold pb-1">
-              {formatNarration(item.narration)}
-            </Text>
-            <Text className=" text-[#66635A] text-[12px] font-medium">
-              {item.reference?.substring(0, 5) || ""}
-            </Text>
-            <Text
-              className=" text-[#66635A] text-[10px] font-medium 
+            <View className="flex-[0.7]">
+              <Text className=" text-[#191508] text-[16px] text-left font-semibold pb-1">
+                {formatNarration(item.narration)}
+              </Text>
+              <Text className=" text-[#66635A] text-[12px] font-medium">
+                {item.reference?.substring(0, 5) || ""}
+              </Text>
+              <Text
+                className=" text-[#66635A] text-[10px] font-medium 
                 leading-4 tracking-widest
                "
-            >
-              {NewDate}
-            </Text>
-          </View>
+              >
+                {NewDate}
+              </Text>
+            </View>
 
-          <View className="flex-[0.2]">
-            <Text className="" style={{ color }}>
-              &#8358;{item.amount.toLocaleString("en-US")}
-            </Text>
+            <View className="flex-[0.2]">
+              <Text className="" style={{ color }}>
+                &#8358;{item.amount.toLocaleString("en-US")}
+              </Text>
+            </View>
           </View>
-        </View>
-      }
-      modalTitle="Invoice Details"
-      modalContent={<ItemInvoiceModal item={item} />}
-    />
+        }
+        modalTitle="Invoice Details"
+        modalContent={<ItemInvoiceModal item={item} />}
+      />
+    </>
   );
 };
 
