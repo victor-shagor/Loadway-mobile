@@ -41,18 +41,13 @@ const ComplaintRenderItem = ({
   index,
   complaintsArray,
 }: ComplaintRenderItemProps) => {
-  const attachmentUrl = complainProps.attachment?.[0] || '';
-  // const handlePress = () => {
+  const attachmentUrl = complainProps.attachment?.[0] || "";
 
-  // }
   return (
     <View style={styles.chatMessageContainer}>
       <Image
         source={
-          attachmentUrl
-            ? { uri: attachmentUrl,
-              }
-            : images.complaint.repair
+          attachmentUrl ? { uri: attachmentUrl } : images.complaint.repair
         }
         style={{ width: 50, height: 50, borderRadius: 25 }}
       />
@@ -121,7 +116,6 @@ const Complaints = () => {
 
   const modalItem = params?.item;
 
-
   useEffect(() => {
     if (modalItem) {
       setTriggerItem(modalItem);
@@ -129,8 +123,8 @@ const Complaints = () => {
     }
     return () => {
       setTriggerItem({} as ComplaintProps);
-    }
-  },[modalItem])
+    };
+  }, [modalItem]);
 
   const handleUpdateComplaints = (updates: Partial<ComplaintStateProps>) => {
     setComplaints((prev) => updateState(prev, updates));
@@ -147,7 +141,7 @@ const Complaints = () => {
         },
       });
       handleCloseModal();
-    } catch (error:any) {
+    } catch (error: any) {
       handleCloseModal();
       // console.log(error.response.data);
     }
@@ -182,78 +176,77 @@ const Complaints = () => {
     getComplaints();
   }, []);
 
-
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-        <>
-          <FlatList
-            data={complaints.data?.complaints}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={()=>{
-                setTriggerItem(item)
-                clickModalizeRef.current?.open()
-              }}>
+      <View style={{ flex: 1, marginBottom: 100 }}>
+        <FlatList
+          data={complaints.data?.complaints}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              onPress={() => {
+                setTriggerItem(item);
+                clickModalizeRef.current?.open();
+              }}
+              style={{ flex: 1 }}
+            >
               <ComplaintRenderItem
-              complainProps={item}
-              index={index}
-              complaintsArray={
-                complaints.data?.complaints as ComplaintProps[]
-              }
-            />
-            </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={
-              <>
-                {complaints.isLoading ? (
-                  <ActivityIndicator size={18} />
-                ) : !complaints.isLoading &&
-                  complaints.data?.complaints?.length! < 1 ? (
-                  <EmptyMessage message={"You have made no complaints"} />
-                ) : null}
-              </>
-            }
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => onRefreshComplaints()}
+                complainProps={item}
+                index={index}
+                complaintsArray={
+                  complaints.data?.complaints as ComplaintProps[]
+                }
               />
-            }
-            showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<SearchInput setSearch={setSearch} />}
-            ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
-          />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={
+            <>
+              {complaints.isLoading ? (
+                <ActivityIndicator size={18} />
+              ) : !complaints.isLoading &&
+                complaints.data?.complaints?.length! < 1 ? (
+                <EmptyMessage message={"You have made no complaints"} />
+              ) : null}
+            </>
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => onRefreshComplaints()}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={<SearchInput setSearch={setSearch} />}
+          ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+        />
 
-          <CustomModal
-            modalizeRef={modalizeRef}
-            triggerItem={
-              <>
-                <AntDesign name="plus" size={15} color={appColors.white} />
-                <ThemedText style={{ color: appColors.white }}>
-                  New Complaint
-                </ThemedText>
-              </>
-            }
-            triggerItemStyle={styles.modalTriggerStyle}
-            modalTitle="Make Complaints"
-            modalContent={
-              <ComplaintModal handleCreateComplaint={handleCreateComplaint} />
-            }
-          />
-          <CustomModal
-            modalizeRef={clickModalizeRef}
-            modalTitle="Complaint"
-            modalContent={
-              <ViewComplaint complaint={triggerItem}/>
-            }
-          />
-        </>
-      </TouchableWithoutFeedback>
+        <CustomModal
+          modalizeRef={modalizeRef}
+          triggerItem={
+            <>
+              <AntDesign name="plus" size={15} color={appColors.white} />
+              <ThemedText style={{ color: appColors.white }}>
+                New Complaint
+              </ThemedText>
+            </>
+          }
+          triggerItemStyle={styles.modalTriggerStyle}
+          modalTitle="Make Complaints"
+          modalContent={
+            <ComplaintModal handleCreateComplaint={handleCreateComplaint} />
+          }
+        />
+
+        <CustomModal
+          modalizeRef={clickModalizeRef}
+          modalTitle="Complaint"
+          modalContent={<ViewComplaint complaint={triggerItem} />}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };

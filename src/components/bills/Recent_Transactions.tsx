@@ -9,22 +9,8 @@ import SectionTitle from "./SectionTitle";
 import axiosInstance from "@src/api/axiosClient";
 import useOnboardingContext from "@src/utils/Context";
 import { formatNarration } from "@src/utils/helper";
-
-export type forWhatProps = "payment_history" | "recent_transaction";
-export type transactionDataProps = {
-  id: string;
-  userId: string;
-  reference: string;
-  amount: number;
-  chargeBack: number;
-  type: string;
-  category: string;
-  narration: string;
-  status: string;
-  metadata: {};
-  createdAt: string;
-  updatedAt: string;
-};
+import { ThemedText } from "../ThemedText";
+import { transactionDataProps } from "@src/models/transactions";
 
 const Item = ({ item }: { item: transactionDataProps }) => {
   const color =
@@ -52,27 +38,27 @@ const Item = ({ item }: { item: transactionDataProps }) => {
   const formattedTime = date.toISOString().split("T")[1].split(".")[0];
   const NewDate = `${formattedDate}, ${formattedTime}`;
 
-
   return (
-    <View className=" flex-row justify-between py-5">
+    <View style={styles.itemContentContainer}>
       <View
         className=" rotate-45 p-3 rounded-2xl"
         style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
       >
         {renderIcon(icon, "AntDesign", 24, color)}
       </View>
-      <View>
-        <Text
-          className=" text-[#191508] text-[16px] font-semibold pb-1"
-          numberOfLines={1}  // Limits to one line
-          ellipsizeMode="tail"  // Adds ellipsis at the end
-          style={{ width: 150 }}  // Set the desired fixed width
+      <View style={{ gap: 2 }}>
+        <ThemedText
+          type="default"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ width: 150 }}
         >
           {formatNarration(item.narration)}
-        </Text>
-        <Text className=" text-[#66635A] text-[10px] font-medium">
+        </ThemedText>
+
+        <ThemedText type="small" className="text-[#66635A]">
           {NewDate}
-        </Text>
+        </ThemedText>
       </View>
       <View>
         <Text className="" style={{ color }}>
@@ -108,11 +94,11 @@ const Recent_Transactions = () => {
   const color = userTransaction.length > 0 ? "#CD3617" : "#D1D0CE";
 
   return (
-    <View className=" mt-[5%] mb-10">
+    <View className="mt-[5%] mb-10">
       <SectionTitle title="Recent Transactions" payAllColor={color} />
       {userTransaction.length > 0 ? (
         <View
-          className=" mx-5  px-5 bg-white rounded-xl 
+          className=" mx-5 px-5 bg-white rounded-xl 
      divide-y divide-slate-200 mt-5 mb-[20%]"
         >
           {userTransaction.map((item, index) => {
@@ -130,8 +116,8 @@ const Recent_Transactions = () => {
           })}
         </View>
       ) : (
-        <View style={{marginBottom:10}}>
-        <Empty_bills_or_transaction text="No recent transactions yet" />
+        <View style={{ marginBottom: 10 }}>
+          <Empty_bills_or_transaction text="No recent transactions yet" />
         </View>
       )}
     </View>
@@ -142,6 +128,13 @@ const styles = StyleSheet.create({
   itemContainer: {
     borderBottomWidth: 0.1,
     borderColor: "rgba(165, 162, 156, 0.5)",
+  },
+  itemContentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: 80,
+    paddingVertical: 10,
   },
   lastItem: {
     borderBottomWidth: 0,

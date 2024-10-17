@@ -1,11 +1,5 @@
 import {} from "expo-status-bar";
-import {
-  View,
-  StatusBar,
-  ScrollView,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, StatusBar, ScrollView, StyleSheet, Alert } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import WalletBallance from "@src/components/bills/walletBallance";
@@ -17,8 +11,6 @@ import HousingBills from "@src/components/bills/HousingBills";
 import React from "react";
 
 const Bills = () => {
-
-
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle("dark-content");
@@ -40,7 +32,7 @@ const Bills = () => {
           <HousingBills title="List of Housing Bills" />
         </View>
         <View className="mb-40">
-          <Recent_Transactions  />
+          <Recent_Transactions />
         </View>
       </ScrollView>
     </View>

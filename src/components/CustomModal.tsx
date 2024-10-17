@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode } from "react";
 import {
   TouchableOpacity,
   TouchableOpacityProps,
@@ -35,20 +35,20 @@ const CustomModal = ({
   modalizeRef,
   triggerDisabled = false,
 }: CustomModalProps) => {
-  // const modalizeRef = useRef<Modalize>(null);
-
   const onOpen = () => {
     modalizeRef.current?.open();
   };
 
   return (
     <>
-      {triggerItem && <ModalButton
-        onPress={onOpen}
-        children={triggerItem}
-        style={triggerItemStyle}
-        disabled={triggerDisabled}
-      />}
+      {triggerItem && (
+        <ModalButton
+          onPress={onOpen}
+          children={triggerItem}
+          style={triggerItemStyle}
+          disabled={triggerDisabled}
+        />
+      )}
       <Portal>
         <Modalize
           ref={modalizeRef}
