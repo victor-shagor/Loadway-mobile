@@ -6,7 +6,7 @@ export enum GateAccessStatus {
   'REJECTED' = 'REJECTED',
 }
 
-export const getGateRequests = async (status?: string, pagination?:string) => {
+export const getGateRequests = async ( pagination: string = '?page=1&limit=6', status?: string) => {
   const url = status ? `/gate/access-logs?status=${status}` : `/gate/access-logs${pagination}`
     const response = await axios.get(url);
     return response.data.data;
