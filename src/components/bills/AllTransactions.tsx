@@ -5,7 +5,7 @@ import { appColors } from "@src/constants/colors";
 import { transactionDataProps } from "./Recent_Transactions";
 import { formatNarration } from "@src/utils/helper";
 
-const Item = ({ item }: { item: transactionDataProps }) => {
+export const Item = ({ item }: { item: transactionDataProps }) => {
   const color =
     item.type === "DEBIT"
       ? appColors.orange

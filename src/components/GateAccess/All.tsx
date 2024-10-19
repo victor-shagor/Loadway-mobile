@@ -5,17 +5,63 @@ import Button from "./Button";
 import { getGateRequests } from "@src/api/gateRequest";
 import { useRequestContext } from "@src/context/gateRequest";
 
+interface AccessLog {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  accessCode: string;
+  location: string;
+  accessType: string;
+  security: string | null;
+  frequentVisitor: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 const All = () => {
-  const [requests, setRequest] = useState([]);
+  const [requests, setRequest] = useState<AccessLog[]>([]);
 
-  const { refetch } = useRequestContext()
+  const { refetch } = useRequestContext();
+
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const getAccess_logs = async (page: number) => {
+    if (isLoading || !hasMore) return;
+
+    setIsLoading(true);
+
+    try {
+      const pagination = `?page=${page}&limit=6`;
+      const data = await getGateRequests(pagination);
+      // const data: transactionDataProps[] = response.data.data.data;
+      // setUserTransaction(data);
+
+      if (data.length > 0) {
+        setRequest((prevData)=> [...prevData, ...data.accessLogs]);
+        setPageNumber(data.pagination.currentPage + 1);
+        setTotalPages(data.pagination.totalPages);
+      }
+
+      if (data.data.data.currentPage >= data.pagination.totalPages) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      // Alert.alert(
+      //   "An Error ocurred. Failed to fetch user transaction." + error
+      // );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      const data = await getGateRequests();
-      setRequest(data);
-    })();
-  }, [refetch]);
+    getAccess_logs(pageNumber);
+  }, [refetch]);
+;
 
   return (
     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
