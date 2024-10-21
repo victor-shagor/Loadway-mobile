@@ -1,11 +1,11 @@
 import { View, Text, Alert, FlatList, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import AllTransactions from "@src/components/bills/AllTransactions";
-import { transactionDataProps } from "@src/components/bills/Recent_Transactions";
 import { getAllTransactions } from "@src/utils/APIRoutes";
 import { getAccessToken } from "@src/utils/RetrieveAccessToken";
 import axiosInstance from "@src/api/axiosClient";
 import { Item } from "@src/components/bills/AllTransactions";
+import { transactionDataProps } from "@src/models/transactions";
 
 const PaymentHistory = () => {
   const [userTransaction, setUserTransaction] = useState<
@@ -75,7 +75,7 @@ const PaymentHistory = () => {
         style={{ backgroundColor: "rgba(178, 177, 173, 0.15)" }}
       >
         <Text className=" text-left pl-5 text-[#3F3C31] py-4 font-bold text-[14px]">
-          30.02.2023
+          30.02.2024
         </Text>
       </View>
       {/* <AllTransactions data={userTransaction} /> */}
