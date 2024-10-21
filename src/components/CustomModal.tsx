@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode } from "react";
 import {
   TouchableOpacity,
   TouchableOpacityProps,
@@ -13,7 +13,7 @@ import { ThemedText } from "./ThemedText";
 import { appColors } from "@src/constants/colors";
 
 interface CustomModalProps {
-  triggerItem: ReactNode;
+  triggerItem?: ReactNode;
   triggerItemStyle?: StyleProp<ViewStyle>;
   modalTitle?: string;
   modalContent: ReactNode;
@@ -35,20 +35,20 @@ const CustomModal = ({
   modalizeRef,
   triggerDisabled = false,
 }: CustomModalProps) => {
-  // const modalizeRef = useRef<Modalize>(null);
-
   const onOpen = () => {
     modalizeRef.current?.open();
   };
 
   return (
     <>
-      <ModalButton
-        onPress={onOpen}
-        children={triggerItem}
-        style={triggerItemStyle}
-        disabled={triggerDisabled}
-      />
+      {triggerItem && (
+        <ModalButton
+          onPress={onOpen}
+          children={triggerItem}
+          style={triggerItemStyle}
+          disabled={triggerDisabled}
+        />
+      )}
       <Portal>
         <Modalize
           ref={modalizeRef}

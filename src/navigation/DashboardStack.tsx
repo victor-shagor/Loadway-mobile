@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Platform,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -10,6 +11,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 
 import {
   CancelEdit,
@@ -41,6 +44,10 @@ import EmergencyUI from "../screens/emergency";
 import ChatRoom from "@src/screens/message/ChatRoom";
 import { io } from "socket.io-client";
 import useOnboardingContext from "@src/utils/Context";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import { updateCurrentUser } from "@src/api/user";
+import { navigate } from ".";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -143,8 +150,49 @@ const TabNavigation = () => {
 //   transports: ['websocket'],
 // });
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: true,
+  }),
+});
+
+
 const DashboardStack = () => {
   const { height } = useWindowDimensions();
+  const [notification, setNotification] = useState<Notifications.Notification | undefined>(
+    undefined
+  );
+  const notificationListener = useRef<Notifications.Subscription>();
+  const responseListener = useRef<Notifications.Subscription>();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      if(response.notification.request.content.title === 'New Message'){
+        navigate('ChatRoom', {chatId: response.notification.request.content.data.chatId, recipientId: response.notification.request.content.data.recipientId})
+      }else if(response.notification.request.content.title === 'Alert'){
+        navigate('UserNotifications', {alert:true, item: response.notification.request.content.data})
+      }else if(response.notification.request.content.title === 'Complaint'){
+        navigate('Message', {complaint:true, item: response.notification.request.content.data})
+      }
+      else{
+        navigate('UserNotifications', {})
+      }
+    });
+
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      responseListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   // const {currentUser} = useOnboardingContext()
 
@@ -165,6 +213,45 @@ const DashboardStack = () => {
   //     };
   //   }
   // }, [currentUser?.id]);
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return;
+      }
+      try {
+        token = (
+          await Notifications.getExpoPushTokenAsync()
+        ).data;
+        // console.log(token);
+        await updateCurrentUser({pushNotificationsToken: token})
+      } catch (e) {
+        console.log(e)
+        return;
+      }
+    } else {
+      console.log('Must use physical device for Push Notifications');
+      return
+    }
+  
+    return token;
+  }
  
   return (
     <Host>
@@ -191,7 +278,7 @@ const DashboardStack = () => {
             name="ChatRoom"
             component={ChatRoom}
             options={{
-              title: "David Schlepp",
+              title: "Chat",
               headerTitleAlign: "center",
               headerBackTitleVisible: false,
               headerTintColor: appColors.black,

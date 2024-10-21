@@ -36,9 +36,11 @@ const images = {
     leakage: require("@src/assets/icons/leakageModalImage.jpeg"),
     security: require("@src/assets/icons/securityModaIImage.jpeg"),
   },
-  notification:{
-    leakage:  require("@src/assets/icons/leakageModalImage.jpeg"),
-    security:  require("@src/assets/icons/securityModaIImage.jpeg"),
+  complaint: {
+    repair: require("@src/assets/icons/complaint.jpg"),
+  },
+  alert: {
+    alertImage: require("@src/assets/icons/alert-images.png"),
   },
 };
 

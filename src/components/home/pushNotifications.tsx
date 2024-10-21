@@ -1,9 +1,15 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
+import useOnboardingContext from "@src/utils/Context";
+import { navigate } from "@src/navigation";
+import { timestampDisplay } from "@src/utils/helper";
 
 const PushNotifications = () => {
+
+  const {alertNotifications, generalNotifications} = useOnboardingContext()
+  if(!alertNotifications?.length && !generalNotifications?.length) return (<View></View>)
   return (
     <View style={styles.pushNotificationWrapper}>
       <View style={{ gap: 8 }}>
@@ -16,12 +22,12 @@ const PushNotifications = () => {
             Push Notifications
           </ThemedText>
 
-          <View style={styles.alertContainer}>
+          {(alertNotifications && alertNotifications.length > 0) &&<TouchableOpacity onPress={()=>navigate('UserNotifications', {alert:true, item: null})} style={styles.alertContainer}>
             <ThemedText
               type="small"
               style={{ fontWeight: 700, color: appColors.orange }}
             >
-              ALERT
+              {alertNotifications[0]?.title}
             </ThemedText>
 
             <View
@@ -31,28 +37,37 @@ const PushNotifications = () => {
                 justifyContent: "space-between",
               }}
             >
+              <View style={{width:'70%', gap: 2}}>
               <ThemedText
                 type="default"
                 style={{ color: appColors.white, fontWeight: 600 }}
               >
-                Unauthorized entry at front gate
+                {alertNotifications[0]?.description}
               </ThemedText>
+              <ThemedText
+                type="default"
+                 ellipsizeMode="tail"
+                numberOfLines={2}
+                style={{ color: appColors.white, fontSize: 12 }}
+              >
+                {alertNotifications[0]?.content}
+              </ThemedText>
+              </View>
 
-              <View style={styles.highRisk}>
-                <ThemedText type="small" style={{ color: appColors.orange }}>
-                  High Risk
-                </ThemedText>
+              <View style={[styles.highRisk, {alignItems: 'flex-end'}]}>
+              <ThemedText style={{color:appColors.white}} type="small">{timestampDisplay(alertNotifications[0]?.createdAt).formattedDate}</ThemedText>
+              <ThemedText style={{color:appColors.white}} type="small">{timestampDisplay(alertNotifications[0]?.createdAt).formattedTime}</ThemedText>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>}
         </View>
 
-        <View style={styles.gateAccess}>
+        {generalNotifications && generalNotifications.length > 0 && <TouchableOpacity onPress={()=>navigate('UserNotifications', {})} style={styles.gateAccess}>
           <ThemedText
             type="small"
-            style={{ fontWeight: 700, color: appColors.lightGray }}
+            style={{ fontWeight: 700, color: appColors.lightGray, textTransform: 'uppercase' }}
           >
-            GATE ACCESS
+            {generalNotifications[0]?.title}
           </ThemedText>
 
           <View
@@ -62,17 +77,28 @@ const PushNotifications = () => {
               justifyContent: "space-between",
             }}
           >
-            <View style={{ gap: 6 }}>
-              <ThemedText type="title">John Davis</ThemedText>
-              <ThemedText type="small">C-135DF0</ThemedText>
-            </View>
-
-            <View style={{ gap: 6 }}>
-              <ThemedText type="small">JAN 20 2023</ThemedText>
-              <ThemedText type="small">10:00 AM</ThemedText>
+            <View style={{width:'70%', gap: 2}}>
+            <ThemedText
+                type="default"
+                style={{ fontWeight: 600 }}
+              >
+                {generalNotifications[0]?.description}
+              </ThemedText>
+              <ThemedText
+              ellipsizeMode="tail"
+                type="default"
+                numberOfLines={2}
+                style={{ fontSize: 12 }}
+              >
+                {generalNotifications[0]?.content}
+              </ThemedText>
+              </View>
+            <View style={{ alignItems: 'flex-end' }}>
+            <ThemedText type="small">{timestampDisplay(generalNotifications[0]?.createdAt).formattedDate}</ThemedText>
+              <ThemedText type="small">{timestampDisplay(generalNotifications[0]?.createdAt).formattedTime}</ThemedText>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>}
       </View>
     </View>
   );
@@ -95,9 +121,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   highRisk: {
-    backgroundColor: appColors.white,
     borderRadius: 5,
     padding: 6,
+    color: appColors.white,
   },
   gateAccess: {
     flex: 1,
@@ -108,7 +134,8 @@ const styles = StyleSheet.create({
     borderColor: appColors.gray,
     borderRadius: 10,
     minHeight: 100,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
   },
 });
 

@@ -1,11 +1,17 @@
+import React, { useRef } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import { Modalize } from "react-native-modalize";
 import { renderIcon } from "../common/renderIcon";
 import { appColors } from "@src/constants/colors";
-import { transactionDataProps } from "./Recent_Transactions";
 import { formatNarration } from "@src/utils/helper";
+import CustomModal from "../CustomModal";
+import { transactionDataProps } from "@src/models/transactions";
+import ItemInvoiceModal from "./InvoiceModal";
+import { ThemedText } from "../ThemedText";
 
-const Item = ({ item }: { item: transactionDataProps }) => {
+export const Item = ({ item }: { item: transactionDataProps }) => {
+  const modalizeRef = useRef<Modalize>(null);
+
   const color =
     item.type === "DEBIT"
       ? appColors.orange
@@ -32,50 +38,54 @@ const Item = ({ item }: { item: transactionDataProps }) => {
   const NewDate = `${formattedDate}, ${formattedTime}`;
 
   return (
-    <View className=" flex-row justify-between py-5">
-      <View
-        className=" rotate-45 p-3  rounded-2xl h-[7vh]"
-        style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
-      >
-        {renderIcon(icon, "AntDesign", 24, color)}
-      </View>
-      <View className=" pl-5  w-[40vw]">
-        <Text className=" text-[#191508] text-[16px] font-semibold pb-1">
-          {formatNarration(item.narration)}
-        </Text>
-        <Text className=" text-[#66635A] text-[12px] font-medium">
-          {item.reference?.substring(0, 5)||''}
-        </Text>
-        <Text
-          className=" text-[#66635A] text-[10px] font-medium 
-              leading-4 tracking-widest
-             "
-        >
-          {NewDate}
-        </Text>
-      </View>
-      <View>
-        <Text className="" style={{ color }}>
-          &#8358;{item.amount.toLocaleString("en-US")}
-        </Text>
-      </View>
-    </View>
+    <>
+      <CustomModal
+        modalizeRef={modalizeRef}
+        triggerItem={
+          <View className=" flex-row justify-between py-5 gap-4">
+            <View
+              className="flex-[0.1] items-center justify-center rotate-45 p-3 rounded-2xl"
+              style={{ backgroundColor: "rgba( 212, 212, 212, 0.16)" }}
+            >
+              {renderIcon(icon, "AntDesign", 24, color)}
+            </View>
+
+            <View className="flex-[0.7]">
+              <Text className=" text-[#191508] text-[16px] text-left font-semibold pb-1">
+                {formatNarration(item.narration)}
+              </Text>
+              <Text className=" text-[#66635A] text-[12px] font-medium">
+                {item.reference?.substring(0, 5) || ""}
+              </Text>
+              <Text
+                className=" text-[#66635A] text-[10px] font-medium 
+                leading-4 tracking-widest
+               "
+              >
+                {NewDate}
+              </Text>
+            </View>
+
+            <View className="flex-[0.2]">
+              <Text className="" style={{ color }}>
+                &#8358;{item.amount.toLocaleString("en-US")}
+              </Text>
+            </View>
+          </View>
+        }
+        modalTitle="Invoice Details"
+        modalContent={<ItemInvoiceModal item={item} />}
+      />
+    </>
   );
 };
 
 const AllTransactions = ({ data }: { data: transactionDataProps[] }) => {
   return (
-    <ScrollView>
-      <View
-        className=" p-5 mx-5  px-5 bg-white rounded-xl 
-       "
-      >
-        {data.map((item, index) => {
-          return (
-            <View key={index}>
-              <Item item={item} />
-            </View>
-          );
+    <ScrollView style={{ marginBottom: 100 }}>
+      <View className="p-4 bg-white rounded-xl">
+        {data.map((item) => {
+          return <Item key={item.id} item={item} />;
         })}
       </View>
     </ScrollView>
@@ -89,6 +99,14 @@ const styles = StyleSheet.create({
   },
   lastItem: {
     borderBottomWidth: 0,
+  },
+  itemInvoiceModalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 100,
+    padding: 20,
   },
 });
 

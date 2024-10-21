@@ -25,6 +25,7 @@ import { getChats } from "@src/api/chats";
 import images from "@src/constants/images";
 import { useChatContext } from "@src/context/chats";
 import { socket } from "@src/App";
+import InitialsAvatar from "../common/initialAvatar";
 
 export type paramList = {
   ChatRoom: any;
@@ -37,10 +38,7 @@ const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
     <>
       <TouchableOpacity onPress={() => naviagtion.navigate("ChatRoom", {chatId: chatProps.id, recipientId: chatProps.recipientId})}>
         <View style={styles.chatMessageContainer}>
-          <Image
-            source={images.user.propertyManager}
-            style={{ width: 50, height: 50 }}
-          />
+          <InitialsAvatar bg={appColors.gray} initials={chatProps.adminRole === 'SECURITY' ? 'S' : 'PM'}/>
           <View style={[styles.chatMessage]}>
             <View style={{ gap: 2, flex: 1 }}>
               <ThemedText type="title">
@@ -93,6 +91,7 @@ const ChatRenderItem = ({ chatProps, index }: ChatRenderItemProps) => {
 const Chat = () => {
   const modalizeRef = useRef<Modalize>(null);
   const { chats, setChats } = useChatContext();
+  const [search, setSearch] = useState("");
 
   useFocusEffect(
     useCallback(() => {
@@ -136,7 +135,7 @@ const Chat = () => {
             ListEmptyComponent={
               <EmptyMessage message={"You have no messages"} /> // Shouldn't be empty since it is defined and constant. Rght?
             }
-            ListHeaderComponent={<SearchInput />}
+            ListHeaderComponent={<SearchInput setSearch={setSearch}/>}
             ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
           />
         </>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
 import Chat from "@src/components/message/chat";
 import Complaints from "@src/components/message/complaints";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export const Tab = createMaterialTopTabNavigator();
 
@@ -31,7 +32,17 @@ export const CustomTabLabel = ({
 
 const Messages = () => {
   const { height } = useWindowDimensions();
+  const navigation = useNavigation();
 
+  const { params } = useRoute();
+
+  const complaint = params?.complaint;
+  const item = params?.item;
+
+
+  useEffect(() => {
+    if(complaint) navigation.navigate("Complaint", {item});
+  }, [navigation, complaint, item]);
   return (
     <Tab.Navigator
       screenOptions={{
