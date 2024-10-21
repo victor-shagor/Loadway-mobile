@@ -7,7 +7,8 @@ const ForgotPassword = () => {
     <SafeAreaView>
       <PassWordManagement
         big_Text="Reset Password"
-        small_text="Please enter the verification code sent to  davidloadways@gmail.com"
+        small_text="Please enter the verification code sent to you."
+        // small_text="Please enter the verification code sent to  davidloadways@gmail.com"
         btn_text="send"
         type="forgotpassword"
         actionForCancelBtn="backToLogin"

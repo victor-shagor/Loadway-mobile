@@ -22,9 +22,8 @@ const ForgotPasswordBtn = ({
 }: ForgotPasswordBtnProps) => {
   const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
-  const { currentUser } = useOnboardingContext();
 
-  const { setLogin } = useOnboardingContext();
+  const { setLogin, login, currentUser } = useOnboardingContext();
   const inputValue = AuthInputs();
 
   const closeModal = () => {
@@ -64,7 +63,7 @@ const ForgotPasswordBtn = ({
         text2: "An error occured, please try again.",
       });
     } finally {
-      closeModal();
+      // closeModal();
     }
   };
 
@@ -72,24 +71,28 @@ const ForgotPasswordBtn = ({
     try {
       const url = `${BaseUrl}${ChangePassword}`;
       const payload = inputValue.resetPassword;
-      console.log(payload)
       const response = await axios.patch(url, {
-        ...payload,
+        // ...payload,
         email: currentUser?.email,
         initialLogin,
+        code: payload?.code,
+        newPassword: payload?.newPassword,
       });
-      if (response.data.success) {
-        setLogin(true);
-      } else {
+      const successful = response.data.success;
+      if (successful) {
+        // setLogin(true);
+        navigateTo("login");
+      } 
+      else {
         console.log("An error occurred");
       }
     } catch (error: any) {
-      console.log(inputValue.resetPassword)
-      console.error("Error resetting password:", error.response);
+      console.error("Error resetting password:", error); // Log the entire error object
     }
   };
 
   const CancelBtnHandler = async () => {
+    console.log(type, action)
     if (type === "modal" && action === "cancelModal") {
       closeModal();
     } else if (type === "modal" && action === "sendEmailToBackend") {
@@ -97,7 +100,7 @@ const ForgotPasswordBtn = ({
     } else if (type === "forgotpassword" && action === "backToLogin") {
       navigateTo("login");
     } else if (type === "forgotpassword" && action === "resetpassword") {
-      await handleResetPassword(false);
+       await handleResetPassword(false);
     } else if (type === "updatepasword" && action === "backToLogin") {
       navigateTo("login");
     } else if (type === "updatepasword" && action === "savepassword") {
