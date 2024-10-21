@@ -9,7 +9,7 @@ import { transactionDataProps } from "@src/models/transactions";
 import ItemInvoiceModal from "./InvoiceModal";
 import { ThemedText } from "../ThemedText";
 
-const Item = ({ item }: { item: transactionDataProps }) => {
+export const Item = ({ item }: { item: transactionDataProps }) => {
   const modalizeRef = useRef<Modalize>(null);
 
   const color =
