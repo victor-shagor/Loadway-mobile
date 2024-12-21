@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,7 +10,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "@src/components/layout/safeAreaView";
-import images from "@src/constants/images";
 import { Feather } from "@expo/vector-icons";
 import { FieldApi, useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
@@ -20,7 +18,6 @@ import { useMutation } from "@tanstack/react-query";
 import { ToastService } from "react-native-toastier";
 import AppToast from "@src/components/common/AppToast";
 import { login } from "@src/api/auth";
-import { useNavigation } from "@react-navigation/native";
 
 type FormField = {
   name: any;
@@ -36,51 +33,81 @@ type FormField = {
   keyboardType?: KeyboardTypeOptions;
 };
 
-const Login = () => {
-  const navigation = useNavigation();
+const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const loginFormFields: Array<FormField> = [
+  const formFields: Array<FormField> = [
+
     {
-      name: "email",
+      name: "resetCode",
       validators: {
-        onChange: z.string().email({
-          message: "Please enter a valid email",
+        onChange: z.string().min(1, {
+          message: "Reset code is required",
         }),
       },
-      placeholder: "Email Address",
-      keyboardType: "email-address",
+      placeholder: "Reset code",
+      keyboardType: "number-pad",
     },
     {
       name: "password",
       validators: {
-        onChange: z.string().min(1, {
-          message: "Password is required",
-        }),
+        onChange: z
+          .string()
+          .min(1, {
+            message: "Password is required",
+          })
+          .regex(/(?=.*[!@#$%^&*])/, {
+            message: "Password must contain at least one special character",
+          })
+          .regex(/\w*[a-z]\w*/, "Must have a small letter")
+          .regex(/\w*[A-Z]\w*/, "Must have a capital letter")
+          .regex(/\d/, "Must have a number")
+          .regex(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Must have a special character")
+          .min(8, "Password must be at least 8 characters long"),
       },
-      placeholder: "Password",
+      placeholder: "New password",
+      type: "password",
+      keyboardType: "default",
+      showRightIcon: true,
+    },
+    {
+      name: "confirmPassword",
+      validators: {
+        onChangeListenTo: ["password"],
+        onChange: ({
+          value,
+          fieldApi,
+        }: {
+          value: string;
+          fieldApi: FieldApi<any, any>;
+        }) => {
+          if (value !== fieldApi.form.getFieldValue("password")) {
+            return "Passwords do not match";
+          }
+          return undefined;
+        },
+      },
+      placeholder: "Confirm password",
       type: "password",
       keyboardType: "default",
       showRightIcon: true,
     },
   ];
 
-  const loginForm = useForm({
+  const form = useForm({
     defaultValues: {
       email: "",
-      password: "",
     },
     onSubmit: async ({ value }) => {
       const data = {
         email: value.email,
-        password: value.password,
       };
-      loginMutation.mutate(data as any);
+      mutation.mutate(data as any);
     },
     validatorAdapter: zodValidator(),
   });
 
-  const loginMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: (value) => {
       return login(value);
     },
@@ -104,7 +131,6 @@ const Login = () => {
       });
     },
     onSuccess: (data) => {
-      // console.log({ data });
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -123,11 +149,6 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !showPassword);
   };
-
-  const gotoForgotPassword = () => {
-    navigation.navigate("sendresetemail");
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -137,30 +158,24 @@ const Login = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 0.1 }}>
           <View className='h-full flex-1 px-[5vw]'>
             <View className='flex gap-8 pb-10'>
-              <View>
-                <Image source={images.icons.logo} className='w-32 h-[33.8px]' />
-              </View>
               <View className='flex'>
                 <Text className='text-black text-3xl font-medium pb-2'>
-                  Bills. Services. Security
+                  Reset Password
                 </Text>
                 <Text className='text-[#4b4b4b] text-xl font-lg'>
-                  Login to your account
+                  Enter a valid email address
                 </Text>
               </View>
             </View>
             <View>
-              <View className='flex'>
-                {loginFormFields.map((inputField, index) => (
-                  <loginForm.Field
+              <View className='flex pb-12'>
+                {formFields.map((inputField, index) => (
+                  <form.Field
                     key={index}
                     name={inputField.name}
                     validators={inputField.validators as any}
                     children={(field) => (
                       <View className='mb-6'>
-                        {/* <View className='bg-white rounded-lg h-14 flex justify-center focus:border-black focus:border px-4 box-border'>
-                      <TextInput placeholder={inputField.placeholder} />
-                    </View> */}
                         <View className='relative bg-white rounded-lg h-14 flex justify-center focus:border-black focus:border px-4 box-border'>
                           <TextInput
                             placeholder={inputField.placeholder}
@@ -200,29 +215,13 @@ const Login = () => {
                   />
                 ))}
               </View>
-              <View className='flex justify-end pb-12'>
-                <Pressable
-                  className='flex-end self-end h-10 flex justify-center center'
-                  onPress={gotoForgotPassword}
-                >
-                  {({ pressed }) => (
-                    <Text
-                      className={`w-fit text-base self-end text-right ${
-                        pressed ? "text-[#E85637]" : "text-[#771500]"
-                      }`}
-                    >
-                      Forgot Password
-                    </Text>
-                  )}
-                </Pressable>
-              </View>
-              <loginForm.Subscribe
+              <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
                   <View>
                     <Pressable
                       disabled={!canSubmit}
-                      onPress={loginForm.handleSubmit}
+                      onPress={form.handleSubmit}
                     >
                       {({ pressed }) => (
                         <View
@@ -235,7 +234,7 @@ const Login = () => {
                           } h-16 rounded-full flex justify-center items-center hover:cursor-pointer`}
                         >
                           <Text className='text-white text-center text-lg'>
-                            Sign in
+                            Update password
                           </Text>
                         </View>
                       )}
@@ -251,4 +250,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

@@ -10,13 +10,17 @@ import OnboardingContext from "./context/onboarding";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RequestContext from "./context/gateRequest";
 import ChatContext from "./context/chats";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 import { socketUrl } from "./utils/Base_url";
+import { useOnlineManager } from "./hooks/useOnlineManager";
+import { useAppState } from "./hooks/useAppState";
+import { onAppStateChange, queryClient } from "./providers/get-query-client";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ToastProvider } from "react-native-toastier";
 
 export const socket = io(socketUrl, {
-  transports: ['websocket'],
+  transports: ["websocket"],
 });
-
 
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
@@ -50,14 +54,14 @@ export default function App() {
   });
 
   useEffect(() => {
-    if(currentUser){
+    if (currentUser) {
       socket.connect();
       // Optionally, listen for a connection event
-      socket.on('connect', () => {
-        console.log('Connected to WebSocket server', socket.id);
-        socket.emit('identify', {userId: currentUser?.id})
+      socket.on("connect", () => {
+        console.log("Connected to WebSocket server", socket.id);
+        socket.emit("identify", { userId: currentUser?.id });
       });
-  
+
       return () => {
         // Clean up the socket connection when the app is closed
         socket.disconnect();
@@ -65,43 +69,55 @@ export default function App() {
     }
   }, [currentUser?.id]);
 
+  useOnlineManager();
+
+  useAppState(onAppStateChange);
+
   return (
     <>
-      <OnboardingContext.Provider
-        value={{
-          currentUser,
-          setCurrentUser,
-          setIsFirstLaunch,
-          isFirstLaunch,
-          color,
-          setColor,
-          login,
-          setLogin,
-          loginDetails,
-          setLoginDetails,
-          changePasswordDetails,
-          setChangePasswordDetails,
-          resetPassword,
-          setResetPassword,
-          bills,
-          setBills,
-          alertNotifications,
-          setAlertNotifications,
-          generalNotifications,
-          setGeneralNotifications,
-        }}
-      >
-        <RequestContext.Provider value={{frequents, setFrequent, refetch, setRefetch}}>
-        <ChatContext.Provider value={{chats, setChats, messages, setMessages}}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView>
-            <RootNavigation />
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-        </ChatContext.Provider>
-        </RequestContext.Provider>
-      </OnboardingContext.Provider>
-      <Toast />
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <OnboardingContext.Provider
+            value={{
+              currentUser,
+              setCurrentUser,
+              setIsFirstLaunch,
+              isFirstLaunch,
+              color,
+              setColor,
+              login,
+              setLogin,
+              loginDetails,
+              setLoginDetails,
+              changePasswordDetails,
+              setChangePasswordDetails,
+              resetPassword,
+              setResetPassword,
+              bills,
+              setBills,
+              alertNotifications,
+              setAlertNotifications,
+              generalNotifications,
+              setGeneralNotifications,
+            }}
+          >
+            <RequestContext.Provider
+              value={{ frequents, setFrequent, refetch, setRefetch }}
+            >
+              <ChatContext.Provider
+                value={{ chats, setChats, messages, setMessages }}
+              >
+                <SafeAreaProvider>
+                  <GestureHandlerRootView>
+                    <RootNavigation />
+                  </GestureHandlerRootView>
+                </SafeAreaProvider>
+              </ChatContext.Provider>
+            </RequestContext.Provider>
+          </OnboardingContext.Provider>
+          <Toast />
+        </ToastProvider>
+      </QueryClientProvider>
     </>
   );
 }

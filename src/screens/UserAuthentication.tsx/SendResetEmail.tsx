@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,7 +10,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "@src/components/layout/safeAreaView";
-import images from "@src/constants/images";
 import { Feather } from "@expo/vector-icons";
 import { FieldApi, useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
@@ -36,11 +34,11 @@ type FormField = {
   keyboardType?: KeyboardTypeOptions;
 };
 
-const Login = () => {
+const SendResetEmail = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const loginFormFields: Array<FormField> = [
+  const formFields: Array<FormField> = [
     {
       name: "email",
       validators: {
@@ -51,36 +49,22 @@ const Login = () => {
       placeholder: "Email Address",
       keyboardType: "email-address",
     },
-    {
-      name: "password",
-      validators: {
-        onChange: z.string().min(1, {
-          message: "Password is required",
-        }),
-      },
-      placeholder: "Password",
-      type: "password",
-      keyboardType: "default",
-      showRightIcon: true,
-    },
   ];
 
-  const loginForm = useForm({
+  const form = useForm({
     defaultValues: {
       email: "",
-      password: "",
     },
     onSubmit: async ({ value }) => {
       const data = {
         email: value.email,
-        password: value.password,
       };
-      loginMutation.mutate(data as any);
+      mutation.mutate(data as any);
     },
     validatorAdapter: zodValidator(),
   });
 
-  const loginMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: (value) => {
       return login(value);
     },
@@ -104,7 +88,6 @@ const Login = () => {
       });
     },
     onSuccess: (data) => {
-      // console.log({ data });
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -117,17 +100,13 @@ const Login = () => {
         ),
         right: <View></View>,
       });
+      navigation.navigate("resetpassword");
     },
   });
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !showPassword);
   };
-
-  const gotoForgotPassword = () => {
-    navigation.navigate("sendresetemail");
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -137,30 +116,24 @@ const Login = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 0.1 }}>
           <View className='h-full flex-1 px-[5vw]'>
             <View className='flex gap-8 pb-10'>
-              <View>
-                <Image source={images.icons.logo} className='w-32 h-[33.8px]' />
-              </View>
               <View className='flex'>
                 <Text className='text-black text-3xl font-medium pb-2'>
-                  Bills. Services. Security
+                  Reset Password
                 </Text>
                 <Text className='text-[#4b4b4b] text-xl font-lg'>
-                  Login to your account
+                  Enter the code sent to
                 </Text>
               </View>
             </View>
             <View>
-              <View className='flex'>
-                {loginFormFields.map((inputField, index) => (
-                  <loginForm.Field
+              <View className='flex pb-12'>
+                {formFields.map((inputField, index) => (
+                  <form.Field
                     key={index}
                     name={inputField.name}
                     validators={inputField.validators as any}
                     children={(field) => (
                       <View className='mb-6'>
-                        {/* <View className='bg-white rounded-lg h-14 flex justify-center focus:border-black focus:border px-4 box-border'>
-                      <TextInput placeholder={inputField.placeholder} />
-                    </View> */}
                         <View className='relative bg-white rounded-lg h-14 flex justify-center focus:border-black focus:border px-4 box-border'>
                           <TextInput
                             placeholder={inputField.placeholder}
@@ -200,29 +173,13 @@ const Login = () => {
                   />
                 ))}
               </View>
-              <View className='flex justify-end pb-12'>
-                <Pressable
-                  className='flex-end self-end h-10 flex justify-center center'
-                  onPress={gotoForgotPassword}
-                >
-                  {({ pressed }) => (
-                    <Text
-                      className={`w-fit text-base self-end text-right ${
-                        pressed ? "text-[#E85637]" : "text-[#771500]"
-                      }`}
-                    >
-                      Forgot Password
-                    </Text>
-                  )}
-                </Pressable>
-              </View>
-              <loginForm.Subscribe
+              <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
                   <View>
                     <Pressable
                       disabled={!canSubmit}
-                      onPress={loginForm.handleSubmit}
+                      onPress={form.handleSubmit}
                     >
                       {({ pressed }) => (
                         <View
@@ -235,7 +192,7 @@ const Login = () => {
                           } h-16 rounded-full flex justify-center items-center hover:cursor-pointer`}
                         >
                           <Text className='text-white text-center text-lg'>
-                            Sign in
+                            Find my account
                           </Text>
                         </View>
                       )}
@@ -251,4 +208,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SendResetEmail;

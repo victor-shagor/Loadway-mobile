@@ -5,6 +5,7 @@ const images = {
     message: require("@src/assets/icons/message-icon.svg"),
     account: require("@src/assets/icons/account-icon.png"),
     dashboardCard1: require("@src/assets/icons/hero-card-icon.png"),
+    logo: require ("@src/assets/icons/dwelling-logo.png"),
   },
   onboarding: {
     icon: require("@src/assets/icons/LoadWayIcon.png"),

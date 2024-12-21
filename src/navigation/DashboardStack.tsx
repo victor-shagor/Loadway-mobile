@@ -20,7 +20,8 @@ import {
   SaveEditedChanges,
   UserImage,
 } from "@src/components/account/utils";
-import Home from "@src/screens/home";
+// import Home from "@src/screens/home";
+import Home from "@src/screens/Home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Profile from "../screens/profile";
