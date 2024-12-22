@@ -24,7 +24,7 @@ const PaymentHistory = () => {
 
     try {
       const pagination = `?page=${page}&limit=6`;
-      const userAccessToken = await getAccessToken();
+      const userAccessToken = await getAccessToken();    
       const url = `${getAllTransactions}${pagination}`;
       const response = await axiosInstance.get<{
         data: {
@@ -33,7 +33,7 @@ const PaymentHistory = () => {
           currentPage: number;
         };
       }>(url);
-      const transactions: transactionDataProps[] = response.data.data.data;
+      const transactions: transactionDataProps[] = response.data?.data?.data;
       // setUserTransaction(transactions);
 
       if (transactions.length > 0) {
@@ -41,8 +41,8 @@ const PaymentHistory = () => {
           ...prevTransactions,
           ...transactions,
         ]);
-        setPageNumber(response.data.data.currentPage + 1);
-        setTotalPages(response.data.data.totalPages);
+        setPageNumber(response.data?.data?.currentPage + 1);
+        setTotalPages(response.data?.data?.totalPages);
       }
 
       if (response.data.data.currentPage >= response.data.data.totalPages) {
@@ -70,14 +70,14 @@ const PaymentHistory = () => {
 
   return (
     <View className="bg-white h-[100vh] pb-[15vh]">
-      <View
+      {/* <View
         className="w-[90vw] mx-[4%] mt-5 rounded-lg"
         style={{ backgroundColor: "rgba(178, 177, 173, 0.15)" }}
       >
         <Text className=" text-left pl-5 text-[#3F3C31] py-4 font-bold text-[14px]">
           30.02.2024
         </Text>
-      </View>
+      </View> */}
       {/* <AllTransactions data={userTransaction} /> */}
       <FlatList
         className=" p-5 mx-5  px-5 bg-white rounded-xl"

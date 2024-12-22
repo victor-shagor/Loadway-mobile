@@ -38,6 +38,10 @@ export const FundWalletModal = ({close}: {close: ()=> void}) => {
         });
       }
     } catch (error: any) {
+
+      console.log(error?.response?.data?.message);
+      console.log(error?.response);
+      console.log(error);
       Toast.show({
         type: "error",
         text1: "Error",
@@ -68,7 +72,7 @@ export const FundWalletModal = ({close}: {close: ()=> void}) => {
       <Pay
       close={close}
         amount={Number(amount)} 
-        payStackKey="pk_test_bbfd7557d09d937608350e54c02212beeb7c0cfd"
+        payStackKey="sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238"
         reference={ref}
       />
     );

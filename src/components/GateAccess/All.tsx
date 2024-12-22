@@ -10,8 +10,9 @@ import Constant from "./Constant";
 import Button from "./Button";
 import { getGateRequests } from "@src/api/gateRequest";
 import { useRequestContext } from "@src/context/gateRequest";
+import { useFocusEffect } from "@react-navigation/native";
 
-interface AccessLog {
+export interface AccessLog {
   id: string;
   firstName: string;
   lastName: string;
@@ -28,7 +29,7 @@ interface AccessLog {
 const All = () => {
   const [requests, setRequest] = useState<AccessLog[]>([]);
 
-  const { refetch } = useRequestContext();
+  const { refetch, setRefetch } = useRequestContext();
 
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -41,12 +42,11 @@ const All = () => {
     setIsLoading(true);
 
     try {
-      const pagination = `?page=${page}&limit=10`;
-      console.log(pagination);
+      const pagination = `?page=${page}&limit=5`;
       const data = await getGateRequests(pagination);
       // setRequest(data.accessLogs);
 
-      console.log(data.accessLogs);
+      console.log(data.accessLogs.length);
       if (data.accessLogs.length > 0) {
         setRequest((prevData) => [...prevData, ...data.accessLogs]);
         setPageNumber(data.pagination.currentPage + 1);
@@ -71,6 +71,13 @@ const All = () => {
     //   const data = await getGateRequests();
     //   setRequest(data.accessLogs);
     // })();
+    if(refetch){
+      setRequest([]);
+      setPageNumber(1);
+      setHasMore(true);
+      getAccess_logs(1);
+      setRefetch(false);
+    }
   }, [refetch]);
   if (isLoading) return <ActivityIndicator size="large" color="#F6411B" />;
 
@@ -97,7 +104,7 @@ const All = () => {
         {
           requests.length > 0 && (
             <FlatList
-              className=" p-5 mx-5  px-5 bg-white rounded-xl"
+              className="p-3 mb-10"
               data={requests}
               renderItem={({ item }) => (
                 <Constant
@@ -134,7 +141,19 @@ const All = () => {
           //   );
           // })
         }
-        <View className=" fixed bottom-[-30%]">
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
+            flex: 1,
+            position: "absolute",
+            top: "100%",
+            right: 0,
+            padding: 10,
+          }}
+        >
           <Button />
         </View>
       </View>

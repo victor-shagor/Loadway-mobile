@@ -13,10 +13,18 @@ import { UserImage } from "./utils";
 import { appColors } from "@src/constants/colors";
 import { ProfileStyledInput } from "./viewProfiile";
 import CustomScrollView from "../CustomScrollView";
+import { useUploadImage } from "@src/hooks/imageUpload";
 
-const EditProfile = () => {
+const EditProfile = ({ profile, setProfile }:any) => {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const { currentUser } = useOnboarding() as OnboardingContextType;
+
+  const handleInputChange = (field:any, value:any) => {
+    setProfile((prevProfile:any) => ({
+      ...prevProfile,
+      [field]: value,
+    }));
+  };
 
   const pickProfileImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -24,8 +32,17 @@ const EditProfile = () => {
       quality: 1,
     });
 
+    const uploadImage = useUploadImage('/file-upload');
+
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
+      const uploadedFile = await uploadImage(result.assets[0].uri)
+      if (uploadedFile) {
+        setProfile((prevProfile:any) => ({
+          ...prevProfile,
+          profilePicture: uploadedFile.url,
+        }));
+      }
       // console.log(result);
     } else {
       alert("You did not select any image.");
@@ -54,7 +71,8 @@ const EditProfile = () => {
             <View style={styles.userDetails}>
               <ThemedText type="title">First Name</ThemedText>
               <ProfileStyledInput
-                defaultValue={currentUser?.firstName}
+                value={profile.firstName}
+                onChangeText={text => handleInputChange("firstName", text)}
                 style={styles.inputStyle}
               />
             </View>
@@ -62,7 +80,8 @@ const EditProfile = () => {
             <View style={styles.userDetails}>
               <ThemedText type="title">Last Name</ThemedText>
               <ProfileStyledInput
-                defaultValue={currentUser?.lastName}
+                value={profile.lastName}
+                onChangeText={text => handleInputChange("lastName", text)}
                 style={styles.inputStyle}
               />
             </View>
@@ -70,7 +89,8 @@ const EditProfile = () => {
             <View style={styles.userDetails}>
               <ThemedText type="title">Phone Number</ThemedText>
               <ProfileStyledInput
-                defaultValue={currentUser?.phoneNumber}
+                value={profile.phoneNumber}
+                onChangeText={text => handleInputChange("phoneNumber", text)}
                 style={styles.inputStyle}
               />
             </View>
@@ -78,6 +98,7 @@ const EditProfile = () => {
             <View style={styles.userDetails}>
               <ThemedText type="title">Email</ThemedText>
               <ProfileStyledInput
+              editable={false}
                 defaultValue={currentUser?.email}
                 style={styles.inputStyle}
               />
@@ -86,6 +107,7 @@ const EditProfile = () => {
             <View style={styles.userDetails}>
               <ThemedText type="title">Address</ThemedText>
               <ProfileStyledInput
+              editable={false}
                 defaultValue={currentUser?.address}
                 style={styles.inputStyle}
               />

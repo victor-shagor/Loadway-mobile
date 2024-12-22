@@ -21,6 +21,12 @@ type NavigationProp = NativeStackNavigationProp<
 export const UserImage = ({ selectedImage }: { selectedImage?: string }) => {
   const { currentUser } = useOnboarding() as OnboardingContextType;
 
+  if (selectedImage) {
+    return (
+      <Image source={selectedImage} style={styles.userImage} />
+    );
+  }
+
   if (currentUser?.profilePicture) {
     return (
       <Image source={currentUser?.profilePicture} style={styles.userImage} />
@@ -29,13 +35,9 @@ export const UserImage = ({ selectedImage }: { selectedImage?: string }) => {
 
   return (
     <>
-      {selectedImage ? (
-        <Image source={selectedImage} style={styles.userImage} />
-      ) : (
         <View style={styles.userImage}>
           <AntDesign name="user" size={24} color={appColors.black} />
         </View>
-      )}
     </>
   );
 };
@@ -53,9 +55,14 @@ export const GoToEditScreen = () => {
   );
 };
 
-export const SaveEditedChanges = () => {
+export const SaveEditedChanges = ({save}:any) => {
+  const { navigate } = useNavigation<NavigationProp>();
+  const handleSave = async () => {
+    await save();
+    navigate("Profile");
+  }
   return (
-    <TouchableOpacity style={{ marginRight: 10 }}>
+    <TouchableOpacity style={{ marginRight: 10 }} onPress={handleSave}>
       <ThemedText>Save</ThemedText>
     </TouchableOpacity>
   );

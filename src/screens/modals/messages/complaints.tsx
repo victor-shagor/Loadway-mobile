@@ -16,13 +16,15 @@ import { updateState } from "@src/utils/updateState";
 import { ToastNotification } from "@src/utils/toastMessage";
 import { useOnboarding } from "@src/context/onboarding";
 import { useUploadImage } from "@src/hooks/imageUpload";
+import { set } from "date-fns";
 
 export const ComplaintModal = ({
   handleCreateComplaint,
 }: {
-  handleCreateComplaint: (payload:any) => void;
+  handleCreateComplaint:  (payload:any) => Promise<void>;
 }) => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [complaintFormData, setComplaintsFormData] = useState({
     title: "",
     description: "",
@@ -58,9 +60,12 @@ export const ComplaintModal = ({
       return;
     }
 
-    handleUpdateComplaints({ status: true });
+    setLoading(true);
+
+   handleUpdateComplaints({ status: true });
 
     
+  
 
     try {
       let uploadedFile = null;
@@ -71,15 +76,17 @@ export const ComplaintModal = ({
         personnel: "PROPERTY_MANAGER",
         title: complaintFormData.title,
         description: complaintFormData.description,
-        attachment: [uploadedFile.url],
+        attachment: uploadedFile && [uploadedFile.url],
       };
 
-      handleCreateComplaint(payload);
+      await handleCreateComplaint(payload);
+      setLoading(false);
     } catch (error:any) {
-      // console.log(error.response.data);
+      console.log(error);
       ToastNotification("error", "An error occurred");
     } finally {
       handleUpdateComplaints({ status: false });
+      setLoading(false);
     }
   };
 
@@ -134,8 +141,8 @@ export const ComplaintModal = ({
         </View>
         <CustomButton
           value={"Submit"}
-          disable={complaintFormData.status}
-          isLoading={complaintFormData.status}
+          disable={loading}
+          isLoading={loading}
           onPress={postComplaint}
         />
       </View>

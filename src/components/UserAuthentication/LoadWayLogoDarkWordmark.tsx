@@ -6,7 +6,7 @@ const LoadWayLogoDarkWordmark = () => {
   return (
     <View>
       <View className=" p-5">
-          <Image source={images.onboarding.logo} />
+          <Image source={images.onboarding.logo} style={{ width: 100, height: 100 }} resizeMode="contain"/>
         </View>
     </View>
   )

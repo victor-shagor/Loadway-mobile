@@ -95,12 +95,12 @@ export const quickLinksArray: QuicklinkProps[] = [
     href: "GateAccess",
     iconProvider: "AntDesign",
   },
-  {
-    icon: "alert-circle",
-    name: "Alert",
-    href: "Emergency",
-    iconProvider: "Feather",
-  },
+  // {
+  //   icon: "alert-circle",
+  //   name: "Alert",
+  //   href: "Emergency",
+  //   iconProvider: "Feather",
+  // },
   {
     icon: "chat-question-outline",
     name: "Complaints",

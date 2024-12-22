@@ -57,6 +57,7 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
             <>
               {item.href === "Electricity" ? (
                 <CustomModal
+                modalTitle="Buy Electricity"
                   modalizeRef={modalizeRef}
                   triggerItem={
                     <>
@@ -77,7 +78,7 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
                     </>
                   }
                   triggerItemStyle={{ alignItems: "center", gap: 5 }}
-                  modalContent={<BuyElectricity />}
+                  modalContent={<BuyElectricity close={()=>modalizeRef.current?.close()}/>}
                 />
               ) : (
                 <TouchableOpacity
@@ -143,7 +144,7 @@ const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
               />
             </TouchableOpacity>
           )}}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => item.id}
           scrollEnabled={false}
         />
         }
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   quickLinksContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     minHeight: 80,
     borderColor: appColors.gray,
     borderRadius: 10,

@@ -28,7 +28,7 @@ const Home = () => {
       try {
         const bills = await getBills();
         setBills(bills);
-        const [alert, general, chats] = await Promise.all([getAllNotifications({ category: "Alert" }),  getAllNotifications({ category: "General" }), getChats()]);
+        const [alert, general, chats] = await Promise.all([getAllNotifications({ category: "Alert", page: 1 }),  getAllNotifications({ category: "General", page: 1 }), getChats()]);
        setAlertNotifications(alert.data);
         setGeneralNotifications(general.data);
         setChats(chats);

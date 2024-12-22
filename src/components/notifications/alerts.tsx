@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react";
-import { FlatList, SectionList, StyleSheet, View } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { ActivityIndicator, FlatList, SectionList, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { RenderedAlertNotification, Divider } from "./renderedNotification";
 import useOnboardingContext from "@src/utils/Context";
@@ -7,10 +7,14 @@ import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { getAllNotifications } from "@src/api/notifications";
 import { format } from "date-fns";
 import { navigate } from "@src/navigation";
+import { appColors } from "@src/constants/colors";
 
 const UserAlerts = () => {
   const { alertNotifications, setAlertNotifications } = useOnboardingContext();
-
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const { params } = useRoute();
 
   const modalView = params?.modalView;
@@ -23,15 +27,39 @@ const UserAlerts = () => {
     
   }
 
+  const fetchNot = async () => {
+    if (isLoading || !hasMore) return;
+  
+    setIsLoading(true);
+    try {
+      const newNot = await getAllNotifications({ category: "Alert", page: pageNumber });
+      
+      if (newNot.data && newNot.data.length > 0) {
+        setAlertNotifications((prevNotifications:any) => [
+          ...prevNotifications,
+          ...newNot.data, 
+        ]);
+        setPageNumber((prevPage) => prevPage + 1);
+        setTotalPages(newNot.totalPages);
+        
+        if (newNot.currentPage >= newNot.totalPages) {
+          setHasMore(false);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchNot = async () => {
-        const newNot = await getAllNotifications({ category: "Alert" });
-        setAlertNotifications(newNot.data);
-      };
-
-      fetchNot();
-    }, [setAlertNotifications])
+      if (hasMore && pageNumber === 1) {
+        // Only fetch if `hasMore` is true and it's the first page
+        fetchNot();
+      }
+    }, [hasMore, pageNumber])
   );
 
   const groupedNotifications = useMemo(() => {
@@ -66,6 +94,9 @@ const UserAlerts = () => {
       )}
       contentContainerStyle={{ flexGrow: 1 }}
       stickySectionHeadersEnabled={false} // Disable sticky headers if needed
+      onEndReached={fetchNot}
+    onEndReachedThreshold={0.5}
+    ListFooterComponent={isLoading ? <ActivityIndicator size="small" color="#0000ff" /> : null}
     />
   );
 };
@@ -74,7 +105,7 @@ const UserAlerts = () => {
 const styles = StyleSheet.create({
   headerContainer: {
     padding: 10,
-    backgroundColor: "#f4f4f4", // Adjust the background color
+    backgroundColor: appColors.gray, // Adjust the background color
   },
   headerText: {
     // fontWeight: "bold",

@@ -36,7 +36,9 @@ const LoginButton = () => {
       }
       const url = `${BaseUrl}${LoginUser}`;
       const payload = loginDetails;
+      console.log(loginDetails, url)
       const response = await axios.post(url, payload);
+      console.log(response);
       await AsyncStorage.setItem(
         "accessToken",
         response.data?.data?.accessToken
@@ -54,7 +56,7 @@ const LoginButton = () => {
       // console.log(response.data.data.firstLogin);
     } catch (error: any) {
       console.log("Error", error.response);
-      console.log("Error", 'An error occured');
+      // console.log("Error", error.response.data);
       setLoading(false);
       Toast.show({
         type: "error",

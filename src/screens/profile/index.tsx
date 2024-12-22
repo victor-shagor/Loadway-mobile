@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: appColors.white,
     borderRadius: 10,
-    minHeight: 300,
+    minHeight: 150,
     padding: 8,
   },
   links: {

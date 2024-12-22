@@ -45,9 +45,11 @@ import ChatRoom from "@src/screens/message/ChatRoom";
 import { io } from "socket.io-client";
 import useOnboardingContext from "@src/utils/Context";
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
-import { updateCurrentUser } from "@src/api/user";
+import { getCurrentUser, updateCurrentUser } from "@src/api/user";
 import { navigate } from ".";
+import { OnboardingContextType, useOnboarding } from "@src/context/onboarding";
+import axiosInstance from "@src/api/axiosClient";
+import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -252,6 +254,40 @@ const DashboardStack = () => {
   
     return token;
   }
+
+  const { currentUser, setCurrentUser } = useOnboarding() as OnboardingContextType;
+
+  const [profile, setProfile] = useState({
+    firstName: currentUser?.firstName,
+    lastName: currentUser?.lastName,
+    phoneNumber: currentUser?.phoneNumber,
+    email: currentUser?.email,
+    address: currentUser?.address,
+    profilePicture: currentUser?.profilePicture,
+  });
+
+  // Function to save profile changes
+  const handleSave = async () => {
+    try {
+      await axiosInstance.put('/user/update', profile)
+      const user = await getCurrentUser()
+      setCurrentUser(user)
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Update successful.",
+      });
+
+      console.log("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Toast.show({
+        type: "Error",
+        text1: "error",
+        text2: "Error while saving changes., try again later",
+      });
+    }
+  };
  
   return (
     <Host>
@@ -347,13 +383,21 @@ const DashboardStack = () => {
             />
             <Stack.Screen
               name="EditProfile"
-              component={EditProfile}
+              // component={EditProfile}
               options={{
                 title: "Edit Profile",
                 headerLeft: () => <CancelEdit />,
-                headerRight: () => <SaveEditedChanges />,
+                headerRight: () => <SaveEditedChanges save={handleSave}/>,
               }}
-            />
+            >
+              {props => (
+          <EditProfile
+            {...props}
+            profile={profile}
+            setProfile={setProfile}
+          />
+        )}
+            </Stack.Screen>
           </Stack.Group>
 
           <Stack.Screen

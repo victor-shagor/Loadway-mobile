@@ -29,9 +29,9 @@ const SearchInput = ({ setSearch }: SearchProps) => {
         />
       </View>
 
-      <TouchableOpacity>
-        <Ionicons name="filter" size={24} color={appColors.lightGray} />
-      </TouchableOpacity>
+      {/* <TouchableOpacity> */}
+        {/* <Ionicons name="filter" size={24} color={appColors.lightGray} /> */}
+      {/* </TouchableOpacity> */}
     </View>
   );
 };
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "flex-start",
-    flex: 0.9,
+    flex: 1,
     backgroundColor: appColors.gray,
     padding: 8,
     gap: 15,

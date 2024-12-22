@@ -201,7 +201,7 @@ const Complaints = () => {
               />
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item?.id}
           ListEmptyComponent={
             <>
               {complaints.isLoading ? (
@@ -221,7 +221,7 @@ const Complaints = () => {
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={<SearchInput setSearch={setSearch} />}
           ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
-          contentContainerStyle={{ flexGrow: 1 }}
+          // contentContainerStyle={{ flexGrow: 1 }}
         />
 
         <CustomModal

@@ -9,6 +9,8 @@ interface CustomButtonProps {
   isLoading?: boolean;
   buttonStyle?: any;
   onPress?: () => void;
+  bgColor?: string;
+  textColor?: string;
 }
 
 const CustomButton = ({
@@ -16,7 +18,9 @@ const CustomButton = ({
   disable,
   value,
   buttonStyle = {},
+  bgColor,
   onPress,
+  textColor
 }: CustomButtonProps) => {
   return (
     <TouchableOpacity
@@ -24,11 +28,12 @@ const CustomButton = ({
         styles.customButtonStyle,
         buttonStyle,
         { backgroundColor: disable ? appColors.gray : appColors.orange },
+        bgColor && { backgroundColor: bgColor },
       ]}
       disabled={disable}
       onPress={onPress}
     >
-      <ThemedText type="title" style={{ color: appColors.white }}>
+      <ThemedText type="title" style={{ color: textColor? textColor :appColors.white }}>
         {value}
       </ThemedText>
       {isLoading && <ActivityIndicator size="small" color={appColors.white} />}
