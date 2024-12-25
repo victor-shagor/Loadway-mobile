@@ -31,7 +31,7 @@ const ViewComplaint = ({ complaint }: any) => {
   const [timelineData, setTimelineData] = useState(timelinePlaceholderData);
 
   useEffect(() => {
-    if (complaint.length > 0) {
+    if (complaint && (complaint?.statusHistory || []).length > 0) {
       setTimelineData(
         timelineData.map((item, index) => {
           const { formattedDate, formattedTime } = timestampDisplay(
@@ -39,6 +39,9 @@ const ViewComplaint = ({ complaint }: any) => {
           );
           return {
             ...item,
+            description:
+              complaint.statusHistory[index]?.response ||
+              timelinePlaceholderData[index].description,
             time: complaint.statusHistory[index]?.timestamp
               ? formattedDate + " | " + formattedTime
               : "Pending",
@@ -52,12 +55,18 @@ const ViewComplaint = ({ complaint }: any) => {
     <ScrollView className='px-4 py-10 pb-24 bg-[#F2F2F2] rounded-t-xl'>
       <View className='items-center pb-8' style={{ gap: 8 }}>
         <Image
-          source={complaint?.attachment[0] || images.complaint.repair}
+          source={
+            (complaint?.attachment || []).length > 0
+              ? complaint?.attachment[0]
+              : images.complaint.repair
+          }
           contentFit='cover'
           className='w-20 h-20 rounded-full'
           placeholder={{ blurhash: blurhash }}
         />
-        <Text className='text-[#050402] font-medium'>{complaint.title}</Text>
+        <Text className='text-[#050402] font-medium'>
+          {complaint?.title || ""}
+        </Text>
         <Text className='text-[#050402]/50 font-medium'>
           {complaint.description}
         </Text>
