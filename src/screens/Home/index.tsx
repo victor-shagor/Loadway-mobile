@@ -1,6 +1,5 @@
 import React from "react";
 import DashboardHeader from "../../components/home/header";
-import RecentActivity from "../../components/home/recentActivity";
 import { StatusBar, View } from "react-native";
 import { appColors } from "@src/constants/colors";
 import { useFocusEffect } from "@react-navigation/native";
@@ -9,9 +8,9 @@ import useOnboardingContext from "@src/utils/Context";
 import { getBills } from "@src/api/bills";
 import { User } from "@src/models/User";
 import { getAllNotifications } from "@src/api/notifications";
-import { set } from "date-fns";
 import { getChats } from "@src/api/chats";
 import { useChatContext } from "@src/context/chats";
+import HomeMain from "@src/components/home";
 
 const Home = () => {
   useFocusEffect(
@@ -20,7 +19,12 @@ const Home = () => {
     }, [])
   );
 
-  const { currentUser, setBills, setAlertNotifications, setGeneralNotifications } = useOnboardingContext();
+  const {
+    currentUser,
+    setBills,
+    setAlertNotifications,
+    setGeneralNotifications,
+  } = useOnboardingContext();
   const { setChats } = useChatContext();
 
   useEffect(() => {
@@ -37,19 +41,12 @@ const Home = () => {
     getUserBills();
   }, []);
 
-  
-
   return (
     <>
-      <View className="relative h-screen">
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={appColors.black}
-          />
-          <DashboardHeader currentUser={currentUser as User} />
-          <RecentActivity />
-          <View className="static bottom-[10%] left-0">
-          </View>
+      <View className='relative h-screen'>
+        <StatusBar barStyle='dark-content' backgroundColor={appColors.black} />
+        <DashboardHeader currentUser={currentUser as User} />
+        <HomeMain />
       </View>
     </>
   );

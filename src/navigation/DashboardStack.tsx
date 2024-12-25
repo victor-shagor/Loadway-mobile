@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Platform,
   StyleSheet,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -11,21 +10,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
-import * as Device from 'expo-device';
-import Constants from 'expo-constants';
+import * as Device from "expo-device";
 
-import {
-  CancelEdit,
-  GoToEditScreen,
-  SaveEditedChanges,
-  UserImage,
-} from "@src/components/account/utils";
-import Home from "@src/screens/home";
+// import Home from "@src/screens/home";
+import Home from "@src/screens/Home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Profile from "../screens/profile";
 import Emergency from "../screens/emergency";
-import GateAccess from "../screens/gateAccess";
 // import HouseBill from "@src/screens/bills/HouseBill";
 import PaymentHistory from "@src/screens/bills/PaymentHistory";
 import UserManagement from "@src/screens/userManagement";
@@ -37,19 +29,19 @@ import Communication from "@src/components/settings/communication";
 import Security from "@src/components/settings/security";
 import AppPreference from "@src/components/settings/appPreference";
 import Support from "@src/components/settings/support";
-import NewRequest from "@src/screens/NewRequest";
-import { renderIcon } from "@src/components/common/renderIcon";
 import UserNotifications from "@src/screens/notifications";
-import EmergencyUI from "../screens/emergency";
 import ChatRoom from "@src/screens/message/ChatRoom";
-import { io } from "socket.io-client";
-import useOnboardingContext from "@src/utils/Context";
 import * as Notifications from 'expo-notifications';
 import { getCurrentUser, updateCurrentUser } from "@src/api/user";
-import { navigate } from ".";
 import { OnboardingContextType, useOnboarding } from "@src/context/onboarding";
 import axiosInstance from "@src/api/axiosClient";
 import Toast from "react-native-toast-message";
+import { navigate } from "./index";
+import AppHeader from "@src/components/common/AppHeader";
+import { useNavigation } from "@react-navigation/native";
+import NewAccess from "@src/screens/new-access";
+import ElectricityVending from "@src/screens/power";
+import GateAccessHome from "../screens/gateAccess";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -98,23 +90,23 @@ const TabNavigation = () => {
             headerShown: false,
             tabBarIcon: ({ size, color, focused }) => (
               <CustomTabIcon active={focused}>
-                <Entypo name="home" size={size} color={color} />
+                <Entypo name='home' size={size} color={color} />
               </CustomTabIcon>
             ),
           }}
-          name="Home"
+          name='Home'
           component={Home}
         />
         <Tab.Screen
           options={{
             tabBarIcon: ({ size, color, focused }) => (
               <CustomTabIcon active={focused}>
-                <Octicons name="credit-card" size={size} color={color} />
+                <Octicons name='credit-card' size={size} color={color} />
               </CustomTabIcon>
             ),
-            headerTitleAlign: "center",
+            header: () => <AppHeader title="BILLS"/>,
           }}
-          name="Bills"
+          name='Bills'
           component={Bills}
         />
         <Tab.Screen
@@ -122,25 +114,27 @@ const TabNavigation = () => {
             tabBarIcon: ({ size, color, focused }) => (
               <CustomTabIcon active={focused}>
                 <Ionicons
-                  name="chatbubble-ellipses"
+                  name='chatbubble-ellipses'
                   size={size}
                   color={color}
                 />
               </CustomTabIcon>
             ),
+            header: () => <AppHeader title="COMPLAINTS"/>,
           }}
-          name="Message"
+          name='Message'
           component={Messages}
         />
         <Tab.Screen
           options={{
             tabBarIcon: ({ size, color, focused }) => (
               <CustomTabIcon active={focused}>
-                <FontAwesome name="user" size={size} color={color} />
+                <FontAwesome name='user' size={size} color={color} />
               </CustomTabIcon>
             ),
+            header: () => <AppHeader title="PROFILE"/>,
           }}
-          name="Profile"
+          name='Profile'
           component={Profile}
         />
       </Tab.Navigator>
@@ -160,37 +154,51 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
 const DashboardStack = () => {
+  const navigation = useNavigation();
   const { height } = useWindowDimensions();
-  const [notification, setNotification] = useState<Notifications.Notification | undefined>(
-    undefined
-  );
+  const [notification, setNotification] = useState<
+    Notifications.Notification | undefined
+  >(undefined);
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+    registerForPushNotificationsAsync();
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      if(response.notification.request.content.title === 'New Message'){
-        navigate('ChatRoom', {chatId: response.notification.request.content.data.chatId, recipientId: response.notification.request.content.data.recipientId})
-      }else if(response.notification.request.content.title === 'Alert'){
-        navigate('UserNotifications', {alert:true, item: response.notification.request.content.data})
-      }else if(response.notification.request.content.title === 'Complaint'){
-        navigate('Message', {complaint:true, item: response.notification.request.content.data})
-      }
-      else{
-        navigate('UserNotifications', {})
-      }
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        if (response.notification.request.content.title === "New Message") {
+          navigate("ChatRoom", {
+            chatId: response.notification.request.content.data.chatId,
+            recipientId: response.notification.request.content.data.recipientId,
+          });
+        } else if (response.notification.request.content.title === "Alert") {
+          navigate("UserNotifications", {
+            alert: true,
+            item: response.notification.request.content.data,
+          });
+        } else if (
+          response.notification.request.content.title === "Complaint"
+        ) {
+          navigate("Message", {
+            complaint: true,
+            item: response.notification.request.content.data,
+          });
+        } else {
+          navigate("UserNotifications", {});
+        }
+      });
 
     return () => {
       notificationListener.current &&
-        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
@@ -208,7 +216,7 @@ const DashboardStack = () => {
   //       console.log('Connected to WebSocket server:', socket.id);
   //       socket.emit('identify', currentUser?.id)
   //     });
-  
+
   //     return () => {
   //       // Clean up the socket connection when the app is closed
   //       socket.disconnect();
@@ -217,41 +225,40 @@ const DashboardStack = () => {
   // }, [currentUser?.id]);
   async function registerForPushNotificationsAsync() {
     let token;
-  
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
+
+    if (Platform.OS === "android") {
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+        lightColor: "#FF231F7C",
       });
     }
-  
+
     if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
+      if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (finalStatus !== 'granted') {
+      if (finalStatus !== "granted") {
         return;
       }
       try {
-        token = (
-          await Notifications.getExpoPushTokenAsync()
-        ).data;
+        token = (await Notifications.getExpoPushTokenAsync()).data;
         // console.log(token);
-        await updateCurrentUser({pushNotificationsToken: token})
+        await updateCurrentUser({ pushNotificationsToken: token });
       } catch (e) {
-        console.log(e)
+        console.log(e);
         return;
       }
     } else {
-      console.log('Must use physical device for Push Notifications');
-      return
+      console.log("Must use physical device for Push Notifications");
+      return;
     }
-  
+
     return token;
   }
 
@@ -289,158 +296,198 @@ const DashboardStack = () => {
     }
   };
  
+  type ScreenProps = {
+    name: string;
+    component: any;
+    showHeader: boolean;
+    title?: string;
+    leftIcon?: string;
+    rightIcon?: string;
+  };
+
+  const screens: ScreenProps[] = [
+    {
+      name: "Main",
+      component: TabNavigation,
+      showHeader: false,
+      title: "",
+    },
+    {
+      name: "GateAccess",
+      component: GateAccessHome,
+      showHeader: true,
+      title: "GATE ACCESS",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "NewAccess",
+      component: NewAccess,
+      showHeader: true,
+      title: "NEW ACCESS",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Electricity",
+      component: ElectricityVending,
+      showHeader: true,
+      title: "ELECTRICITY VENDING",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Emergency",
+      component: Emergency,
+      showHeader: true,
+      title: "EMERGENCY",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "ChatRoom",
+      component: ChatRoom,
+      showHeader: true,
+      title: "CHAT",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "HouseBill",
+      component: PaymentHistory,
+      showHeader: true,
+      title: "PAYMENT HISTORY",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "PaymentHistory",
+      component: PaymentHistory,
+      showHeader: true,
+      title: "PAYMENT HISTORY",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "UserNotifications",
+      component: UserNotifications,
+      showHeader: true,
+      title: "NOTIFICATIONS",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Account",
+      component: Account,
+      showHeader: true,
+      title: "ACCOUNT",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "EditProfile",
+      component: EditProfile,
+      showHeader: true,
+      title: "EDIT PROFILE",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "UserManagement",
+      component: UserManagement,
+      showHeader: true,
+      title: "USER MANAGEMENT",
+      leftIcon: "arrow-left",
+    },
+  ];
+
+  const profileScreens: ScreenProps[] = [
+    {
+      name: "Settings",
+      component: Settings,
+      showHeader: true,
+      title: "SETTINGS",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Notifications",
+      component: NotificationsPreferences,
+      showHeader: true,
+      title: "NOTIFICATION PREFERENCES",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Communication",
+      component: Communication,
+      showHeader: true,
+      title: "COMMUNICATION PREFERENCES",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Security",
+      component: Security,
+      showHeader: true,
+      title: "PASSWORD & SECURITY",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "AppPreferences",
+      component: AppPreference,
+      showHeader: true,
+      title: "APP PREFERENCES",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "Support",
+      component: Support,
+      showHeader: true,
+      title: "HELP & SUPPORT",
+      leftIcon: "arrow-left",
+    },
+  ];
+
+  const gotoRoute = () => {
+    navigation.goBack();
+  };
+
   return (
     <Host>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Main"
-          component={TabNavigation}
-          options={{ headerShown: false, title: "" }}
-        />
-
-        <Stack.Group screenOptions={{ headerTitleAlign: "center" }}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {screens.map((screen) => (
           <Stack.Screen
-            name="Emergency"
-            component={EmergencyUI}
+            key={screen.name}
+            name={screen.name}
+            component={screen.component}
             options={{
-              title: "Emergency",
-              headerTitleAlign: "center",
-              headerBackTitleVisible: false,
-              headerTintColor: appColors.black,
+              headerShown: screen.showHeader,
+              headerShadowVisible: false,
+              header: () => (
+                <AppHeader
+                  title={screen.title}
+                  leftIcon={screen.leftIcon}
+                  rightIcon={screen.rightIcon}
+                  handleLeftBtnPress={gotoRoute}
+                />
+              ),
             }}
           />
-
-          <Stack.Screen
-            name="ChatRoom"
-            component={ChatRoom}
-            options={{
-              title: "Chat",
-              headerTitleAlign: "center",
-              headerBackTitleVisible: false,
-              headerTintColor: appColors.black,
-            }}
-          />
-
-          <Stack.Screen
-            name="GateAccess"
-            component={GateAccess}
-            options={{
-              title: "Gate Access",
-              headerTitleAlign: "center",
-              headerBackTitleVisible: false,
-              headerTintColor: appColors.black,
-              // headerRight: () => (
-              //   <TouchableOpacity
-              //     onPress={() => {}} // Should be removed or edited.
-              //     style={{ marginRight: 15 }}
-              //   >
-              //     {renderIcon(
-              //       "filter-variant",
-              //       "MaterialCommunityIcons",
-              //       28,
-              //       appColors.black
-              //     )}
-              //   </TouchableOpacity>
-              // ),
-            }}
-          />
-          <Stack.Screen
-            name="newrequest"
-            component={NewRequest}
-            options={{
-              title: "New Request",
-              headerTitleAlign: "center",
-              headerBackTitleVisible: false,
-              headerTintColor: appColors.black,
-            }}
-          />
-          {/* <Stack.Screen
-          name="HouseBill"
-          component={HouseBill}
-          options={{ title: "Housing  bills", headerTitleAlign: 'center' }}
-        /> */}
-          <Stack.Screen
-            name="PaymentHistory"
-            component={PaymentHistory}
-            options={{ title: "Payment History" }}
-          />
-
-          <Stack.Screen
-            name="UserNotifications"
-            component={UserNotifications}
-            options={{ title: "Notifications" }}
-          />
-
-          <Stack.Group>
-            <Stack.Screen
-              name="Account"
-              component={Account}
-              options={{
-                headerStyle: { height: height * 0.15 },
-                headerTitle: () => <UserImage />,
-                headerRight: () => <GoToEditScreen />,
-              }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              // component={EditProfile}
-              options={{
-                title: "Edit Profile",
-                headerLeft: () => <CancelEdit />,
-                headerRight: () => <SaveEditedChanges save={handleSave}/>,
-              }}
-            >
-              {props => (
-          <EditProfile
-            {...props}
-            profile={profile}
-            setProfile={setProfile}
-          />
-        )}
-            </Stack.Screen>
-          </Stack.Group>
-
-          <Stack.Screen
-            name="UserManagement"
-            component={UserManagement}
-            options={{ title: "UserManagement" }}
-          />
-
-          {/* PROFILE SETTINGS */}
-          <Stack.Group>
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ title: "Settings" }}
-            />
-            <Stack.Screen
-              name="Notifications"
-              component={NotificationsPreferences}
-              options={{ title: "Notifications Preferences" }}
-            />
-            <Stack.Screen
-              name="Communication"
-              component={Communication}
-              options={{ title: "Communication Preferences" }}
-            />
-            <Stack.Screen
-              name="Security"
-              component={Security}
-              options={{ title: "Password & Security" }}
-            />
-            <Stack.Screen
-              name="AppPreferences"
-              component={AppPreference}
-              options={{ title: "App Preferences" }}
-            />
-            <Stack.Screen
-              name="Support"
-              component={Support}
-              options={{ title: "Help & Support" }}
-            />
-          </Stack.Group>
-        </Stack.Group>
+        ))}
       </Stack.Navigator>
+      
+
+      {/* PROFILE SETTINGS */}
+      <Stack.Group>
+        {profileScreens.map((screen) => (
+          <Stack.Screen
+            key={screen.name}
+            name={screen.name}
+            component={screen.component}
+            options={{
+              headerShown: screen.showHeader,
+              headerShadowVisible: false,
+              header: () => (
+                <AppHeader
+                  title={screen.title}
+                  leftIcon={screen.leftIcon}
+                  rightIcon={screen.rightIcon}
+                  handleLeftBtnPress={gotoRoute}
+                />
+              ),
+            }}
+          />
+        ))}
+      </Stack.Group>
+      
     </Host>
   );
 };

@@ -5,6 +5,7 @@ const images = {
     message: require("@src/assets/icons/message-icon.svg"),
     account: require("@src/assets/icons/account-icon.png"),
     dashboardCard1: require("@src/assets/icons/hero-card-icon.png"),
+    logo: require("@src/assets/icons/dwelling-logo.png"),
   },
   onboarding: {
     icon: require("@src/assets/icons/LoadWayIcon.png"),
@@ -28,6 +29,10 @@ const images = {
   },
   gateAccess: {
     avatar: require("@src/assets/icons/cso.png"),
+    empty: require("@src/assets/icons/empty-gate-access-image.png"),
+    standingMan: require("@src/assets/icons/standing-man-icon.png"),
+    copy: require("@src/assets/icons/copy-icon.png"),
+    forwardArrow: require("@src/assets/icons/forward-arrow-icon.png"),
   },
   newRequest: {
     avatar: require("@src/assets/icons/cso.png"),
@@ -38,10 +43,20 @@ const images = {
   },
   complaint: {
     repair: require("@src/assets/icons/complaint.jpg"),
+    emptyComplaints: require("@src/assets/icons/empty-complaints.png"),
   },
   alert: {
     alertImage: require("@src/assets/icons/alert-images.png"),
     checkmark: require("@src/assets/icons/checkmark.png"),
+  },
+  quickLInks: {
+    visitors: require("@src/assets/icons/unlock-icon.png"),
+    complaints: require("@src/assets/icons/error-icon.png"),
+    electricity: require("@src/assets/icons/bolt-icon.png"),
+  },
+  bills: {
+    walletIcon: require("@src/assets/icons/wallet-icon.png"),
+    filledWalletIcon: require("@src/assets/icons/filled-wallet-icon.png"),
   },
 };
 

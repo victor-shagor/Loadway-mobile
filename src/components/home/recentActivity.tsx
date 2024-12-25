@@ -1,71 +1,27 @@
 import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
-import { ThemedText } from "@src/components/ThemedText";
-import { recentActivityArray, RecentActivityProps } from "../../screens/home/data";
-import QuickLinks from "./quickLinks";
-import { appColors } from "@src/constants/colors";
-import Cards from "./cards";
-import PushNotifications from "./pushNotifications";
-import { Activity, ActivityType, User } from "@src/models/User";
+import { StyleSheet, View, Text, Image } from "react-native";
+import { ActivityType } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
-import EmptyState from "../common/emptyState";
-import { formatTimestamp } from "@src/utils/helper";
+import { formatString, formatTimestamp } from "@src/utils/helper";
 import useOnboardingContext from "@src/utils/Context";
+import { ScrollView } from "react-native-gesture-handler";
+import images from "@src/constants/images";
 
-interface RecentActivityPropsWithIndex {
-  item: Activity;
-  index: number;
-  currentUser: User | null
-}
 
-const RecentActivityItem = ({ item, index, currentUser }: RecentActivityPropsWithIndex) => {
-  const activities = currentUser?.activities || [];
-  const icon = item.activityType === ActivityType.COMPLAINT ? 'chat-question-outline' : 'unlock'
-  const iconProvider = item.activityType === ActivityType.COMPLAINT ? 'MaterialCommunityIcons' : 'AntDesign'
-  const formatString = (input: string) => {
-    const words = input.toLowerCase().split('_');
-    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-    return capitalizedWords.join(' ');
-  }
-  
+type ListIconProps = {
+  type: ActivityType;
+};
+
+const ListIcon = ({ type }: ListIconProps) => {
+  const iconMap = {
+    COMPLAINT: images.quickLInks.complaints,
+    GATE_ACCESS: images.quickLInks.visitors,
+    WALLET: images.quickLInks.electricity,
+    PASSWORD_CHANGE: images.quickLInks.complaints,
+  };
   return (
-    <View style={styles.renderActivityItem}>
-      <View
-        style={[
-          styles.renderActivityItem,
-          {
-            flex: 1,
-            borderBottomWidth:
-              index !== activities?.length - 1 ? 1 : undefined,
-          },
-        ]}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 15,
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={styles.iconContainer}>
-            {renderIcon(
-              icon,
-              iconProvider,
-              24,
-              appColors.iconWine
-            )}
-          </View>
-          <View style={{ gap: 3 }}>
-            <ThemedText type="small">{formatString(item.activityType)}</ThemedText>
-            <ThemedText type="title">{item.title}</ThemedText>
-          </View>
-        </View>
-
-        <View style={{ gap: 2 }}>
-          <ThemedText type="default">{formatTimestamp(item.createdAt)}</ThemedText>
-        </View>
-      </View>
+    <View className='w-14 h-14 items-center justify-center rounded-full bg-[#F8F8F8]'>
+      <Image source={iconMap[type]} width={24} height={30} />
     </View>
   );
 };
@@ -75,64 +31,48 @@ const RecentActivity = () => {
   const activities = currentUser?.activities || [];
 
   return (
-    <FlatList
-      data={activities}
-      renderItem={({ item, index }) => (
-        <View style={{marginBottom: index === activities?.length -1 ? 30 : 0 }}>
-        <RecentActivityItem item={item} index={index} currentUser={currentUser}/>
-        </View>
-      )}
-      keyExtractor={(item) => item.title}
-      ListHeaderComponent={
-        <View style={{ gap: 15 }}>
-          <Cards />
-          <PushNotifications />
-          <QuickLinks currentUser={currentUser}/>
-
-          <ThemedText type="default" style={styles.recentActivityHeader}>
-            Recent Activity
-          </ThemedText>
-
-          {(!activities || activities.length === 0) && (
-            <View style={{ marginBottom: 30 }}>
-            <EmptyState text="No recent activity yet" />
+    <View className='gap-2'>
+      <Text className='text-black font-medium text-base'>RECENT ACTIVITY</Text>
+      <ScrollView className='max-h-[300px] bg-white rounded-lg px-4'>
+        {!activities.length ? (
+          <View className='flex-row items-center py-8'>
+            {renderIcon("clock", "MaterialCommunityIcons", 32, "#929292")}
+            <Text className='ml-2 text-black/50 text-base'>
+              No activity yet
+            </Text>
+          </View>
+        ) : (
+          activities.map((item, index) => (
+            <View
+              key={index}
+              className={`flex-row py-4 ${
+                index === activities?.length - 1 ? "" : "border-b"
+              } border-black/30`}
+              style={styles.listItem}
+            >
+              <ListIcon type={item.activityType as ActivityType} />
+              <View className='flex-1 justify-center'>
+                <Text className='text-black/80 text-xs'>
+                  {formatString(item.activityType)}
+                </Text>
+                <Text className='text-black text-base'>{item.title}</Text>
+              </View>
+              <View>
+                <Text className='text-black/80 text-xs'>
+                  {formatTimestamp(item.createdAt)}
+                </Text>
+              </View>
             </View>
-          )}
-        </View>
-      }
-      contentContainerStyle={{ padding: 10, paddingBottom: 100 }}
-      showsVerticalScrollIndicator={false}
-    />
+          ))
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  renderActivityContainer: {
-    backgroundColor: appColors.white,
-    padding: 10,
-  },
-  renderActivityItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: appColors.white,
-    borderColor: appColors.gray,
-    borderRadius: 10,
-    minHeight: 70,
-    padding: 10,
-  },
-  recentActivityHeader: {
-    color: appColors.lightGray,
-    fontWeight: "600",
-    marginBottom: 5
-  },
-  iconContainer: {
-    backgroundColor: appColors.iconGray,
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+  listItem: {
+    gap: 8,
   },
 });
 

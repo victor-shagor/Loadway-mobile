@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View} from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
-import { ThemedText } from "@src/components/ThemedText";
-import Chat from "@src/components/message/chat";
 import Complaints from "@src/components/message/complaints";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import AppTopTabBar, { TabItem } from "@src/components/common/AppTopTabBar";
+import { Feather } from "@expo/vector-icons";
 
 export const Tab = createMaterialTopTabNavigator();
 
@@ -31,59 +30,39 @@ export const CustomTabLabel = ({
 };
 
 const Messages = () => {
-  const { height } = useWindowDimensions();
-  const navigation = useNavigation();
 
-  const { params } = useRoute();
+  const tabs: Array<TabItem> = [
+    {
+      name: "CHAT",
+      label: "CHAT",
+    },
+    {
+      name: "COMPLAINTS",
+      label: "COMPLAINTS",
+    },
+  ];
 
-  const complaint = params?.complaint;
-  const item = params?.item;
+  const [activeTab, setActiveTab] = useState<string>("COMPLAINTS");
 
-
-  useEffect(() => {
-    if(complaint) navigation.navigate("Complaint", {item});
-  }, [navigation, complaint, item]);
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarIndicatorStyle: { display: "none" },
-        tabBarStyle: [styles.tabScreenStyles],
-      }}
-      sceneContainerStyle={{ padding: 12 }}
-    >
-      <Tab.Screen
-        name="Chat"
-        component={Chat}
-        options={{
-          tabBarLabel: ({ focused }) => (
-            <CustomTabLabel active={focused}>
-              <ThemedText
-                type="title"
-                style={{ color: focused ? appColors.orange : appColors.black }}
-              >
-                Chat
-              </ThemedText>
-            </CustomTabLabel>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Complaint"
-        component={Complaints}
-        options={{
-          tabBarLabel: ({ focused }) => (
-            <CustomTabLabel active={focused}>
-              <ThemedText
-                type="title"
-                style={{ color: focused ? appColors.orange : appColors.black }}
-              >
-                Complaint
-              </ThemedText>
-            </CustomTabLabel>
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <View className='flex-1 py-3'>
+      {/* <View className='absolute z-10 w-full'>
+        <AppTopTabBar
+          activeTab={activeTab}
+          tabs={tabs}
+          onTabPressed={(tab) => setActiveTab(tab)}
+        />
+      </View> */}
+      <View className='flex-1 px-[5vw]'>
+        {activeTab === "CHAT" ? (
+          <View className='flex-1'>
+            <Feather name='zap-off' size={24} color='#000' />
+          </View>
+        ) : (
+          <Complaints />
+        )}
+      </View>
+    </View>
   );
 };
 

@@ -1,26 +1,16 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
   FlatList,
-  TouchableOpacity,
   Image,
+  Text,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Entypo } from "@expo/vector-icons/";
-import { ThemedText } from "@src/components/ThemedText";
 import { appColors } from "@src/constants/colors";
-import { quickLinksArray, recentChatArray } from "@src/screens/home/data";
-import CustomModal from "@src/components/CustomModal";
-import BuyElectricity from "@src/screens/modals/electricity";
-import { renderIcon } from "@src/components/common/renderIcon";
-import { Modalize } from "react-native-modalize";
-import { User } from "@src/models/User";
-import EmptyState from "../common/emptyState";
-import { useChatContext } from "@src/context/chats";
-import InitialsAvatar from "../common/initialAvatar";
-import { navigate } from "@src/navigation";
+import { quickLinksArray } from "@src/constants/data";
 
 export type QuickLinksRootStackParamList = {
   GateAccess: undefined;
@@ -34,140 +24,49 @@ type NavigationProp = NativeStackNavigationProp<
   keyof QuickLinksRootStackParamList
 >;
 
-const QuickLinks = ({currentUser}:{currentUser: User | null}) => {
+const QuickLinks = () => {
   const navigation = useNavigation<NavigationProp>();
 
-  const modalizeRef = useRef<Modalize>(null);
-  const { chats } = useChatContext();
-
   return (
-    <View style={styles.container}>
-      <View style={{ gap: 8, marginBottom: 20 }}>
-        <ThemedText
-          type="default"
-          style={{ color: appColors.lightGray, fontWeight: 600 }}
-        >
-          Quick Links
-        </ThemedText>
-
-        <FlatList
-          horizontal
-          data={quickLinksArray}
-          renderItem={({ item }) => (
-            <>
-              {item.href === "Electricity" ? (
-                <CustomModal
-                modalTitle="Buy Electricity"
-                  modalizeRef={modalizeRef}
-                  triggerItem={
-                    <>
-                      <View style={styles.iconContainer}>
-                        {renderIcon(
-                          item.icon,
-                          item.iconProvider,
-                          24,
-                          appColors.orange
-                        )}
-                      </View>
-                      <ThemedText
-                        type="small"
-                        style={{ fontWeight: 600, fontSize: 10 }}
-                      >
-                        {item.name}
-                      </ThemedText>
-                    </>
-                  }
-                  triggerItemStyle={{ alignItems: "center", gap: 5 }}
-                  modalContent={<BuyElectricity close={()=>modalizeRef.current?.close()}/>}
-                />
-              ) : (
-                <TouchableOpacity
-                  style={{ alignItems: "center", gap: 5 }}
-                  onPress={() => navigation.navigate(item.href)}
-                >
-                  <View style={styles.iconContainer}>
-                    {renderIcon(
-                      item.icon,
-                      item.iconProvider,
-                      24,
-                      appColors.orange
-                    )}
-                  </View>
-                  <ThemedText
-                    type="small"
-                    style={{ fontWeight: 600, fontSize: 10 }}
-                  >
-                    {item.name}
-                  </ThemedText>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-          keyExtractor={(item) => item.name}
-          scrollEnabled={false}
-          contentContainerStyle={styles.quickLinksContainer}
-        />
-      </View>
-
-      <View style={{ gap: 8, marginBottom: 20 }}>
-        <ThemedText
-          type="default"
-          style={{ color: appColors.lightGray, fontWeight: 600 }}>
-          Recent Chats
-        </ThemedText>
-
-        {(!chats || chats.length === 0) && (
-            <View >
-            <EmptyState text="No recent chat yet" />
-            </View>
-          )}
-
-        {(chats && chats?.length>0 )&& <FlatList
-          data={chats}
-          renderItem={({ item }) => {
-            return (
-            <TouchableOpacity onPress={()=> navigate('ChatRoom', {chatId: item.id, recipientId: item.recipientId})} style={[styles.quickLinksContainer, { marginBottom: 8 }]} key={item.id}>
+    <View className='pb-8 pt-10'>
+      <FlatList
+        data={quickLinksArray}
+        horizontal
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => navigation.navigate(item.href, item.params as any)}
+          >
+            {({ pressed }) => (
               <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
+                className={`${pressed ? "opacity-50" : ""} gap-4 items-center`}
               >
-                <InitialsAvatar initials={item.adminRole === 'SECURITY' ? 'S' : 'PM'}/>
-                <View style={{ gap: 2 }}>
-                  <ThemedText type="title">{item.adminRole}</ThemedText>
-                  <ThemedText>{item.lastMessage}</ThemedText>
+                <View
+                  className='w-16 h-16 items-center justify-center rounded-full'
+                  style={{ backgroundColor: item.bgColor }}
+                >
+                  <Image source={item.icon} width={45} height={45} />
                 </View>
+                <Text className='font-normal text-[#0C0A04]'>{item.name}</Text>
               </View>
-
-              <Entypo
-                name="chevron-small-right"
-                size={20}
-                color={appColors.black}
-              />
-            </TouchableOpacity>
-          )}}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-        />
-        }
-      </View>
+            )}
+          </Pressable>
+        )}
+        contentContainerStyle={styles.quickLinksContainer}
+        keyExtractor={(item) => item.name}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  quickLinksContainer: {
+    justifyContent: "space-evenly",
+    flexDirection: "row",
+    flex: 1,
+  },
   container: {
     flex: 1,
     gap: 15,
-  },
-  quickLinksContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    minHeight: 80,
-    borderColor: appColors.gray,
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: appColors.white,
-    flex: 1,
   },
   iconContainer: {
     backgroundColor: appColors.iconGray,

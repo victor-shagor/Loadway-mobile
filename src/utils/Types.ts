@@ -10,18 +10,27 @@ export type PassWordManagementProps = {
 };
 
 export type ForgotPasswordBtnProps = {
-    bg_color: string;
-    border_color: string;
-    text_color: string;
-    text: string;
-    type: "modal"| "forgotpassword" | "updatepasword";
-    action:
-      | "cancelModal"
-      | "sendEmailToBackend"
-      | "backToLogin"
-      | "resetpassword"
-      | "savepassword"
-      | "actionForCancelBtn"
-      | "actionForSendBtn";
-    setModalVisible?: (value: boolean) => void;
-  }
+  bg_color: string;
+  border_color: string;
+  text_color: string;
+  text: string;
+  type: "modal" | "forgotpassword" | "updatepasword";
+  action:
+    | "cancelModal"
+    | "sendEmailToBackend"
+    | "backToLogin"
+    | "resetpassword"
+    | "savepassword"
+    | "actionForCancelBtn"
+    | "actionForSendBtn";
+  setModalVisible?: (value: boolean) => void;
+};
+
+export type ApiResponse<T> = {
+  data: T | Array<T>;
+  status: number;
+};
+export type ApiError = {
+  message: string;
+  status: number;
+};

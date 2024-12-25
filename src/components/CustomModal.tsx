@@ -54,11 +54,13 @@ const CustomModal = ({
           ref={modalizeRef}
           adjustToContentHeight
           avoidKeyboardLikeIOS
-          handlePosition="inside"
+          handlePosition='inside'
           HeaderComponent={
-            <View style={styles.header}>
-              <ThemedText style={styles.headerTitle}>{modalTitle}</ThemedText>
-            </View>
+            modalTitle && (
+              <View style={styles.header}>
+                <ThemedText style={styles.headerTitle}>{modalTitle}</ThemedText>
+              </View>
+            )
           }
           overlayStyle={{
             backgroundColor: "rgba(0, 0, 0, 0.2)",
