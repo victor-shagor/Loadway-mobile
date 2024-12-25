@@ -1,70 +1,55 @@
 import useOnboardingContext from "@src/utils/Context";
 import React, { useRef } from "react";
-import { StyleSheet, View, Dimensions, Text } from "react-native";
-import Button from "./Button";
+import { View, Text, Pressable } from "react-native";
 import CustomModal from "../CustomModal";
 import { Modalize } from "react-native-modalize";
 import FundWalletModal from "@src/screens/modals/fundWallet";
-import PayBillModal from "../bills/PayBillModal";
-
-
-const { width: screenWidth } = Dimensions.get("window");
+import { formatMoney } from "@src/utils/helper";
 
 const Cards = () => {
-  const { currentUser, bills } = useOnboardingContext();
+  const { currentUser } = useOnboardingContext();
   const walletRef = useRef<Modalize>(null);
-  const billRef = useRef<Modalize>(null);
+
   return (
-    <>
-      <View className="bg-[#050402] rounded-2xl">
-        <View>
-          <Text
-            className=" font-normal text-[16px] text-white 
-           px-[6%] pt-[5%]"
-          >
-            Wallet Balance
-          </Text>
-        </View>
-        <View>
-          <Text
-            className=" font-semibold text-[28px] text-white
-            px-[6%] pt-[4%] mb-[10%]"
-          >
-            &#8358;{currentUser?.wallet?.balance.toLocaleString("en-US") ?? 0}
-          </Text>
-        </View>
-        <View className=" flex-row gap-5 px-[9%] pt-[2%]">
-        <CustomModal
-            modalTitle="Fund Wallet"
-            modalizeRef={walletRef}
-              triggerItem={
-                <Button text="Fund Wallet" />
-              }
-              modalContent={<FundWalletModal close={()=>walletRef.current?.close()}/>}
-            />
-            {bills.length && 
-              <CustomModal
-              modalTitle="Pay Bills"
-              modalizeRef={billRef}
-                triggerItem={
-                  <Button text="Pay Bills" />
-                }
-                modalContent={<PayBillModal close={()=>billRef.current?.close()}/>}
-              />
-            }
-            
-        </View>
-        <View className=" bg-[#310D05] mt-[5%] rounded-b-2xl">
-          <Text
-            className=" font-normal text-[14px] text-white text-center
-            py-2
-           "
-          >
-            Total amount of Due Bills: &#8358;{Number(currentUser?.duesSum || 0).toLocaleString("en-US") ?? 0}
-          </Text>
+    <View className='bg-[#050402] rounded-2xl overflow-hidden h-60'>
+      <View className='flex-1 p-6 gap-3'>
+        <Text className='text-white text-base font-medium'>Wallet balance</Text>
+        <Text className='text-white text-[40px] leading-[52px] font-medium'>
+          {formatMoney(Number(currentUser?.wallet?.balance || 0), "₦")}
+        </Text>
+        <View className='self-start'>
+          <View>
+            <Pressable
+              className='self-start'
+              onPress={() => walletRef.current?.open()}
+            >
+              {({ pressed }) => (
+                <View
+                  className={`${
+                    pressed ? "opacity-50" : "opacity-100"
+                  } h-12 w-36 rounded-full bg-[#F6411B] justify-center items-center`}
+                >
+                  <Text className='text-white text-xl font-medium'>
+                    Fund Wallet
+                  </Text>
+                </View>
+              )}
+            </Pressable>
+          </View>
         </View>
       </View>
-    </>
+      <View className='bg-[#310D05] h-10 justify-center items-center'>
+        <Text className='text-white font-medium text-base'>
+          Total due bills: {formatMoney(Number(currentUser?.duesSum || 0), "₦")}
+        </Text>
+      </View>
+      <CustomModal
+        modalizeRef={walletRef}
+        modalContent={
+          <FundWalletModal close={() => walletRef.current?.close()} />
+        }
+      />
+    </View>
   );
 };
 

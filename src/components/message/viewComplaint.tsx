@@ -1,93 +1,88 @@
-import { appColors } from '@src/constants/colors';
-import { timestampDisplay } from '@src/utils/helper';
-import React from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { ThemedText } from '../ThemedText';
+import { timestampDisplay } from "@src/utils/helper";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Image } from "expo-image";
+import { blurhash } from "@src/constants/data";
+import images from "@src/constants/images";
 
-const TimelineItem = ({ status, response, timestamp }:any) => {
-    const { formattedDate, formattedTime } = timestampDisplay(timestamp);
-    return(
-  <View style={styles.itemContainer}>
-    <View style={styles.itemDotContainer}>
-      <View style={styles.circle} />
-      <View style={styles.verticalLine} />
-    </View>
-    <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center'}}>
-    <View style={{marginLeft: 10}}>
-      <Text style={styles.title}>{status}</Text>
-      <Text style={styles.description}>{response}</Text>
-    </View>
-    <View style={{alignItems: 'flex-end', marginRight: 50}}>
-    <Text style={styles.time}>{formattedDate}</Text>
-    <Text style={[styles.time, {color: appColors.black}]}>{formattedTime}</Text>
-    </View>
-    </View>
-    
-  </View>)
-};
+const ViewComplaint = ({ complaint }: any) => {
+  const timelinePlaceholderData = [
+    {
+      title: "SENT",
+      description: "Complaint submitted, awaiting review",
+      time: "Pending",
+    },
+    {
+      title: "OPEN",
+      description: "Complaint reviewed, awaiting action",
+      time: "Pending",
+    },
+    {
+      title: "ONGOING",
+      description: "Complaint in progress, awaiting completion",
+      time: "Pending",
+    },
+    {
+      title: "CLOSED",
+      description: "Complaint completed, awaiting feedback",
+      time: "Pending",
+    },
+  ];
+  const [timelineData, setTimelineData] = useState(timelinePlaceholderData);
 
-const ViewComplaint = ({complaint}:any)=> {
+  useEffect(() => {
+    if (complaint.length > 0) {
+      setTimelineData(
+        timelineData.map((item, index) => {
+          const { formattedDate, formattedTime } = timestampDisplay(
+            complaint.statusHistory[index]?.timestamp
+          );
+          return {
+            ...item,
+            time: complaint.statusHistory[index]?.timestamp
+              ? formattedDate + " | " + formattedTime
+              : "Pending",
+          };
+        })
+      );
+    }
+  }, [complaint]);
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={{fontSize: 16, fontWeight: '600', marginBottom: 50}}>
-        {complaint?.title}
-      </Text>
-      {complaint?.statusHistory?.map((item:any, index:number) => (
-        <TimelineItem
-          key={index}
-          status={item.status}
-          response={item.response}
-          timestamp={item.timestamp}
+    <ScrollView className='px-4 py-10 pb-24 bg-[#F2F2F2] rounded-t-xl'>
+      <View className='items-center pb-8' style={{ gap: 8 }}>
+        <Image
+          source={complaint?.attachment[0] || images.complaint.repair}
+          contentFit='cover'
+          className='w-20 h-20 rounded-full'
+          placeholder={{ blurhash: blurhash }}
         />
-      ))}
+        <Text className='text-[#050402] font-medium'>{complaint.title}</Text>
+        <Text className='text-[#050402]/50 font-medium'>
+          {complaint.description}
+        </Text>
+      </View>
+      <View style={{ gap: 16 }}>
+        {timelineData.map((item, index) => (
+          <View key={index} className='flex-row' style={{ gap: 10 }}>
+            <View>
+              <View className='h-3 w-3 rounded-full bg-[#E85637]'></View>
+              {index !== timelineData.length - 1 && (
+                <View className='absolute left-[4.5px] h-[100px] w-0.5 bg-[#E85637]'></View>
+              )}
+            </View>
+            <View style={{ gap: 4 }}>
+              <Text className='font-bold'>{item.title}</Text>
+              <Text className='text-[#050402]/50'>{item.description}</Text>
+              <View className='bg-white px-3 py-2 self-start rounded-full'>
+                <Text className='text-[#4C3A1C text-xs'>{item.time}</Text>
+              </View>
+            </View>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginBottom: 40,
-    marginTop: 10,
-    padding: 15,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  itemDotContainer: {
-    alignItems: 'center',
-  },
-  circle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: 'red',
-  },
-  verticalLine: {
-    width: 2,
-    flex: 1,
-    backgroundColor: 'red',
-  },
-  itemContent: {
-    flex: 1,
-    paddingLeft: 10,
-  },
-  title: {
-    fontSize: 16,
-    paddingBottom: 5,
-    fontWeight: 600,
-  },
-  description: {
-    fontSize: 11,
-    width: 250,
-  },
-  time: {
-    fontSize: 12,
-    color: 'grey',
-  }
-});
-
+};
 
 export default ViewComplaint;
