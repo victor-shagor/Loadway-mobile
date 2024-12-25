@@ -8,7 +8,7 @@ import {
 import { ImageProps } from "react-native";
 import images from "@src/constants/images";
 import { QuickLinksRootStackParamList } from "@src/components/home/quickLinks";
-import { ChatProps, ComplaintProps } from "@src/models/messaging";
+import { ChatProps } from "@src/models/messaging";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
@@ -25,10 +25,11 @@ export type IconProvider =
   | "FontAwesome";
 
 export interface QuicklinkProps {
-  icon: IconTypes;
   name: string;
   href: keyof QuickLinksRootStackParamList;
-  iconProvider: IconProvider;
+  icon: any;
+  bgColor: string;
+  params?: Record<string, any>;
 }
 export interface HousingBillsProps {
   bill_type: string;
@@ -69,7 +70,7 @@ export interface getHelp {
   id: number;
 }
 export interface getHelpDataContact {
-  icon: IconTypes;
+  icon: string;
   title: string;
   iconProvider: IconProvider;
 }
@@ -90,28 +91,23 @@ export type HousingBillsnProps = {
 
 export const quickLinksArray: QuicklinkProps[] = [
   {
-    icon: "unlock",
-    name: "Gate Access",
+    name: "Visitors",
     href: "GateAccess",
-    iconProvider: "AntDesign",
+    icon: images.quickLInks.visitors,
+    bgColor: "#E8E23730",
   },
-  // {
-  //   icon: "alert-circle",
-  //   name: "Alert",
-  //   href: "Emergency",
-  //   iconProvider: "Feather",
-  // },
   {
-    icon: "chat-question-outline",
     name: "Complaints",
     href: "Message",
-    iconProvider: "MaterialCommunityIcons",
+    icon: images.quickLInks.complaints,
+    bgColor: "#3778E830",
+    params: { complaint: true },
   },
   {
-    icon: "lightning-bolt-outline",
-    name: "Buy Elecricity",
+    icon: images.quickLInks.electricity,
+    name: "Electricity",
     href: "Electricity",
-    iconProvider: "MaterialCommunityIcons",
+    bgColor: "#8DE83730",
   },
 ];
 
@@ -349,3 +345,25 @@ export const getHelpDataContact: getHelpDataContact[] = [
     iconProvider: "Feather",
   },
 ];
+
+export const complaintCategories = [
+  {
+    label: "Plumbing",
+    value: "Plumbing",
+  },
+  {
+    label: "Electrical",
+    value: "Electrical",
+  },
+  {
+    label: "Painting",
+    value: "Painting",
+  },
+  {
+    label: "Cleaning",
+    value: "Cleaning",
+  },
+];
+
+export const blurhash =
+  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";

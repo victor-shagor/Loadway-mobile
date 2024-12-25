@@ -1,241 +1,157 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
-  StyleSheet,
   View,
-  RefreshControl,
   FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Image,
   ActivityIndicator,
-  TouchableOpacity,
+  Text,
+  Pressable,
+  RefreshControl,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { Modalize } from "react-native-modalize";
-import { createComplaints, getAllComplaints } from "@src/api/complaints";
-import { ThemedText } from "@src/components/ThemedText";
-import { appColors } from "@src/constants/colors";
-import {
-  ComplaintProps,
-  ComplaintRenderItemProps,
-} from "@src/models/messaging";
+import { ComplaintProps } from "@src/models/messaging";
 import { ComplaintAPIProps } from "@src/models/messaging";
-import { updateState } from "@src/utils/updateState";
 import ComplaintModal from "@src/screens/modals/messages/complaints";
 import CustomModal from "../CustomModal";
-import EmptyMessage from "./emptyMessage";
-import SearchInput from "./searchInput";
-import images from "@src/constants/images";
 import ViewComplaint from "./viewComplaint";
-import { useRoute } from "@react-navigation/native";
+import { useGetComplaintsQuery } from "@src/hooks/useComplaintQuery";
+import { timestampDisplay } from "@src/utils/helper";
+import { Image } from "expo-image";
+import { blurhash } from "@src/constants/data";
+import images from "@src/constants/images";
 
 export interface ComplaintStateProps {
   isLoading: boolean;
   data: ComplaintAPIProps | null;
 }
 
-const ComplaintRenderItem = ({
-  complainProps,
-  index,
-  complaintsArray,
-}: ComplaintRenderItemProps) => {
-  const attachmentUrl = complainProps.attachment?.[0] || "";
-
-  return (
-    <View style={styles.chatMessageContainer}>
-      <Image
-        source={
-          attachmentUrl ? { uri: attachmentUrl } : images.complaint.repair
-        }
-        style={{ width: 50, height: 50, borderRadius: 25 }}
-      />
-
-      <View
-        style={[
-          styles.chatMessage,
-          {
-            borderBottomWidth: index !== complaintsArray?.length - 1 ? 1 : 0,
-            borderBottomColor: appColors.gray,
-          },
-        ]}
-      >
-        <View style={{ gap: 2, flex: 1 }}>
-          <ThemedText type="title">{complainProps.title}</ThemedText>
-          <View
-            style={[
-              styles.complaintStateStyle,
-              {
-                backgroundColor:
-                  complainProps.status === "PENDING"
-                    ? appColors.pendingBrown
-                    : appColors.closedGreen,
-              },
-            ]}
-          >
-            <ThemedText
-              type="title"
-              style={{
-                color:
-                  complainProps.status === "PENDING"
-                    ? appColors.brown
-                    : appColors.green,
-                fontSize: 11,
-              }}
-            >
-              {complainProps.status}
-            </ThemedText>
-          </View>
-        </View>
-
-        <ThemedText type="small" style={{ color: appColors.deepGray }}>
-          {/* {complainProps.time} */}
-        </ThemedText>
-      </View>
-    </View>
-  );
-};
-
 const Complaints = () => {
-  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
+  const { data, isLoading, isFetching, refetch } =
+    useGetComplaintsQuery(search);
+
   const [triggerItem, setTriggerItem] = useState({} as ComplaintProps);
-  const [complaints, setComplaints] = useState<ComplaintStateProps>({
-    isLoading: false,
-    data: null,
-  });
+
   const modalizeRef = useRef<Modalize>(null);
   const clickModalizeRef = useRef<Modalize>(null);
 
-  const handleCloseModal = () => {
+  const handleCreateComplaint = async () => {
     modalizeRef.current?.close();
+    refetch();
   };
-
-  const { params } = useRoute();
-
-  const modalItem = params?.item;
-
-  useEffect(() => {
-    if (modalItem) {
-      setTriggerItem(modalItem);
-      clickModalizeRef.current?.open();
-    }
-    return () => {
-      setTriggerItem({} as ComplaintProps);
-    };
-  }, [modalItem]);
-
-  const handleUpdateComplaints = (updates: Partial<ComplaintStateProps>) => {
-    setComplaints((prev) => updateState(prev, updates));
-  };
-
-  const handleCreateComplaint = async (payload: any) => {
-    try {
-      const response = await createComplaints(payload);
-      setComplaints({
-        ...complaints,
-        data: {
-          ...complaints.data,
-          complaints: [response, ...(complaints.data?.complaints || [])],
-        },
-      });
-      handleCloseModal();
-    } catch (error: any) {
-      handleCloseModal();
-      // console.log(error.response.data);
-    }
-  };
-
-  const getComplaints = useCallback(async () => {
-    handleUpdateComplaints({ isLoading: true });
-    try {
-      const response = await getAllComplaints(search);
-      handleUpdateComplaints({ data: response });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      handleUpdateComplaints({ isLoading: false });
-    }
-  }, []);
-
-  const onRefreshComplaints = useCallback(async () => {
-    setRefreshing(true);
-
-    try {
-      const response = await getAllComplaints(search);
-      handleUpdateComplaints({ data: response });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setRefreshing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    getComplaints();
-  }, []);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <View style={{ flex: 1, marginBottom: 100 }}>
+    <View className='flex-1'>
+      {isLoading || isFetching ? (
+        <View className='flex-1 items-center justify-center'>
+          <ActivityIndicator size='large' color='#F6411B' />
+        </View>
+      ) : (
         <FlatList
-          data={complaints.data?.complaints}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => {
-                setTriggerItem(item);
-                clickModalizeRef.current?.open();
-              }}
-              style={{ flex: 1 }}
-            >
-              <ComplaintRenderItem
-                complainProps={item}
-                index={index}
-                complaintsArray={
-                  complaints.data?.complaints as ComplaintProps[]
-                }
-              />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item?.id}
-          ListEmptyComponent={
-            <>
-              {complaints.isLoading ? (
-                <ActivityIndicator size={18} />
-              ) : !complaints.isLoading &&
-                complaints.data?.complaints?.length! < 1 ? (
-                <EmptyMessage message={"You have made no complaints"} />
-              ) : null}
-            </>
-          }
+          data={ data?.complaints || []}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ gap: 16 }}
           refreshControl={
             <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => onRefreshComplaints()}
+              refreshing={isFetching || isLoading}
+              onRefresh={refetch}
+              colors={["#F6411B"]}
+              tintColor={"#F6411B"}
             />
           }
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={<SearchInput setSearch={setSearch} />}
-          ListHeaderComponentStyle={{ flex: 1, marginBottom: 20 }}
-          // contentContainerStyle={{ flexGrow: 1 }}
+          ListEmptyComponent={() => (
+            <View className='flex-1 items-center justify-center pt-32 px-14 gap-4'>
+              <View className='w-44 h-40'>
+                <Image
+                  source={images.complaint.emptyComplaints}
+                  contentFit='cover'
+                  className='w-full h-full'
+                />
+              </View>
+              <View>
+                <Text className='text-center font-medium text-lg text-[#050402]'>
+                  Complaints to your facility manager will show up here
+                </Text>
+              </View>
+            </View>
+          )}
+          renderItem={(item) => (
+            <Pressable
+              onPress={() => {
+                setTriggerItem(item.item);
+                clickModalizeRef.current?.open();
+              }}
+              children={({ pressed }) => (
+                <View
+                  className={`${pressed ? "opacity-50" : ""} flex-row`}
+                  style={{ gap: 8 }}
+                >
+                  <View className='w-16 h-16 bg-[#F2F2F2] rounded-full border-2 border-[#B42020] shrink-0 p-1'>
+                    <Image
+                      source={item.item.attachment[0] as any}
+                      contentFit='cover'
+                      className='w-full h-full rounded-full'
+                      placeholder={{ blurhash: blurhash }}
+                    />
+                  </View>
+                  <View className='flex-1'>
+                    <View className='flex-row'>
+                      <View className='flex-1'>
+                        <Text>
+                          {timestampDisplay(item.item.createdAt).formattedDate}{" "}
+                          at{" "}
+                          {timestampDisplay(item.item.createdAt).formattedTime}
+                        </Text>
+                        <Text className='font-bold text-base'>
+                          {item.item.title}
+                        </Text>
+                      </View>
+                      <View
+                        className={`${
+                          item.item.status === "PENDING"
+                            ? "bg-[#EFDCBA]"
+                            : "bg-[#BAEFBC]"
+                        } shrink-0 items-center justify-center rounded-full px-2`}
+                      >
+                        <Text
+                          className={`${
+                            item.item.status === "PENDING"
+                              ? "text-[#4C3A1C]"
+                              : "text-[#264C1C]"
+                          } font-medium text-xs`}
+                        >
+                          {item.item.status === "PENDING"
+                            ? "PENDING"
+                            : "RESOLVED"}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Text numberOfLines={2} className='text-[#050402]/50 '>
+                        {item.item.description}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            />
+          )}
         />
-
+      )}
+      <Pressable onPress={() => modalizeRef.current?.open()}>
+        {({ pressed }) => (
+          <View
+            className={`${
+              pressed ? "opacity-50" : ""
+            } absolute bottom-28 right-[5vw] rounded-full w-[72px] h-[72px] flex justify-center items-center bg-[#F6411B]`}
+          >
+            <Feather name='plus' size={24} color='#fff' />
+          </View>
+        )}
+      </Pressable>
+      <View>
         <CustomModal
           modalizeRef={modalizeRef}
-          triggerItem={
-            <>
-              <AntDesign name="plus" size={15} color={appColors.white} />
-              <ThemedText style={{ color: appColors.white }}>
-                New Complaint
-              </ThemedText>
-            </>
-          }
-          triggerItemStyle={styles.modalTriggerStyle}
-          modalTitle="Make Complaints"
           modalContent={
             <ComplaintModal handleCreateComplaint={handleCreateComplaint} />
           }
@@ -243,59 +159,11 @@ const Complaints = () => {
 
         <CustomModal
           modalizeRef={clickModalizeRef}
-          modalTitle="Complaint"
           modalContent={<ViewComplaint complaint={triggerItem} />}
         />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  chatMessageContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    minHeight: 80,
-    padding: 10,
-    flex: 1,
-    gap: 15,
-  },
-  chatMessage: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 15,
-    flex: 1,
-    paddingBottom: 5,
-  },
-  messageCountContainer: {
-    backgroundColor: appColors.orange,
-    padding: 4,
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalTriggerStyle: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 5,
-    flex: 1,
-    position: "absolute",
-    top: "70%",
-    right: 0,
-    borderRadius: 50,
-    backgroundColor: appColors.orange,
-    padding: 10,
-  },
-  complaintStateStyle: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 6,
-    borderRadius: 8,
-    maxWidth: "30%",
-  },
-});
 
 export default Complaints;

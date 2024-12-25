@@ -3,10 +3,14 @@ import axios from "./axiosClient";
 import { HousingBillsProps } from "@src/components/bills/HousingBills";
 
 export const getBills = async () => {
-  const response = await axios.get<{
-    data: HousingBillsProps[] | [];
-  }>(`${getUserDueBills}`);
-  return response.data.data;
+  try {
+    const response = await axios.get<{
+      data: Array<HousingBillsProps | any>;
+    }>(`${getUserDueBills}`);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const payBills = async (data: any) => {

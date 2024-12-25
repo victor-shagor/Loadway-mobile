@@ -34,7 +34,6 @@ const WalletBallance = () => {
       </View>
       <View className=" flex-row gap-5 px-[9%] pt-[2%]">
       <CustomModal
-            modalTitle="Fund Wallet"
             modalizeRef={walletRef}
               triggerItem={
                 <Button text="Fund Wallet" />

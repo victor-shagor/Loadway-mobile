@@ -5,7 +5,7 @@ import SelectContact from "@src/components/NewRequest/SelectContact";
 import Form from "@src/components/NewRequest/Form";
 import OrFill from "@src/components/NewRequest/OrFill";
 import AccessSent from "@src/components/Modal/AccessSent";
-import { addToFrequentList, createGateAccess, getFrequesntVisitors } from "@src/api/gateRequest";
+import { addToFrequentList, createGateAccess, getFrequentVisitors } from "@src/api/gateRequest";
 import { useRequestContext } from "@src/context/gateRequest";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCurrentUser } from "@src/hooks/useCurrentUser";
@@ -22,7 +22,7 @@ const NewRequest = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await getFrequesntVisitors();
+      const data = await getFrequentVisitors();
       setFrequent(data);
     })();
   }, []);
@@ -51,7 +51,7 @@ const NewRequest = () => {
   const handleAddToFrequent = async () =>{
     try {
       await addToFrequentList({phoneNumber: access.phoneNumber })
-      const data = await getFrequesntVisitors()
+      const data = await getFrequentVisitors()
       setFrequent(data)
     } catch (error:any) {
       console.log(error?.reponse?.data)
