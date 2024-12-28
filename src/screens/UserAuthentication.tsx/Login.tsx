@@ -28,6 +28,7 @@ import useOnboardingContext from "@src/utils/Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getCurrentUser } from "@src/api/user";
 import * as SecureStore from "expo-secure-store";
+import { StatusBar } from "expo-status-bar";
 
 type FormField = {
   name: any;
@@ -143,10 +144,10 @@ const Login = () => {
       const currentUser = await getCurrentUser();
       setCurrentUser(currentUser);
       if (data?.firstLogin) {
+        await AsyncStorage.setItem("firstLogin", "true");
         navigation.navigate("updatepassword");
-      } else {
-        setLogin(true);
       }
+      setLogin(true);
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -162,11 +163,8 @@ const Login = () => {
         ),
         right: <View></View>,
       });
-      await save("email", (await loginForm.getFieldValue("email")) as string);
-      await save(
-        "password",
-        (await loginForm.getFieldValue("password")) as string
-      );
+      await save("email", loginForm.getFieldValue("email") as string);
+      await save("password", loginForm.getFieldValue("password") as string);
     },
     onSettled: () => {
       setIsLoading(false);
@@ -183,11 +181,12 @@ const Login = () => {
 
   return (
     <SafeAreaView className='flex-1 pt-4'>
+      <StatusBar style='dark' />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1, height: "100%" }}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 0.1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View className='h-full flex-1 px-[5vw]'>
             <View className='pb-10'>
               <View className='pb-5'>
@@ -306,6 +305,11 @@ const Login = () => {
                 </Pressable>
               </View>
             </View>
+          </View>
+          <View className='px-[5vw] mb-2'>
+            <Text className='uppercase text-center font-medium text-xs text-black/50'>
+              Powered by <Text className='text-black'>Mason Atlantic</Text>
+            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

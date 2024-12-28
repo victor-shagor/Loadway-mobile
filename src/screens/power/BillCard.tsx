@@ -47,7 +47,7 @@ const BillCard = ({ item, handlePress }: BillCardProps) => {
             <View
               className={`${
                 pressed ? "opacity-50" : ""
-              } rounded-full h-14 justify-center items-center border border-black`}
+              } rounded-full h-14 justify-center items-center border-2 border-black`}
             >
               <Text className='text-center font-medium text-base'>
                 VIEW DETAILS

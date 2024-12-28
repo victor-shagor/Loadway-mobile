@@ -14,6 +14,10 @@ export const getBills = async () => {
 };
 
 export const payBills = async (data: any) => {
-  const response = await axios.post(`${payUserBills}`, data);
-  return response.status;
+  try {
+    const response = await axios.post(`${payUserBills}`, data);
+    return response.status;
+  } catch (error) {
+    throw error;
+  }
 };

@@ -1,21 +1,13 @@
-import { View, ScrollView, Alert, StatusBar } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { View, ScrollView, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import FrequentVisit from "@src/components/NewRequest/FrequentVisit";
-import SelectContact from "@src/components/NewRequest/SelectContact";
 import Form from "@src/components/NewRequest/Form";
-import OrFill from "@src/components/NewRequest/OrFill";
 import AccessSent from "@src/components/Modal/AccessSent";
 import { addToFrequentList, createGateAccess, getFrequentVisitors } from "@src/api/gateRequest";
 import { useRequestContext } from "@src/context/gateRequest";
-import { useFocusEffect } from "@react-navigation/native";
 import { useCurrentUser } from "@src/hooks/useCurrentUser";
 
 const NewRequest = () => {
-  useFocusEffect(
-    useCallback(() => {
-      StatusBar.setBarStyle("dark-content");
-    }, [])
-  );
 
   const { setFrequent, frequents, setRefetch, refetch } = useRequestContext();
 

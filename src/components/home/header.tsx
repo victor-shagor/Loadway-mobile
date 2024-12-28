@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Pressable,
-} from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";

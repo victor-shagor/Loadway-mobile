@@ -9,6 +9,9 @@ import { ImageProps } from "react-native";
 import images from "@src/constants/images";
 import { QuickLinksRootStackParamList } from "@src/components/home/quickLinks";
 import { ChatProps } from "@src/models/messaging";
+import ComplaintIcon from "@src/components/icons/ComplaintIcon";
+import ElectricityIcon from "@src/components/icons/ElectricityIcon";
+import GuestIcon from "@src/components/icons/GuestIcon";
 
 export type IconTypes =
   | keyof typeof AntDesign.glyphMap
@@ -30,6 +33,7 @@ export interface QuicklinkProps {
   icon: any;
   bgColor: string;
   params?: Record<string, any>;
+  iconColor: string;
 }
 export interface HousingBillsProps {
   bill_type: string;
@@ -93,21 +97,24 @@ export const quickLinksArray: QuicklinkProps[] = [
   {
     name: "Visitors",
     href: "GateAccess",
-    icon: images.quickLInks.visitors,
+    icon: GuestIcon,
     bgColor: "#E8E23730",
+    iconColor: "#E1B13A",
   },
   {
     name: "Complaints",
     href: "Message",
-    icon: images.quickLInks.complaints,
+    icon: ComplaintIcon,
     bgColor: "#3778E830",
     params: { complaint: true },
+    iconColor: "#7B65F4",
   },
   {
-    icon: images.quickLInks.electricity,
+    icon: ElectricityIcon,
     name: "Electricity",
     href: "Electricity",
     bgColor: "#8DE83730",
+    iconColor: "#90D25D",
   },
 ];
 

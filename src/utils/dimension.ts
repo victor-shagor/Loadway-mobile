@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from "react-native";
+import { Dimensions, Platform, StatusBar } from "react-native";
 
 const STATUSBAR_DEFAULT_HEIGHT = 20;
 const STATUSBAR_X_HEIGHT = 44;
@@ -47,7 +47,7 @@ if (Platform.OS === "ios" && !Platform.isPad && !Platform.isTV) {
 export function getStatusBarHeight() {
   return Platform.select({
     ios: statusBarHeight,
-    android: 0,
+    android: StatusBar.currentHeight,
     default: 0,
   });
 }

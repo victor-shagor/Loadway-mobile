@@ -41,7 +41,7 @@ const ViewNotification = ({
           <View
             className={`${
               pressed ? "opacity-50" : ""
-            } rounded-full h-16 justify-center items-center border border-black`}
+            } rounded-full h-16 justify-center items-center border-2 border-black`}
           >
             <Text className='text-center font-medium text-base'>
               Close message

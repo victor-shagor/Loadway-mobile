@@ -13,8 +13,8 @@ import { FlatList } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { timestampDisplay } from "@src/utils/helper";
 import CustomModal from "@src/components/CustomModal";
-import { refresh } from "@react-native-community/netinfo";
 import ViewNotification from "@src/components/notifications/ViewNotification";
+import { StatusBar } from "expo-status-bar";
 
 const UserNotifications = () => {
   const notificationInfoModalRef = useRef<any>(null);
@@ -40,7 +40,7 @@ const UserNotifications = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(1000);
 
-  const { data, isFetching, isLoading } = useGetAllNotificationsQuery(
+  const { data, isFetching, isLoading, refetch } = useGetAllNotificationsQuery(
     activeTab,
     page,
     pageSize
@@ -48,6 +48,7 @@ const UserNotifications = () => {
 
   return (
     <View className='flex-1 pt-3'>
+      <StatusBar style='dark' />
       <View className='absolute z-10 w-full'>
         <AppTopTabBar
           activeTab={activeTab}
@@ -65,7 +66,7 @@ const UserNotifications = () => {
             refreshControl={
               <RefreshControl
                 refreshing={isFetching || isLoading}
-                onRefresh={refresh}
+                onRefresh={refetch}
                 colors={["#F6411B"]}
                 tintColor={"#F6411B"}
               />
@@ -89,8 +90,8 @@ const UserNotifications = () => {
               <Pressable
                 onPress={() => openNotificationInfoModal(item)}
                 children={({ pressed }) => (
-                  <View className='flex-row' style={{ gap: 16 }}>
-                    <View className='w-16 h-16 rounded-full border-2 border-[#B42020] justify-center items-center overflow-hidden p-1 shrink-0'>
+                  <View className={`${pressed ? "opacity-50" : ""} flex-row`} style={{ gap: 16 }}>
+                    <View className={`w-16 h-16 rounded-full ${false ? "border-2" : ""} border-[#B42020] justify-center items-center overflow-hidden p-1 shrink-0`}>
                       <View className='rounded-full w-full h-full items-center justify-center bg-[#EFBABA]'>
                         <MaterialCommunityIcons
                           name='bell'
@@ -114,6 +115,9 @@ const UserNotifications = () => {
                         </Text>
                       </View>
                     </View>
+                    {/* This is for unread notifications
+                    Change to true to show
+                     */}
                     {false && (
                       <View className='shrink-0 pt-7'>
                         <View className='bg-[#FF2828] h-2 w-2 rounded-full'></View>

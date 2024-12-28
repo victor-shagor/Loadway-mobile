@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Platform,
   StyleSheet,
+  Text,
   useWindowDimensions,
   View,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Ionicons, Entypo, Octicons, FontAwesome } from "@expo/vector-icons";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
 import * as Device from "expo-device";
@@ -31,7 +36,7 @@ import AppPreference from "@src/components/settings/appPreference";
 import Support from "@src/components/settings/support";
 import UserNotifications from "@src/screens/notifications";
 import ChatRoom from "@src/screens/message/ChatRoom";
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 import { getCurrentUser, updateCurrentUser } from "@src/api/user";
 import { OnboardingContextType, useOnboarding } from "@src/context/onboarding";
 import axiosInstance from "@src/api/axiosClient";
@@ -42,6 +47,11 @@ import { useNavigation } from "@react-navigation/native";
 import NewAccess from "@src/screens/new-access";
 import ElectricityVending from "@src/screens/power";
 import GateAccessHome from "../screens/gateAccess";
+import HomeIcon from "@src/components/icons/HomeIcon";
+import BillIcon from "@src/components/icons/BillIcon";
+import MessageIcon from "@src/components/icons/MessageIcon";
+import ProfileIcon from "@src/components/icons/ProfileIcon";
+import ResetPassword from "@src/screens/UserAuthentication.tsx/ResetPassword";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -51,28 +61,65 @@ export type BillsStackParamList = {
   PaymentHistory: any;
 };
 
+type TabItem = {
+  name: string;
+  label: string;
+  icon: (color: string) => ReactElement;
+  headerShown?: boolean;
+  component: any;
+  headerTitle?: string;
+};
+
+type ScreenProps = {
+  name: string;
+  component: any;
+  showHeader: boolean;
+  title?: string;
+  leftIcon?: string;
+  rightIcon?: string;
+};
+
 export type NewRequestStackParamList = {
   newrequest: any;
 };
 
-const CustomTabIcon = ({
-  children,
-  active,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-}) => {
-  return (
-    <View
-      style={[
-        styles.iconContainer,
-        { backgroundColor: active ? appColors.orange : appColors.white },
-      ]}
-    >
-      {children}
-    </View>
-  );
-};
+const tabs: Array<TabItem> = [
+  {
+    name: "Home",
+    label: "Home",
+    icon: (color: string) => <HomeIcon color={color} width={50} height={50} />,
+    component: Home,
+    headerShown: false,
+  },
+  {
+    name: "Bills",
+    label: "Bills",
+    icon: (color: string) => <BillIcon color={color} width={50} height={50} />,
+    component: Bills,
+    headerShown: true,
+    headerTitle: "BILLS",
+  },
+  {
+    name: "Message",
+    label: "Message",
+    icon: (color: string) => (
+      <MessageIcon color={color} width={50} height={50} />
+    ),
+    component: Messages,
+    headerShown: true,
+    headerTitle: "COMPLAINTS",
+  },
+  {
+    name: "Profile",
+    label: "Profile",
+    icon: (color: string) => (
+      <ProfileIcon color={color} width={50} height={50} />
+    ),
+    component: Profile,
+    headerShown: false,
+    headerTitle: "PROFILE",
+  },
+];
 
 const TabNavigation = () => {
   return (
@@ -85,58 +132,31 @@ const TabNavigation = () => {
           headerTitleAlign: "center",
         }}
       >
-        <Tab.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ size, color, focused }) => (
-              <CustomTabIcon active={focused}>
-                <Entypo name='home' size={size} color={color} />
-              </CustomTabIcon>
-            ),
-          }}
-          name='Home'
-          component={Home}
-        />
-        <Tab.Screen
-          options={{
-            tabBarIcon: ({ size, color, focused }) => (
-              <CustomTabIcon active={focused}>
-                <Octicons name='credit-card' size={size} color={color} />
-              </CustomTabIcon>
-            ),
-            header: () => <AppHeader title="BILLS"/>,
-          }}
-          name='Bills'
-          component={Bills}
-        />
-        <Tab.Screen
-          options={{
-            tabBarIcon: ({ size, color, focused }) => (
-              <CustomTabIcon active={focused}>
-                <Ionicons
-                  name='chatbubble-ellipses'
-                  size={size}
-                  color={color}
-                />
-              </CustomTabIcon>
-            ),
-            header: () => <AppHeader title="COMPLAINTS"/>,
-          }}
-          name='Message'
-          component={Messages}
-        />
-        <Tab.Screen
-          options={{
-            tabBarIcon: ({ size, color, focused }) => (
-              <CustomTabIcon active={focused}>
-                <FontAwesome name='user' size={size} color={color} />
-              </CustomTabIcon>
-            ),
-            header: () => <AppHeader title="PROFILE"/>,
-          }}
-          name='Profile'
-          component={Profile}
-        />
+        {tabs.map((tab, index) => (
+          <Tab.Screen
+            key={index}
+            options={{
+              headerShown: tab.headerShown,
+              tabBarIcon: ({ size, color, focused }) => (
+                <View className='items-center' style={{ gap: 4 }}>
+                  <View className='h-6 w-6'>
+                    {tab.icon(focused ? appColors.orange : color)}
+                  </View>
+                  <Text
+                    className={`${
+                      focused ? "text-[#E85637]" : "text-black/50"
+                    } font-medium text-sm`}
+                  >
+                    {tab.label}
+                  </Text>
+                </View>
+              ),
+              header: () => <AppHeader title={tab.headerTitle} />,
+            }}
+            name={tab.name}
+            component={tab.component}
+          />
+        ))}
       </Tab.Navigator>
     </Host>
   );
@@ -155,7 +175,7 @@ Notifications.setNotificationHandler({
 });
 
 const DashboardStack = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { height } = useWindowDimensions();
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
@@ -193,7 +213,7 @@ const DashboardStack = () => {
           navigate("UserNotifications", {});
         }
       });
-
+    navigation.navigate("Main" as any);
     return () => {
       notificationListener.current &&
         Notifications.removeNotificationSubscription(
@@ -262,7 +282,8 @@ const DashboardStack = () => {
     return token;
   }
 
-  const { currentUser, setCurrentUser } = useOnboarding() as OnboardingContextType;
+  const { currentUser, setCurrentUser } =
+    useOnboarding() as OnboardingContextType;
 
   const [profile, setProfile] = useState({
     firstName: currentUser?.firstName,
@@ -276,9 +297,9 @@ const DashboardStack = () => {
   // Function to save profile changes
   const handleSave = async () => {
     try {
-      await axiosInstance.put('/user/update', profile)
-      const user = await getCurrentUser()
-      setCurrentUser(user)
+      await axiosInstance.put("/user/update", profile);
+      const user = await getCurrentUser();
+      setCurrentUser(user);
       Toast.show({
         type: "success",
         text1: "Success",
@@ -294,15 +315,6 @@ const DashboardStack = () => {
         text2: "Error while saving changes., try again later",
       });
     }
-  };
- 
-  type ScreenProps = {
-    name: string;
-    component: any;
-    showHeader: boolean;
-    title?: string;
-    leftIcon?: string;
-    rightIcon?: string;
   };
 
   const screens: ScreenProps[] = [
@@ -389,6 +401,12 @@ const DashboardStack = () => {
       title: "USER MANAGEMENT",
       leftIcon: "arrow-left",
     },
+    {
+      name: "resetpassword",
+      component: ResetPassword,
+      showHeader: true,
+      leftIcon: "arrow-left",
+    },
   ];
 
   const profileScreens: ScreenProps[] = [
@@ -463,7 +481,6 @@ const DashboardStack = () => {
           />
         ))}
       </Stack.Navigator>
-      
 
       {/* PROFILE SETTINGS */}
       <Stack.Group>
@@ -487,7 +504,6 @@ const DashboardStack = () => {
           />
         ))}
       </Stack.Group>
-      
     </Host>
   );
 };

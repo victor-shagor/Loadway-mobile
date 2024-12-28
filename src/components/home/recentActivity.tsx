@@ -1,11 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { ActivityType } from "@src/models/User";
 import { renderIcon } from "../common/renderIcon";
 import { formatString, formatTimestamp } from "@src/utils/helper";
 import useOnboardingContext from "@src/utils/Context";
 import { ScrollView } from "react-native-gesture-handler";
 import images from "@src/constants/images";
+import { Image } from "expo-image";
 
 
 type ListIconProps = {
@@ -21,7 +22,7 @@ const ListIcon = ({ type }: ListIconProps) => {
   };
   return (
     <View className='w-14 h-14 items-center justify-center rounded-full bg-[#F8F8F8]'>
-      <Image source={iconMap[type]} width={24} height={30} />
+      <Image source={iconMap[type]} contentFit='cover' className='w-8 h-8' />
     </View>
   );
 };

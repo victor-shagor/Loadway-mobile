@@ -126,7 +126,6 @@ export const ComplaintModal = ({
       if (selectedFile) {
         url = await uploadFile();
       }
-      console.log({ url });
       const data = {
         personnel: "PROPERTY_MANAGER",
         title: value.category,

@@ -5,6 +5,7 @@ import { appColors } from "@src/constants/colors";
 import Complaints from "@src/components/message/complaints";
 import AppTopTabBar, { TabItem } from "@src/components/common/AppTopTabBar";
 import { Feather } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 
 export const Tab = createMaterialTopTabNavigator();
 
@@ -46,6 +47,7 @@ const Messages = () => {
 
   return (
     <View className='flex-1 py-3'>
+      <StatusBar style='dark' />
       {/* <View className='absolute z-10 w-full'>
         <AppTopTabBar
           activeTab={activeTab}
