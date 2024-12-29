@@ -1,9 +1,8 @@
-import React from "react";
+import React, { createElement } from "react";
 import {
   StyleSheet,
   View,
   FlatList,
-  Image,
   Text,
   Pressable,
 } from "react-native";
@@ -44,7 +43,13 @@ const QuickLinks = () => {
                   className='w-16 h-16 items-center justify-center rounded-full'
                   style={{ backgroundColor: item.bgColor }}
                 >
-                  <Image source={item.icon} width={45} height={45} />
+                  <View className='w-9 h-9 ml-1'>
+                    {createElement(item.icon, {
+                      width: 70,
+                      height: 70,
+                      primaryColor: item.iconColor,
+                    })}
+                  </View>
                 </View>
                 <Text className='font-normal text-[#0C0A04]'>{item.name}</Text>
               </View>

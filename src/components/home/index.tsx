@@ -1,20 +1,35 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  View,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import React from "react";
 import Cards from "./cards";
 import PushNotifications from "./pushNotifications";
 import RecentActivity from "./recentActivity";
 import QuickLinks from "./quickLinks";
+import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
 
-type Props = {};
+const HomeMain = () => {
+  const { isLoading, isFetching, refetch } = useGetCurrentUserQuery();
 
-const HomeMain = (props: Props) => {
   return (
-    <ScrollView className="px-[5vw] py-4 flex-1">
+    <ScrollView
+      className='px-[5vw] py-4 flex-1'
+      refreshControl={
+        <RefreshControl
+          refreshing={isFetching || isLoading}
+          onRefresh={refetch}
+          colors={["#F6411B"]}
+          tintColor={"#F6411B"}
+        />
+      }
+    >
       <Cards />
-      <QuickLinks/>
+      <QuickLinks />
       <PushNotifications />
-      <RecentActivity/>
-      <View className="h-32"></View>
+      <RecentActivity />
+      <View className='h-32'></View>
     </ScrollView>
   );
 };

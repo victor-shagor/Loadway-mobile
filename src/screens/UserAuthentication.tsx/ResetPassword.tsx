@@ -22,6 +22,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@src/navigation";
+import { OnboardingContextType, useOnboarding } from "@src/context/onboarding";
+import { StatusBar } from "expo-status-bar";
+import * as SecureStore from "expo-secure-store";
 
 type FormField = {
   name: any;
@@ -49,6 +52,7 @@ const ResetPassword = () => {
   const navigation =
     useNavigation<StackNavigationProp<AuthenticationStackParamList>>();
 
+  const { setCurrentUser, setLogin } = useOnboarding() as OnboardingContextType;
   useEffect(() => {
     AsyncStorage.getItem("resetEmail").then((value) => {
       setResendEmail(value || "");
@@ -158,7 +162,7 @@ const ResetPassword = () => {
         right: <View></View>,
       });
     },
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -175,6 +179,9 @@ const ResetPassword = () => {
         right: <View></View>,
       });
       AsyncStorage.removeItem("resetEmail");
+      await SecureStore.deleteItemAsync("password")
+      setLogin(false);
+      setCurrentUser(null);
       navigation.navigate("login" as any);
     },
     onSettled: () => {
@@ -195,6 +202,7 @@ const ResetPassword = () => {
 
   return (
     <View className='flex-1 pt-4'>
+      <StatusBar style='dark' />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1, height: "100%" }}

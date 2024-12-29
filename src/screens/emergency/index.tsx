@@ -1,17 +1,12 @@
 
 
-import React, { useCallback } from "react";
-import { StatusBar, StyleSheet, View, useWindowDimensions } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { appColors } from "@src/constants/colors";
 import { ThemedText } from "@src/components/ThemedText";
-import { useFocusEffect } from "@react-navigation/native";
 import EmergencyContact from "@src/components/Emergency/EmergencyContact";
 import ReportEmergency from "@src/components/Emergency/ReportEmergency";
-
-
-
-
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -37,13 +32,6 @@ const CustomTabLabel = ({
 };
 
 const EmergencyUI = () => {
-  const { height } = useWindowDimensions();
-  useFocusEffect(
-    useCallback(() => {
-      StatusBar.setBarStyle("dark-content");
-    }, [])
-  );
-
   return (
     <Tab.Navigator
       screenOptions={{

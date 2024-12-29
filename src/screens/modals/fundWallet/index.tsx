@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -19,12 +18,15 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { formatMoney } from "@src/utils/helper";
 import InSufficientBalance from "./InSufficientBalance";
+import { payBills } from "@src/api/bills";
+import { queryClient } from "@src/providers/get-query-client";
 
 type FundWalletModalProps = {
   close: () => void;
   type?: "wallet" | "bill";
   isExternalDeficit?: boolean;
   externalDeficit?: number;
+  bills?: Array<string>;
 };
 
 export const FundWalletModal = ({
@@ -32,6 +34,7 @@ export const FundWalletModal = ({
   type = "wallet",
   isExternalDeficit,
   externalDeficit = 0,
+  bills = [],
 }: FundWalletModalProps) => {
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState("");
@@ -40,6 +43,63 @@ export const FundWalletModal = ({
 
   const [deficit, setDeficit] = useState<number>(0);
   const [isAddFunds, setIsAddFunds] = useState(false);
+
+  useEffect(() => {
+    if (type === "bill" && externalDeficit < 1) {
+      payBillMutation.mutate();
+    }
+  }, []);
+
+  const payBillMutation = useMutation({
+    mutationFn: async () => {
+      setLoading(true);
+      return await payBills({
+        bills,
+      });
+    },
+    mutationKey: ["bills"],
+    onError: (error: any) => {
+      ToastService.show({
+        position: "top",
+        contentContainerStyle: {
+          top: 70,
+          borderRadius: 100,
+          backgroundColor: "#ef4444",
+        },
+        children: (
+          <AppToast
+            message={error?.response?.data?.message || "An error occurred"}
+            leftIcon='alert-circle'
+            color='#fff'
+          />
+        ),
+        right: <View></View>,
+      });
+    },
+    onSuccess: async (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["bills"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      ToastService.show({
+        position: "top",
+        contentContainerStyle: {
+          top: 70,
+          borderRadius: 100,
+          backgroundColor: "#FFF1C6",
+        },
+        children: (
+          <AppToast
+            message={data?.message || "Payment successful"}
+            leftIcon='check-circle'
+          />
+        ),
+        right: <View></View>,
+      });
+    },
+    onSettled: () => {
+      setLoading(false);
+      close();
+    },
+  });
 
   const initiateTransaction = async (amount: any) => {
     try {
@@ -195,7 +255,7 @@ export const FundWalletModal = ({
   return (
     <View className='py-10 px-[5vw]' style={{ gap: 20 }}>
       <View>
-        <Text className='text-black text-2xl font-medium pb-1.5 text-center'>
+        <Text className='text-black text-xl font-medium pb-1.5 text-center'>
           {type === "bill" ? "POWER TOPUP" : "FUND WALLET"}
         </Text>
         <form.Field
@@ -296,30 +356,4 @@ export const FundWalletModal = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: appColors.modalBackground,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-    gap: 20,
-  },
-  input: {
-    padding: 10,
-    backgroundColor: appColors.white,
-    borderWidth: 1,
-    borderColor: appColors.gray,
-    borderRadius: 6,
-    height: 48,
-  },
-  imagePicker: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-  },
-  buttonStyle: {
-    marginVertical: 30,
-  },
-});
 export default FundWalletModal;

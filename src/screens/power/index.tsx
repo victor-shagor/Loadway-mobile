@@ -6,6 +6,7 @@ import { Feather } from "@expo/vector-icons";
 import CustomModal from "@src/components/CustomModal";
 import FundWalletModal from "../modals/fundWallet";
 import ViewBillModal from "./ViewBillModal";
+import { StatusBar } from "expo-status-bar";
 
 const ElectricityVending = () => {
   const { data, isLoading, isFetched, refetch } = useGetBillsQuery();
@@ -56,6 +57,7 @@ const ElectricityVending = () => {
 
   return (
     <View className='flex-1 px-[5vw]'>
+      <StatusBar style='dark' />
       <FlatList
         data={tempData}
         keyExtractor={(_, index) => index.toString()}

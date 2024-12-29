@@ -22,6 +22,7 @@ import { ToastService } from "react-native-toastier";
 import { revokeGateAccess } from "@src/api/gateRequest";
 import AppToast from "@src/components/common/AppToast";
 import { queryClient } from "@src/providers/get-query-client";
+import { StatusBar } from "expo-status-bar";
 
 type Props = {};
 
@@ -94,10 +95,10 @@ const GateAccessHome = (props: Props) => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({
-        queryKey: ["frequentVisitors"]
+        queryKey: ["frequentVisitors"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["gateAccess"]
+        queryKey: ["gateAccess"],
       });
       ToastService.show({
         position: "top",
@@ -119,6 +120,7 @@ const GateAccessHome = (props: Props) => {
 
   return (
     <View className='flex-1 pt-3'>
+      <StatusBar style="dark"/>
       <View className='absolute z-10 w-full'>
         <AppTopTabBar
           activeTab={activeTab}
@@ -210,22 +212,21 @@ const GateAccessHome = (props: Props) => {
         </View>
       )}
 
-        <Pressable
-          onPressIn={() => {
-            navigation.navigate("NewAccess");
-          }}
-        >
-          {({ pressed }) => (
-            <View
-              className={`${
-                pressed ? "opacity-50" : ""
-              } absolute bottom-16 right-[5vw] rounded-full w-[72px] h-[72px] flex justify-center items-center bg-[#F6411B]`}
-            >
-              <Feather name='plus' size={24} color='#fff' />
-            </View>
-          )}
-        </Pressable>
-
+      <Pressable
+        onPressIn={() => {
+          navigation.navigate("NewAccess");
+        }}
+      >
+        {({ pressed }) => (
+          <View
+            className={`${
+              pressed ? "opacity-50" : ""
+            } absolute bottom-16 right-[5vw] rounded-full w-[72px] h-[72px] flex justify-center items-center bg-[#F6411B]`}
+          >
+            <Feather name='plus' size={24} color='#fff' />
+          </View>
+        )}
+      </Pressable>
 
       <CustomModal
         modalizeRef={accessInfoModalRef}

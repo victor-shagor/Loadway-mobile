@@ -1,23 +1,34 @@
-import {} from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import {
   View,
   Text,
   Pressable,
   FlatList,
+  RefreshControl,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useOnboardingContext from "@src/utils/Context";
 import { formatMoney } from "@src/utils/helper";
 import { Image } from "expo-image";
 import images from "@src/constants/images";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
+import { useGetBillsQuery } from "@src/hooks/useBillQuery";
+import { Feather } from "@expo/vector-icons";
 
 const Bills = () => {
   const { currentUser } = useOnboardingContext();
-  const [currentTab, setCurrentTab] = React.useState("pending");
-  const fundWalletModalRef = React.useRef<any>(null);
+  const [currentTab, setCurrentTab] = useState("pending");
+  const fundWalletModalRef = useRef<any>(null);
   const [isExternalDeficit, setIsExternalDeficit] = React.useState(false);
+  const [billIds, setBillIds] = useState<Array<any>>([]);
+
+  const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
+
+  useEffect(() => {
+    setBillIds(data?.map((item) => item.id) || []);
+  }, [data]);
 
   const tabs = [
     {
@@ -33,29 +44,7 @@ const Bills = () => {
   const handleTabPress = (tabName: string) => {
     setCurrentTab(tabName);
   };
-
-  const pendingData = [
-    {
-      name: "HOUSE RENT",
-      date: "2024-12-24",
-      amount: 900000,
-    },
-    {
-      name: "HOUSE RENT",
-      date: "2024-12-24",
-      amount: 900000,
-    },
-    {
-      name: "HOUSE RENT",
-      date: "2024-12-24",
-      amount: 900000,
-    },
-    {
-      name: "HOUSE RENT",
-      date: "2024-12-24",
-      amount: 900000,
-    },
-  ];
+ 
 
   const handlePayNow = () => {
     setIsExternalDeficit(true);
@@ -69,6 +58,7 @@ const Bills = () => {
 
   return (
     <View className='flex-1 h-screen px-[5vw]' style={{ gap: 24 }}>
+      <StatusBar style='dark' />
       <View className='rounded-xl bg-[#310D05] p-5' style={{ gap: 10 }}>
         <View className='flex-row justify-between items-center'>
           <View className='flex-row items-center' style={{ gap: 8 }}>
@@ -116,57 +106,84 @@ const Bills = () => {
           </Pressable>
         ))}
       </View>
-      <FlatList
-        data={pendingData}
-        className='bg-white rounded-xl p-5 max-h-64'
-        contentContainerStyle={{ gap: 16 }}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => {
-          return (
-            <View
-              className='flex-row justify-between items-center'
-              style={{ gap: 12 }}
-            >
-              <View
-                className={`${
-                  currentTab === "pending" ? "bg-[#FFC7C4]" : "bg-[#D5FFC4]"
-                } w-14 h-14 items-center justify-center rounded-full shrink-0`}
-              >
-                {currentTab === "pending" ? (
-                  <Text className='text-[#CF1919] font-semibold text-2xl'>
-                    !
-                  </Text>
-                ) : (
-                  <Image
-                    source={images.bills.walletIcon}
-                    className='w-10 h-10'
-                  />
-                )}
-              </View>
-              <View className='flex-1'>
-                <Text className='text-[#050402]/50 font-medium text-sm'>
-                  {item.date}
-                </Text>
-                <Text className='text-[#050402] font-medium text-base'>
-                  {item.name}
-                </Text>
-              </View>
-              <Text className='text-[#000] font-medium text-sm shrink-0'>
-                {formatMoney(Number(item.amount), "₦")}
-              </Text>
-            </View>
-          );
-        }}
-      />
 
-      {currentTab === "pending" && (
+      {isLoading || isFetching ? (
+        <View className='flex-1 items-center justify-center'>
+          <ActivityIndicator size='large' color='#F6411B' />
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          className='bg-white rounded-xl p-5 max-h-64'
+          contentContainerStyle={{ gap: 16 }}
+          keyExtractor={(_, index) => index.toString()}
+          ListEmptyComponent={() => (
+            <View className='flex-1 items-center justify-center gap-4 pt-10'>
+              <View>
+                <Feather name='credit-card' size={40} color='#a1a1a1' />
+              </View>
+              <View>
+                <Text className='text-center font-medium text-base text-[#050402]'>
+                  Your pending bills will show up here
+                </Text>
+              </View>
+            </View>
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching || isLoading}
+              onRefresh={refetch}
+              colors={["#F6411B"]}
+              tintColor={"#F6411B"}
+            />
+          }
+          renderItem={({ item }) => {
+            return (
+              <View
+                className='flex-row justify-between items-center'
+                style={{ gap: 12 }}
+              >
+                <View
+                  className={`${
+                    currentTab === "pending" ? "bg-[#FFC7C4]" : "bg-[#D5FFC4]"
+                  } w-14 h-14 items-center justify-center rounded-full shrink-0`}
+                >
+                  {currentTab === "pending" ? (
+                    <Text className='text-[#CF1919] font-semibold text-2xl'>
+                      !
+                    </Text>
+                  ) : (
+                    <Image
+                      source={images.bills.walletIcon}
+                      className='w-10 h-10'
+                    />
+                  )}
+                </View>
+                <View className='flex-1'>
+                  <Text className='text-[#050402]/50 font-medium text-sm'>
+                    {item.dueDate}
+                  </Text>
+                  <Text className='text-[#050402] font-medium text-base'>
+                    {item.billName}
+                  </Text>
+                </View>
+                <Text className='text-[#000] font-medium text-sm shrink-0'>
+                  {formatMoney(Number(item.amountDue || 0), "₦")}
+                </Text>
+              </View>
+            );
+          }}
+        />
+      )}
+
+      {currentTab === "pending" && Number(currentUser?.duesSum) > 0 && (
         <Pressable
           onPress={handlePayNow}
           children={({ pressed }) => (
             <View
               className={`${
                 pressed ? "opacity-50" : ""
-              } rounded-full h-14 justify-center items-center border border-black bg-[#FFF6F4]`}
+              } rounded-full h-14 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#050402]'>
                 Pay all now
@@ -180,10 +197,15 @@ const Bills = () => {
         modalizeRef={fundWalletModalRef}
         modalContent={
           <FundWalletModal
-            isExternalDeficit={isExternalDeficit}
-            externalDeficit={currentUser?.duesSum}
+            isExternalDeficit={
+              Number(currentUser?.duesSum) > Number(currentUser?.wallet.balance)
+            }
+            externalDeficit={
+              Number(currentUser?.duesSum) - Number(currentUser?.wallet.balance)
+            }
             close={() => fundWalletModalRef.current?.close()}
             type={isExternalDeficit ? "bill" : "wallet"}
+            bills={billIds}
           />
         }
       />

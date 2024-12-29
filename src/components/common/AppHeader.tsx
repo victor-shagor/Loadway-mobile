@@ -1,4 +1,4 @@
-import { Pressable, StatusBar, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import { getStatusBarHeight } from "@src/utils/dimension";
@@ -25,10 +25,6 @@ const AppHeader = ({
       className={`bg-[#f1f1f1] flex items-center flex-row px-[5vw] py-2`}
       style={{ paddingTop: statusBarHeight + 8 }}
     >
-      <StatusBar
-          backgroundColor="#f1f1f1"
-          barStyle="dark-content"
-        />
       {leftIcon ? (
         <Pressable
           className='shrink-0'

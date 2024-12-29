@@ -52,7 +52,7 @@ const InSufficientBalance = ({
             <View
               className={`${
                 pressed ? "opacity-50" : ""
-              } rounded-full h-16 justify-center items-center border border-black bg-[#FFF6F4]`}
+              } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
                 {`Add ${formatMoney(deficit, "₦")} to wallet`}
@@ -71,10 +71,10 @@ const InSufficientBalance = ({
                   : pressed
                   ? "opacity-50"
                   : ""
-              } rounded-full h-16 justify-center items-center border border-black bg-[#FFF6F4]`}
+              } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
-                {`Buy ${formatMoney(
+                {`${isExternalDeficit ? 'Pay' : 'Buy'} ${formatMoney(
                   Number(currentUser?.wallet.balance || 0),
                   "₦"
                 )} instead`}

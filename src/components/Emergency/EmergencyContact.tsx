@@ -1,10 +1,9 @@
-import { ScrollView, StatusBar, StyleSheet, View, Dimensions } from "react-native";
-import React, { useCallback, useRef } from "react";
+import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
+import React, { useRef } from "react";
 import GetHelp from "@src/components/Emergency/GetHelp";
 import { getHelpData } from "@src/constants/data";
 import CustomText from "@src/components/Emergency/CustomText";
 import GetHelpContact from "@src/components/Emergency/GetHelpContact";
-import { useFocusEffect } from "@react-navigation/native";
 import CustomModal from "../CustomModal";
 import PoliceStation from "./PoliceStation";
 import { Modalize } from "react-native-modalize";
@@ -16,11 +15,6 @@ import { appColors } from "@src/constants/colors";
 
 
 const EmergencyContact = () => {
-  useFocusEffect(
-    useCallback(() => {
-      StatusBar.setBarStyle("dark-content");
-    }, [])
-  );
 
   const modalizeRefForReport = useRef<Modalize>(null);
 

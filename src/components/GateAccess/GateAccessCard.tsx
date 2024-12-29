@@ -6,6 +6,8 @@ import * as Clipboard from "expo-clipboard";
 import { Share } from "react-native";
 import { ToastService } from "react-native-toastier";
 import AppToast from "../common/AppToast";
+import { addDays } from "date-fns";
+import { timestampDisplay } from "@src/utils/helper";
 
 type ActionButtonType = {
   name: string;
@@ -26,14 +28,34 @@ const GateAccessCard = ({
   accessRevoked?: boolean;
 }) => {
   const copyToClipboard = async () => {
-    const messageTemplate = `Hi ${accessCodeData.guestName},\n\nYour access code is: ${accessCodeData.code}\n\nAddress: ${accessCodeData?.address}\n\nPowered by dwelling`;
+    const messageTemplate = `Hi ${
+      accessCodeData.guestName
+    },\n\nYour access code is: ${accessCodeData.code}\n\nAddress: ${
+      accessCodeData?.address
+    }\n\nWhen you arrive at the gate, show the code to the security team. Your code expires on ${
+      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
+        .formattedDate
+    } at ${
+      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
+        .formattedTime
+    }.\n\nPowered by masonatlantic.com`;
     await Clipboard.setStringAsync(messageTemplate);
   };
 
   const onShare = async () => {
     try {
       await Share.share({
-        message: `Hi ${accessCodeData.guestName},\n\nYour access code is: ${accessCodeData.code}\n\nAddress: ${accessCodeData?.address}\n\nPowered by dwelling`,
+        message: `Hi ${
+      accessCodeData.guestName
+    },\n\nYour access code is: ${accessCodeData.code}\n\nAddress: ${
+      accessCodeData?.address
+    }\n\nWhen you arrive at the gate, show the code to the security team. Your code expires on ${
+      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
+        .formattedDate
+    } at ${
+      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
+        .formattedTime
+    }.\n\nPowered by masonatlantic.com`,
       });
     } catch (error: any) {
       ToastService.show({
@@ -132,7 +154,7 @@ const GateAccessCard = ({
                     : pressed
                     ? "opacity-50"
                     : ""
-                } rounded-full px-6 py-3 flex justify-center items-center border border-[#C80000]`}
+                } rounded-full px-6 py-3 flex justify-center items-center border-2 border-[#C80000]`}
               >
                 <Text className='text-[#C80000] font-medium text-base'>
                   Revoke Invite

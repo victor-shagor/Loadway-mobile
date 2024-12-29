@@ -16,13 +16,13 @@ import { useMutation } from "@tanstack/react-query";
 import { ToastService } from "react-native-toastier";
 import AppToast from "@src/components/common/AppToast";
 import { queryClient } from "@src/providers/get-query-client";
-import { revokeGateAccess } from "@src/api/gateRequest";
+import { createGateAccess } from "@src/api/gateRequest";
 
 const FrequentGuestList = () => {
   const { data, isLoading, isFetching } = useGetFrequentVisitors();
   const [accessCodeData, setAccessCodeData] = React.useState<any>({});
   const frequentInfoModalRef = React.useRef<any>(null);
-  
+
   const handleOpenFrequentInfoModal = (item: any) => {
     setAccessCodeData({
       ...item,
@@ -30,20 +30,19 @@ const FrequentGuestList = () => {
       code: item.accessCode,
       address: item.location,
     });
-    frequentInfoModalRef.current?.open();
+    mutation.mutate();
   };
 
-  const handleRevokeAccess = async () => {
-    await revokeGateAccessMutation.mutateAsync();
-    frequentInfoModalRef.current?.close();
-  };
-
-  const revokeGateAccessMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: async () => {
-      return await revokeGateAccess(accessCodeData?.id || "");
+      return await createGateAccess({
+        firstName: accessCodeData?.firstName,
+        lastName: accessCodeData?.lastName,
+        phoneNumber: accessCodeData?.phoneNumber,
+      });
     },
-    mutationKey: ["addToFrequent"],
-    onError: () => {
+    mutationKey: ["createAccess"],
+    onError: (error: any) => {
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -53,7 +52,7 @@ const FrequentGuestList = () => {
         },
         children: (
           <AppToast
-            message={"An error occurred"}
+            message={error || "An error occurred"}
             leftIcon='alert-circle'
             color='#fff'
           />
@@ -61,13 +60,9 @@ const FrequentGuestList = () => {
         right: <View></View>,
       });
     },
-    onSuccess: async () => {
-      queryClient.invalidateQueries({
-        queryKey: ["frequentVisitors"]
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["gateAccess"]
-      });
+    onSuccess: async (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["gateAccess"] });
+      queryClient.invalidateQueries({ queryKey: ["frequentVisitors"] });
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -77,26 +72,27 @@ const FrequentGuestList = () => {
         },
         children: (
           <AppToast
-            message={"Revoked access successfully"}
+            message={data?.message || "Access created successfully"}
             leftIcon='check-circle'
           />
         ),
         right: <View></View>,
       });
+      setAccessCodeData({
+        guestName: accessCodeData?.guestName,
+        phoneNumber: accessCodeData?.phoneNumber,
+        code: data?.data,
+        address: accessCodeData?.address,
+      });
+      frequentInfoModalRef.current?.open();
     },
+    onSettled: () => {},
   });
 
   return (
     <View className='flex-1 px-[5vw] gap-2.5 pb-12'>
       <Text>FREQUENT LIST</Text>
       <View className='bg-white rounded-lg p-5 flex-1'>
-        {/* <View className='relative bg-[#F2F2F2] rounded-lg h-14 flex justify-center focus:border-black focus:border px-4 box-border mb-4'>
-          <TextInput
-            placeholder='Search for a guest'
-            placeholderTextColor={"black"}
-            inputMode='text'
-          />
-        </View> */}
         {isLoading || isFetching ? (
           <View className='flex-1 items-center justify-center py-5 mx-[5vw] h-96'>
             <ActivityIndicator size='large' color='#F6411B' />
@@ -129,7 +125,11 @@ const FrequentGuestList = () => {
               <Pressable
                 onPress={() => handleOpenFrequentInfoModal(item)}
                 children={({ pressed }) => (
-                  <View className='gap-4 flex-row items-center'>
+                  <View
+                    className={`${
+                      pressed ? "opacity-50" : ""
+                    } gap-4 flex-row items-center`}
+                  >
                     <View className='items-center justify-center rounded-full h-14 w-14 bg-[#EFEDBA]'>
                       <Text className='text-xs text-[#B89130]'>
                         {getInitials(item.firstName + " " + item.lastName)}
@@ -153,10 +153,9 @@ const FrequentGuestList = () => {
       <CustomModal
         modalizeRef={frequentInfoModalRef}
         modalContent={
-          <GateAccessCard
-            accessCodeData={accessCodeData}
-            revokeAccess={handleRevokeAccess}
-          />
+          <View className="justify-center items-center">
+            <GateAccessCard accessCodeData={accessCodeData} />
+          </View>
         }
       />
     </View>

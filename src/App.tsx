@@ -17,6 +17,7 @@ import { useAppState } from "./hooks/useAppState";
 import { onAppStateChange, queryClient } from "./providers/get-query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ToastProvider } from "react-native-toastier";
+import { StatusBar } from "expo-status-bar";
 
 export const socket = io(socketUrl, {
   transports: ["websocket"],
@@ -76,6 +77,7 @@ export default function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
         <ToastProvider duration={1500}>
           <OnboardingContext.Provider
             value={{
@@ -123,12 +125,3 @@ export default function App() {
 }
 
 registerRootComponent(App);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

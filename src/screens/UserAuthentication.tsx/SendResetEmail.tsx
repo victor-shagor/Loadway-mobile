@@ -22,6 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthenticationStackParamList } from "@src/navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 
 type FormField = {
   name: any;
@@ -124,6 +125,7 @@ const SendResetEmail = () => {
   };
   return (
     <View className="flex-1 pt-4">
+      <StatusBar style='dark' />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1, height: "100%" }}
