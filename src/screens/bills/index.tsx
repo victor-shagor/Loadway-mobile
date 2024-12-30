@@ -9,22 +9,28 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import useOnboardingContext from "@src/utils/Context";
-import { formatMoney } from "@src/utils/helper";
+import { formatMoney, timestampDisplay } from "@src/utils/helper";
 import { Image } from "expo-image";
 import images from "@src/constants/images";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
-import { useGetBillsQuery } from "@src/hooks/useBillQuery";
+import {
+  useGetBillsQuery,
+  useGetTransactionsQuery,
+} from "@src/hooks/useBillQuery";
 import { Feather } from "@expo/vector-icons";
 
 const Bills = () => {
   const { currentUser } = useOnboardingContext();
   const [currentTab, setCurrentTab] = useState("pending");
   const fundWalletModalRef = useRef<any>(null);
-  const [isExternalDeficit, setIsExternalDeficit] = React.useState(false);
+  const [isExternalDeficit, setIsExternalDeficit] = useState(false);
+  const [externalDeficit, setExternalDeficit] = useState(0);
   const [billIds, setBillIds] = useState<Array<any>>([]);
 
   const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
+
+  const { data: historyData } = useGetTransactionsQuery();
 
   useEffect(() => {
     setBillIds(data?.map((item) => item.id) || []);
@@ -44,15 +50,21 @@ const Bills = () => {
   const handleTabPress = (tabName: string) => {
     setCurrentTab(tabName);
   };
- 
 
   const handlePayNow = () => {
-    setIsExternalDeficit(true);
+    setIsExternalDeficit(
+      Number(currentUser?.duesSum) > Number(currentUser?.wallet.balance)
+    );
+    setExternalDeficit(
+      Number(currentUser?.duesSum) - Number(currentUser?.wallet.balance)
+    );
     fundWalletModalRef.current?.open();
   };
 
   const handleAddMoney = () => {
     setIsExternalDeficit(false);
+    setExternalDeficit(0);
+    setBillIds([]);
     fundWalletModalRef.current?.open();
   };
 
@@ -113,7 +125,7 @@ const Bills = () => {
         </View>
       ) : (
         <FlatList
-          data={data}
+          data={currentTab === "pending" ? data : historyData.data}
           className='bg-white rounded-xl p-5 max-h-64'
           contentContainerStyle={{ gap: 16 }}
           keyExtractor={(_, index) => index.toString()}
@@ -161,14 +173,31 @@ const Bills = () => {
                 </View>
                 <View className='flex-1'>
                   <Text className='text-[#050402]/50 font-medium text-sm'>
-                    {item.dueDate}
+                    {
+                      timestampDisplay(
+                        currentTab === "pending" ? item.dueDate : item.updatedAt
+                      ).formattedDate
+                    }{" "}
+                    at{" "}
+                    {
+                      timestampDisplay(
+                        currentTab === "pending" ? item.dueDate : item.updatedAt
+                      ).formattedTime
+                    }
                   </Text>
                   <Text className='text-[#050402] font-medium text-base'>
-                    {item.billName}
+                    {currentTab === "pending" ? item.billName : item.narration}
                   </Text>
                 </View>
                 <Text className='text-[#000] font-medium text-sm shrink-0'>
-                  {formatMoney(Number(item.amountDue || 0), "₦")}
+                  {formatMoney(
+                    Number(
+                      currentTab === "pending"
+                        ? item.amountDue || 0
+                        : item.amount || 0
+                    ),
+                    "₦"
+                  )}
                 </Text>
               </View>
             );
@@ -197,12 +226,8 @@ const Bills = () => {
         modalizeRef={fundWalletModalRef}
         modalContent={
           <FundWalletModal
-            isExternalDeficit={
-              Number(currentUser?.duesSum) > Number(currentUser?.wallet.balance)
-            }
-            externalDeficit={
-              Number(currentUser?.duesSum) - Number(currentUser?.wallet.balance)
-            }
+            isExternalDeficit={isExternalDeficit}
+            externalDeficit={externalDeficit}
             close={() => fundWalletModalRef.current?.close()}
             type={isExternalDeficit ? "bill" : "wallet"}
             bills={billIds}

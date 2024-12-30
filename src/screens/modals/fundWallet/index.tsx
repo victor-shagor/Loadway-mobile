@@ -79,6 +79,7 @@ export const FundWalletModal = ({
     onSuccess: async (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["bills"] });
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -224,6 +225,13 @@ export const FundWalletModal = ({
         }
         payStackKey='sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238'
         reference={ref}
+        onSuccess={() => {
+          if (type === "bill") {
+            payBillMutation.mutate();
+          } else {
+            close();
+          }
+        }}
       />
     );
   }
@@ -245,7 +253,7 @@ export const FundWalletModal = ({
         <InSufficientBalance
           deficit={isExternalDeficit ? externalDeficit : deficit}
           handleAddFunds={handleAddFunds}
-          handleBuy={() => {}}
+          handleBuy={() => payBillMutation.mutate()}
           isExternalDeficit={isExternalDeficit}
         />
       </View>

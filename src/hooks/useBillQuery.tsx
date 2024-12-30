@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getBills } from "@src/api/bills";
+import { getAllUserTransactions, getBills } from "@src/api/bills";
 
 const useGetBillsQuery = () => {
   const queryInfo = useQuery({
@@ -9,4 +9,12 @@ const useGetBillsQuery = () => {
   return queryInfo;
 };
 
-export { useGetBillsQuery };
+const useGetTransactionsQuery = (page?: number, limit?: number) => {
+  const queryInfo = useQuery({
+    queryKey: ["transactions"],
+    queryFn: async () => await getAllUserTransactions(page, limit),
+  });
+  return queryInfo;
+};
+
+export { useGetBillsQuery, useGetTransactionsQuery };

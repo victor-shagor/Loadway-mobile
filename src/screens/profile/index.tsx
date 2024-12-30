@@ -129,7 +129,23 @@ const Profile = () => {
   }
 
   const copyAddress = () => {
-    Clipboard.setStringAsync(currentUser?.address || "");
+    Clipboard.setStringAsync(currentUser?.address || "").then(() => {
+      ToastService.show({
+        position: "top",
+        contentContainerStyle: {
+          top: 70,
+          borderRadius: 100,
+          backgroundColor: "#FFF1C6",
+        },
+        children: (
+          <AppToast
+            message={"Address copied"}
+            leftIcon='check-circle'
+          />
+        ),
+        right: <View></View>,
+      });
+    });
   };
 
   return (

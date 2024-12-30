@@ -108,7 +108,7 @@ const Login = () => {
     onSubmit: async ({ value }) => {
       setIsLoading(true);
       const data = {
-        email: value.email,
+        email: (value.email || '').toLowerCase(),
         password: value.password,
       };
       loginMutation.mutate(data as any);
