@@ -104,19 +104,19 @@ const Chat = () => {
     }, [setChats])
   );
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    // Listen for new messages
-    socket.on("newMessage", (newMessage) => {
-      // Add new message to the messages array
-       getChats().then(res => setChats(res));
-    });
+  //   // Listen for new messages
+  //   socket.on("newMessage", (newMessage) => {
+  //     // Add new message to the messages array
+  //      getChats().then(res => setChats(res));
+  //   });
 
-    // Cleanup listener when component unmounts
-    return () => {
-      socket.off("nessage");
-    };
-  }, []);
+  //   // Cleanup listener when component unmounts
+  //   return () => {
+  //     socket.off("nessage");
+  //   };
+  // }, []);
 
   return (
     <KeyboardAvoidingView

@@ -54,21 +54,21 @@ export default function App() {
     newPassword: "",
   });
 
-  useEffect(() => {
-    if (currentUser) {
-      socket.connect();
-      // Optionally, listen for a connection event
-      socket.on("connect", () => {
-        console.log("Connected to WebSocket server", socket.id);
-        socket.emit("identify", { userId: currentUser?.id });
-      });
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     socket.connect();
+  //     // Optionally, listen for a connection event
+  //     socket.on("connect", () => {
+  //       console.log("Connected to WebSocket server", socket.id);
+  //       socket.emit("identify", { userId: currentUser?.id });
+  //     });
 
-      return () => {
-        // Clean up the socket connection when the app is closed
-        socket.disconnect();
-      };
-    }
-  }, [currentUser?.id]);
+  //     return () => {
+  //       // Clean up the socket connection when the app is closed
+  //       socket.disconnect();
+  //     };
+  //   }
+  // }, [currentUser?.id]);
 
   useOnlineManager();
 
