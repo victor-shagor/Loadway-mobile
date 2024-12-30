@@ -39,7 +39,23 @@ const GateAccessCard = ({
       timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
         .formattedTime
     }.\n\nPowered by masonatlantic.com`;
-    await Clipboard.setStringAsync(messageTemplate);
+    await Clipboard.setStringAsync(messageTemplate).then(() => {
+      ToastService.show({
+        position: "top",
+        contentContainerStyle: {
+          top: 70,
+          borderRadius: 100,
+          backgroundColor: "#FFF1C6",
+        },
+        children: (
+          <AppToast
+            message={"Copied to clipboard"}
+            leftIcon='check-circle'
+          />
+        ),
+        right: <View></View>,
+      });
+    });
   };
 
   const onShare = async () => {

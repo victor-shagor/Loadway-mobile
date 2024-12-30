@@ -11,11 +11,13 @@ export default function Pay({
   payStackKey,
   reference,
   close,
+  onSuccess,
 }: {
   amount: number;
   payStackKey: string;
   reference: string;
   close: () => void;
+  onSuccess: () => void;
 }) {
   const { setCurrentUser, currentUser } = useOnboardingContext();
   return (
@@ -64,8 +66,7 @@ export default function Pay({
                 balance: Number(currentUser?.wallet?.balance || 0) + amount,
               },
             });
-            close();
-
+            onSuccess();
             ToastService.show({
               position: "top",
               contentContainerStyle: {

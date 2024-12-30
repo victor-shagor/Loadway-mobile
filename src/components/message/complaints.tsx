@@ -138,7 +138,7 @@ const Complaints = () => {
           )}
         />
       )}
-      <Pressable onPress={() => modalizeRef.current?.open()}>
+      <Pressable onPressIn={() => modalizeRef.current?.open()}>
         {({ pressed }) => (
           <View
             className={`${
