@@ -7,7 +7,7 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { formatMoney, timestampDisplay } from "@src/utils/helper";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
@@ -19,15 +19,15 @@ import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
+import PaymentModal from "../modals/fundWallet/payment";
 
 const Bills = () => {
   const { navigate } = useNavigation<any>();
   const [currentTab, setCurrentTab] = useState("pending");
   const fundWalletModalRef = useRef<any>(null);
+  const paymentModalRef = useRef<any>(null);
   const [isExternalDeficit, setIsExternalDeficit] = useState(false);
   const [externalDeficit, setExternalDeficit] = useState(0);
-  const [billIds, setBillIds] = useState<Array<any>>([]);
-  const [modalType, setModalType] = useState<"wallet" | "bill">("wallet");
 
   const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
   const { data: historyData } = useGetTransactionsQuery();
@@ -36,10 +36,6 @@ const Bills = () => {
     isLoading: isUserLoading,
     isFetching: isUserFetching,
   } = useGetCurrentUserQuery();
-
-  useEffect(() => {
-    setBillIds(data?.map((item) => item.id) || []);
-  }, [data]);
 
   const tabs = [
     {
@@ -57,21 +53,16 @@ const Bills = () => {
   };
 
   const handlePayNow = () => {
-    setModalType("bill");
     setIsExternalDeficit(
       Number(currentUser?.duesSum) > Number(currentUser?.wallet.balance)
     );
     setExternalDeficit(
       Number(currentUser?.duesSum) - Number(currentUser?.wallet.balance)
     );
-    fundWalletModalRef.current?.open();
+    paymentModalRef.current?.open();
   };
 
   const handleAddMoney = () => {
-    setModalType("wallet");
-    setIsExternalDeficit(false);
-    setExternalDeficit(0);
-    setBillIds([]);
     fundWalletModalRef.current?.open();
   };
 
@@ -284,11 +275,20 @@ const Bills = () => {
         modalizeRef={fundWalletModalRef}
         modalContent={
           <FundWalletModal
+            close={() => fundWalletModalRef.current?.close()}
+            type="wallet"
+          />
+        }
+      />
+
+      <CustomModal
+        modalizeRef={paymentModalRef}
+        modalContent={
+          <PaymentModal
             isExternalDeficit={isExternalDeficit}
             externalDeficit={externalDeficit}
-            close={() => fundWalletModalRef.current?.close()}
-            type={modalType}
-            bills={billIds}
+            close={() => paymentModalRef.current?.close()}
+            type="bill"
           />
         }
       />
