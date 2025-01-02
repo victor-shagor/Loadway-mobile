@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -52,6 +47,7 @@ import BillIcon from "@src/components/icons/BillIcon";
 import MessageIcon from "@src/components/icons/MessageIcon";
 import ProfileIcon from "@src/components/icons/ProfileIcon";
 import ResetPassword from "@src/screens/UserAuthentication.tsx/ResetPassword";
+import TransactionDetails from "@src/screens/transaction-details";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -101,13 +97,13 @@ const tabs: Array<TabItem> = [
   },
   {
     name: "Message",
-    label: "Message",
+    label: "Requests",
     icon: (color: string) => (
       <MessageIcon color={color} width={50} height={50} />
     ),
     component: Messages,
     headerShown: true,
-    headerTitle: "COMPLAINTS",
+    headerTitle: "REQUESTS",
   },
   {
     name: "Profile",
@@ -405,6 +401,13 @@ const DashboardStack = () => {
       name: "resetpassword",
       component: ResetPassword,
       showHeader: true,
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "TransactionDetails",
+      component: TransactionDetails,
+      showHeader: true,
+      title: "TRANSACTION DETAILS",
       leftIcon: "arrow-left",
     },
   ];

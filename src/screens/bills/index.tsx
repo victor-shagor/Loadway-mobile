@@ -8,10 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import useOnboardingContext from "@src/utils/Context";
 import { formatMoney, timestampDisplay } from "@src/utils/helper";
-import { Image } from "expo-image";
-import images from "@src/constants/images";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
 import {
@@ -19,18 +16,26 @@ import {
   useGetTransactionsQuery,
 } from "@src/hooks/useBillQuery";
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
 
 const Bills = () => {
-  const { currentUser } = useOnboardingContext();
+  const { navigate } = useNavigation<any>();
   const [currentTab, setCurrentTab] = useState("pending");
   const fundWalletModalRef = useRef<any>(null);
   const [isExternalDeficit, setIsExternalDeficit] = useState(false);
   const [externalDeficit, setExternalDeficit] = useState(0);
   const [billIds, setBillIds] = useState<Array<any>>([]);
+  const [modalType, setModalType] = useState<"wallet" | "bill">("wallet");
 
   const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
-
   const { data: historyData } = useGetTransactionsQuery();
+  const {
+    data: currentUser,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
+  } = useGetCurrentUserQuery();
 
   useEffect(() => {
     setBillIds(data?.map((item) => item.id) || []);
@@ -52,6 +57,7 @@ const Bills = () => {
   };
 
   const handlePayNow = () => {
+    setModalType("bill");
     setIsExternalDeficit(
       Number(currentUser?.duesSum) > Number(currentUser?.wallet.balance)
     );
@@ -62,11 +68,25 @@ const Bills = () => {
   };
 
   const handleAddMoney = () => {
+    setModalType("wallet");
     setIsExternalDeficit(false);
     setExternalDeficit(0);
     setBillIds([]);
     fundWalletModalRef.current?.open();
   };
+
+  const gotoDetails = async (item: any) => {
+    await AsyncStorage.setItem("transactionDetails", JSON.stringify(item));
+    navigate("TransactionDetails");
+  };
+
+  if (isUserLoading || isUserFetching) {
+    return (
+      <View className='flex-1 items-center justify-center'>
+        <ActivityIndicator size='large' color='#F6411B' />
+      </View>
+    );
+  }
 
   return (
     <View className='flex-1 h-screen px-[5vw]' style={{ gap: 24 }}>
@@ -151,61 +171,99 @@ const Bills = () => {
           }
           renderItem={({ item }) => {
             return (
-              <View
-                className='flex-row justify-between items-center'
-                style={{ gap: 12 }}
-              >
-                <View
-                  className={`${
-                    currentTab === "pending" ? "bg-[#FFC7C4]" : "bg-[#D5FFC4]"
-                  } w-14 h-14 items-center justify-center rounded-full shrink-0`}
-                >
-                  {currentTab === "pending" ? (
-                    <Text className='text-[#CF1919] font-semibold text-2xl'>
-                      !
+              <Pressable
+                onPress={() => {
+                  if (currentTab !== "pending") {
+                    gotoDetails(item);
+                  }
+                }}
+                children={({ pressed }) => (
+                  <View
+                    className={`${
+                      pressed ? "opacity-50" : ""
+                    } flex-row justify-between items-center`}
+                    style={{ gap: 12 }}
+                  >
+                    <View
+                      className={`${
+                        currentTab === "pending"
+                          ? "bg-[#FFC7C4]"
+                          : item.type === "DEBIT"
+                          ? "bg-[#FFC7C4]"
+                          : "bg-[#D5FFC4]"
+                      } w-14 h-14 items-center justify-center rounded-full shrink-0`}
+                    >
+                      {currentTab === "pending" ? (
+                        <Text className='text-[#CF1919] font-semibold text-2xl'>
+                          !
+                        </Text>
+                      ) : (
+                        <View
+                          className={`${
+                            item.type === "DEBIT"
+                              ? "-rotate-[135deg]"
+                              : "rotate-45"
+                          }`}
+                        >
+                          <Feather
+                            name='arrow-down'
+                            size={24}
+                            color={
+                              item.type === "DEBIT" ? "#CF1919" : "#264C1C"
+                            }
+                          />
+                        </View>
+                      )}
+                    </View>
+                    <View className='flex-1'>
+                      <Text className='text-[#050402]/50 font-medium text-sm'>
+                        {
+                          timestampDisplay(
+                            currentTab === "pending"
+                              ? item.dueDate
+                              : item.updatedAt
+                          ).formattedDate
+                        }{" "}
+                        at{" "}
+                        {
+                          timestampDisplay(
+                            currentTab === "pending"
+                              ? item.dueDate
+                              : item.updatedAt
+                          ).formattedTime
+                        }
+                      </Text>
+                      <Text className='text-[#050402] font-medium text-base'>
+                        {currentTab === "pending"
+                          ? item.billName
+                          : item.narration}
+                      </Text>
+                    </View>
+                    <Text className='text-[#000] font-medium text-sm shrink-0'>
+                      {currentTab !== "pending"
+                        ? item.type === "DEBIT"
+                          ? "-"
+                          : "+"
+                        : ""}
+                      {""}
+                      {formatMoney(
+                        Number(
+                          currentTab === "pending"
+                            ? item.amountDue || 0
+                            : item.amount || 0
+                        ),
+                        "₦"
+                      )}
                     </Text>
-                  ) : (
-                    <Image
-                      source={images.bills.walletIcon}
-                      className='w-10 h-10'
-                    />
-                  )}
-                </View>
-                <View className='flex-1'>
-                  <Text className='text-[#050402]/50 font-medium text-sm'>
-                    {
-                      timestampDisplay(
-                        currentTab === "pending" ? item.dueDate : item.updatedAt
-                      ).formattedDate
-                    }{" "}
-                    at{" "}
-                    {
-                      timestampDisplay(
-                        currentTab === "pending" ? item.dueDate : item.updatedAt
-                      ).formattedTime
-                    }
-                  </Text>
-                  <Text className='text-[#050402] font-medium text-base'>
-                    {currentTab === "pending" ? item.billName : item.narration}
-                  </Text>
-                </View>
-                <Text className='text-[#000] font-medium text-sm shrink-0'>
-                  {formatMoney(
-                    Number(
-                      currentTab === "pending"
-                        ? item.amountDue || 0
-                        : item.amount || 0
-                    ),
-                    "₦"
-                  )}
-                </Text>
-              </View>
+                  </View>
+                )}
+              />
             );
           }}
         />
       )}
 
-      {currentTab === "pending" && Number(currentUser?.duesSum) > 0 && (
+      {/* {currentTab === "pending" && Number(currentUser?.duesSum) > 0 && ( */}
         <Pressable
           onPress={handlePayNow}
           children={({ pressed }) => (
@@ -220,7 +278,7 @@ const Bills = () => {
             </View>
           )}
         />
-      )}
+      {/* )} */}
 
       <CustomModal
         modalizeRef={fundWalletModalRef}
@@ -229,7 +287,7 @@ const Bills = () => {
             isExternalDeficit={isExternalDeficit}
             externalDeficit={externalDeficit}
             close={() => fundWalletModalRef.current?.close()}
-            type={isExternalDeficit ? "bill" : "wallet"}
+            type={modalType}
             bills={billIds}
           />
         }

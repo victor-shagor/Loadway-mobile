@@ -28,7 +28,7 @@ const InSufficientBalance = ({
               ? images.bills.filledWalletIcon
               : images.quickLInks.electricity
           }
-          className="h-full w-full"
+          className='h-full w-full'
         />
         <View className='absolute justify-center items-center -top-3 -right-3 w-10 h-10 rounded-full bg-[#FFC7C4]'>
           <Text className='items-center justify-center text-[#CF1919] font-medium text-4xl'>
@@ -74,14 +74,27 @@ const InSufficientBalance = ({
               } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
-                {`${isExternalDeficit ? 'Pay' : 'Buy'} ${formatMoney(
-                  Number(currentUser?.wallet.balance || 0),
-                  "₦"
-                )} instead`}
+                {isExternalDeficit
+                  ? "Do it later"
+                  : `Buy ${formatMoney(
+                      Number(currentUser?.wallet.balance || 0),
+                      "₦"
+                    )} instead`}
               </Text>
             </View>
           )}
         />
+        {isExternalDeficit && (
+          <View
+            className='self-center flex-row items-center'
+            style={{ gap: 10 }}
+          >
+            <View className='bg-black h-6 w-6 rounded-full justify-center items-center'>
+              <Text className='text-white'>!</Text>
+            </View>
+            <Text>Your services will be limited</Text>
+          </View>
+        )}
       </View>
     </View>
   );
