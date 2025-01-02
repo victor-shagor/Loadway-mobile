@@ -102,7 +102,7 @@ export const quickLinksArray: QuicklinkProps[] = [
     iconColor: "#E1B13A",
   },
   {
-    name: "Complaints",
+    name: "Requests",
     href: "Message",
     icon: ComplaintIcon,
     bgColor: "#3778E830",

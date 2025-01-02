@@ -48,7 +48,7 @@ const Complaints = () => {
         </View>
       ) : (
         <FlatList
-          data={ data?.complaints || []}
+          data={data?.complaints || []}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ gap: 16 }}
           refreshControl={
@@ -70,7 +70,7 @@ const Complaints = () => {
               </View>
               <View>
                 <Text className='text-center font-medium text-lg text-[#050402]'>
-                  Complaints to your facility manager will show up here
+                  Requests to your facility manager will show up here
                 </Text>
               </View>
             </View>

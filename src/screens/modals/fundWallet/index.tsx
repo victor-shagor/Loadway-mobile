@@ -16,10 +16,12 @@ import { ToastService } from "react-native-toastier";
 import AppToast from "@src/components/common/AppToast";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { formatMoney } from "@src/utils/helper";
+import { formatMoney, timestampDisplay } from "@src/utils/helper";
 import InSufficientBalance from "./InSufficientBalance";
 import { payBills } from "@src/api/bills";
 import { queryClient } from "@src/providers/get-query-client";
+import Receipt from "./Receipt";
+import CustomModal from "@src/components/CustomModal";
 
 type FundWalletModalProps = {
   close: () => void;
@@ -39,15 +41,32 @@ export const FundWalletModal = ({
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState("");
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
+  const [receiptData, setReceiptData] = useState<any>({});
+  const receiptModalRef = React.useRef<any>(null);
+
   const { currentUser } = useOnboardingContext();
 
   const [deficit, setDeficit] = useState<number>(0);
-  const [isAddFunds, setIsAddFunds] = useState(false);
+  const [isAddFunds, setIsAddFunds] = useState(true);
 
   useEffect(() => {
-    if (type === "bill" && externalDeficit < 1) {
-      payBillMutation.mutate();
-    }
+    (async () => {
+      setReceiptData({
+        amount: currentUser?.duesSum || 0,
+        walletBalance: currentUser?.wallet.balance || 0,
+        date: timestampDisplay(new Date()).formattedDate,
+        time: timestampDisplay(new Date()).formattedTime,
+        status: "success",
+      });
+      if (type === "bill" && externalDeficit < 1) {
+        await payBillMutation.mutateAsync();
+        receiptModalRef.current?.open();
+      }
+      if (type === "bill" && externalDeficit > 0) {
+        await payBillMutation.mutateAsync();
+        setDeficit(externalDeficit);
+      }
+    })();
   }, []);
 
   const payBillMutation = useMutation({
@@ -75,11 +94,9 @@ export const FundWalletModal = ({
         ),
         right: <View></View>,
       });
+      close()
     },
     onSuccess: async (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["bills"] });
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -95,10 +112,17 @@ export const FundWalletModal = ({
         ),
         right: <View></View>,
       });
+      if (type === "bill" && externalDeficit < 1) {
+        receiptModalRef.current?.open();
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["bills"] });
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        close()
+      }
     },
     onSettled: () => {
       setLoading(false);
-      close();
     },
   });
 
@@ -247,13 +271,13 @@ export const FundWalletModal = ({
     );
   }
 
-  if (deficit > 0 || isExternalDeficit) {
+  if (deficit > 0 || isExternalDeficit || externalDeficit > 0) {
     return (
       <View className='py-10 px-[5vw]' style={{ gap: 20 }}>
         <InSufficientBalance
           deficit={isExternalDeficit ? externalDeficit : deficit}
           handleAddFunds={handleAddFunds}
-          handleBuy={() => payBillMutation.mutate()}
+          handleBuy={() => close()}
           isExternalDeficit={isExternalDeficit}
         />
       </View>
@@ -359,6 +383,21 @@ export const FundWalletModal = ({
             )}
           </Pressable>
         )}
+      />
+      <CustomModal
+        modalizeRef={receiptModalRef}
+        modalContent={
+          <Receipt
+            onClose={() => {
+              queryClient.invalidateQueries({ queryKey: ["bills"] });
+              queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+              queryClient.invalidateQueries({ queryKey: ["transactions"] });
+              receiptModalRef.current?.close();
+              close();
+            }}
+            data={receiptData}
+          />
+        }
       />
     </View>
   );

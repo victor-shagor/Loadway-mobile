@@ -108,7 +108,7 @@ export const ComplaintModal = ({
     {
       name: "attachment",
       validators: {
-        onChange: z.any(),
+        onChange: z.any().optional(),
       },
       placeholder: "Attachment",
     },
@@ -122,7 +122,7 @@ export const ComplaintModal = ({
     },
     onSubmit: async ({ value }) => {
       setIsLoading(true);
-      let url;
+      let url = '';
       if (selectedFile) {
         url = await uploadFile();
       }
@@ -187,7 +187,7 @@ export const ComplaintModal = ({
   return (
     <View className='px-4 py-8 bg-[#F2F2F2] rounded-t-xl' style={{ gap: 16 }}>
       <View className='flex-row justify-between items-center'>
-        <Text className='text-xl font-medium'>NEW COMPLAINT</Text>
+        <Text className='text-xl font-medium'>NEW REQUEST</Text>
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (

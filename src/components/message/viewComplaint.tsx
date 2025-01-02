@@ -1,11 +1,15 @@
 import { timestampDisplay } from "@src/utils/helper";
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
 import { blurhash } from "@src/constants/data";
 import images from "@src/constants/images";
+import ProfileIcon from "../icons/ProfileIcon";
+import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
 
 const ViewComplaint = ({ complaint }: any) => {
+  const { data: currentUser, isLoading, isFetched } = useGetCurrentUserQuery();
+
   const timelinePlaceholderData = [
     {
       title: "SENT",
@@ -51,6 +55,14 @@ const ViewComplaint = ({ complaint }: any) => {
     }
   }, [complaint]);
 
+  if (isLoading || !isFetched) {
+    return (
+      <View className='flex-1 items-center justify-center'>
+        <ActivityIndicator size='large' color='#F6411B' />
+      </View>
+    );
+  }
+
   return (
     <ScrollView className='px-4 py-10 pb-24 bg-[#F2F2F2] rounded-t-xl'>
       <View className='items-center pb-8' style={{ gap: 8 }}>
@@ -72,23 +84,65 @@ const ViewComplaint = ({ complaint }: any) => {
         </Text>
       </View>
       <View style={{ gap: 16 }}>
-        {timelineData.map((item, index) => (
+        {(complaint?.statusHistory || []).map((item: any, index: any) => (
           <View key={index} className='flex-row' style={{ gap: 10 }}>
             <View>
               <View className='h-3 w-3 rounded-full bg-[#E85637]'></View>
-              {index !== timelineData.length - 1 && (
-                <View className='absolute left-[4.5px] h-[100px] w-0.5 bg-[#E85637]'></View>
+              {(index < 1 ||
+                index !== (complaint?.statusHistory || []).length - 1) && (
+                <View className='absolute left-[4.5px] h-[109px] w-0.5 bg-[#E85637]'></View>
               )}
             </View>
-            <View style={{ gap: 4 }}>
-              <Text className='font-bold'>{item.title}</Text>
-              <Text className='text-[#050402]/50'>{item.description}</Text>
-              <View className='bg-white px-3 py-2 self-start rounded-full'>
-                <Text className='text-[#4C3A1C text-xs'>{item.time}</Text>
+            <View className='flex-1' style={{ gap: 4 }}>
+              <View className='flex-row justify-between'>
+                <View className='flex-1 flex-row items-center'>
+                  <View className='w-10 h-10 items-center justify-center bg-[#FFC7C4] rounded-full mr-2'>
+                    {index === 0 ? (
+                      <Image source={currentUser?.profilePicture} contentFit="cover" className='w-10 h-10 rounded-full' />
+                    ) : (
+                      <View className='w-6 h-6'>
+                        <ProfileIcon width={50} height={50} color='#00000080' />
+                      </View>
+                    )}
+                  </View>
+                  <Text className='text-[#050402] font-medium'>
+                    {index === 0 ? "RESIDENT" : "P.MANAGER"}
+                  </Text>
+                </View>
+                <View
+                  className={`${
+                    item?.status === "PENDING" ? "bg-[#EFDCBA]" : "bg-[#BAEFC9]"
+                  } shrink-1 rounded-full h-10 px-3 justify-center items-center`}
+                >
+                  <Text className='text-[#050402]/50'>{item?.status}</Text>
+                </View>
+              </View>
+              <Text className='text-[#050402]/50'>{item?.response}</Text>
+              <View>
+                <Text className='text-[#4C3A1C text-xs'>{item?.timestamp}</Text>
               </View>
             </View>
           </View>
         ))}
+
+        <View className='flex-row' style={{ gap: 10 }}>
+          <View>
+            <View className='h-3 w-3 rounded-full bg-[#E85637]'></View>
+          </View>
+          <View className='flex-1' style={{ gap: 4 }}>
+            <View className='flex-row justify-between'>
+              <View className='flex-1 flex-row items-center'>
+                <View className='w-10 h-10 items-center justify-center bg-[#FFC7C4] rounded-full mr-2'>
+                  <View className='w-6 h-6'>
+                    <ProfileIcon width={50} height={50} color='#00000080' />
+                  </View>
+                </View>
+                <Text className='text-[#050402] font-medium'>P.MANAGER</Text>
+              </View>
+            </View>
+            <Text className='text-[#050402]/50'>Awaiting response...</Text>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
