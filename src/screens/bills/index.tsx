@@ -263,7 +263,7 @@ const Bills = () => {
         />
       )}
 
-      {/* {currentTab === "pending" && Number(currentUser?.duesSum) > 0 && ( */}
+      {currentTab === "pending" && Number(currentUser?.duesSum) > 0 && (
         <Pressable
           onPress={handlePayNow}
           children={({ pressed }) => (
@@ -278,7 +278,7 @@ const Bills = () => {
             </View>
           )}
         />
-      {/* )} */}
+      )}
 
       <CustomModal
         modalizeRef={fundWalletModalRef}
