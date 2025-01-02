@@ -11,9 +11,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Host } from "react-native-portalize";
 import { appColors } from "../constants/colors";
 import * as Device from "expo-device";
+import Constants from 'expo-constants';
 
 // import Home from "@src/screens/home";
-import Home from "@src/screens/Home";
+import Home from "@src/screens/home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Profile from "../screens/profile";
@@ -158,14 +159,11 @@ const TabNavigation = () => {
   );
 };
 
-// export const socket = io('http://192.168.1.4:3007', {
-//   transports: ['websocket'],
-// });
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: true,
   }),
 });
@@ -183,6 +181,7 @@ const DashboardStack = () => {
     registerForPushNotificationsAsync();
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
+        console.log(notification);
         setNotification(notification);
       });
 
@@ -220,25 +219,7 @@ const DashboardStack = () => {
     };
   }, []);
 
-  // const {currentUser} = useOnboardingContext()
-
-  // useEffect(() => {
-  //   // Connect to the socket
-  //   if(currentUser){
-  //     socket.connect();
-
-  //     // Optionally, listen for a connection event
-  //     socket.on('connect', () => {
-  //       console.log('Connected to WebSocket server:', socket.id);
-  //       socket.emit('identify', currentUser?.id)
-  //     });
-
-  //     return () => {
-  //       // Clean up the socket connection when the app is closed
-  //       socket.disconnect();
-  //     };
-  //   }
-  // }, [currentUser?.id]);
+ 
   async function registerForPushNotificationsAsync() {
     let token;
 
@@ -263,8 +244,11 @@ const DashboardStack = () => {
         return;
       }
       try {
-        token = (await Notifications.getExpoPushTokenAsync()).data;
-        // console.log(token);
+        const projectId =
+        Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+
+        token = (await Notifications.getExpoPushTokenAsync({projectId})).data;
+        console.log(token);
         await updateCurrentUser({ pushNotificationsToken: token });
       } catch (e) {
         console.log(e);
