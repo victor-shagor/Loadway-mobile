@@ -130,4 +130,3 @@ const TransactionDetails = (props: Props) => {
 
 export default TransactionDetails;
 
-const styles = StyleSheet.create({});
