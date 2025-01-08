@@ -7,6 +7,9 @@
     "entryPoint": "./src/App.tsx",
     "icon": "./src/assets/foregroundimage.jpeg",
     "userInterfaceStyle": "light",
+    "notification": {
+      "icon": "./src/assets/adaptive-icon.png"
+    },
     "splash": {
       "image": "./src/assets/splash-screen.png",
       "resizeMode": "contain",
@@ -50,6 +53,12 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/adaptive-icon.png"
         }
       ],
       "expo-build-properties",
