@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { formatMoney, timestampDisplay } from "@src/utils/helper";
+import { formatMoney, isDateInPast, timestampDisplay } from "@src/utils/helper";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
 import {
@@ -20,6 +20,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
 import PaymentModal from "../modals/fundWallet/payment";
+import { set } from "date-fns";
+import { queryClient } from "@src/providers/get-query-client";
 
 const Bills = () => {
   const { navigate } = useNavigation<any>();
@@ -28,13 +30,16 @@ const Bills = () => {
   const paymentModalRef = useRef<any>(null);
   const [isExternalDeficit, setIsExternalDeficit] = useState(false);
   const [externalDeficit, setExternalDeficit] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [totalDue, setTotalDue] = useState(0);
 
   const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
-  const { data: historyData } = useGetTransactionsQuery();
+  const { data: historyData, refetch: transRefetch } = useGetTransactionsQuery();
   const {
     data: currentUser,
     isLoading: isUserLoading,
     isFetching: isUserFetching,
+    refetch: userRefetch,
   } = useGetCurrentUserQuery();
 
   const tabs = [
@@ -59,12 +64,22 @@ const Bills = () => {
     setExternalDeficit(
       Number(currentUser?.duesSum) - Number(currentUser?.wallet.balance)
     );
+
+    setPaymentAmount(Number(currentUser?.wallet.balance));
+
+    setTotalDue(Number(currentUser?.duesSum));
     paymentModalRef.current?.open();
   };
 
   const handleAddMoney = () => {
     fundWalletModalRef.current?.open();
   };
+
+  const refeshData =  () => {
+    refetch();
+    transRefetch();
+    userRefetch();
+  }
 
   const gotoDetails = async (item: any) => {
     await AsyncStorage.setItem("transactionDetails", JSON.stringify(item));
@@ -208,20 +223,13 @@ const Bills = () => {
                     </View>
                     <View className='flex-1'>
                       <Text className='text-[#050402]/50 font-medium text-sm'>
+                      {!isDateInPast(item.dueDate) ? 'Since' : 'Due by'}{' '}
                         {
                           timestampDisplay(
                             currentTab === "pending"
                               ? item.dueDate
                               : item.updatedAt
                           ).formattedDate
-                        }{" "}
-                        at{" "}
-                        {
-                          timestampDisplay(
-                            currentTab === "pending"
-                              ? item.dueDate
-                              : item.updatedAt
-                          ).formattedTime
                         }
                       </Text>
                       <Text className='text-[#050402] font-medium text-base'>
@@ -230,6 +238,7 @@ const Bills = () => {
                           : item.narration}
                       </Text>
                     </View>
+                    <View style={{justifyContent: 'flex-end', alignItems:'flex-end'}}>
                     <Text className='text-[#000] font-medium text-sm shrink-0'>
                       {currentTab !== "pending"
                         ? item.type === "DEBIT"
@@ -246,6 +255,10 @@ const Bills = () => {
                         "₦"
                       )}
                     </Text>
+                    <Text className='text-[#000] font-small text-sm shrink-0' style={{fontSize: 11}}>
+                      Paid: {formatMoney(item.amount - item.amountDue || 0, "₦")}
+                    </Text>
+                    </View>
                   </View>
                 )}
               />
@@ -283,12 +296,21 @@ const Bills = () => {
 
       <CustomModal
         modalizeRef={paymentModalRef}
+        onClose={() => {
+          queryClient.invalidateQueries({ queryKey: ["bills"] });
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] })
+        }}
         modalContent={
           <PaymentModal
+            amount={paymentAmount}
+            totalDue={totalDue}
+            refeshData={refeshData}
             isExternalDeficit={isExternalDeficit}
             externalDeficit={externalDeficit}
             close={() => paymentModalRef.current?.close()}
             type="bill"
+
           />
         }
       />

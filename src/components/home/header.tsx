@@ -13,9 +13,14 @@ type NavigationProp = NativeStackNavigationProp<
   keyof { UserNotifications: undefined }
 >;
 
-const DashboardHeader = ({ currentUser }: { currentUser: User }) => {
+const DashboardHeader = ({
+  currentUser,
+}: {
+  currentUser: User;
+}) => {
   const { navigate } = useNavigation<NavigationProp>();
   const statusBarHeight = getStatusBarHeight();
+
   return (
     <View
       className='bg-black flex-row justify-between items-center px-5 pb-4'
@@ -37,11 +42,33 @@ const DashboardHeader = ({ currentUser }: { currentUser: User }) => {
           <View
             className={`${
               pressed ? "opacity-50" : "opacity-100"
-            } bg-[#E85637]/20 w-12 h-12 rounded-full justify-center items-center`}
+            } bg-[#E85637]/20 w-12 h-12 rounded-full justify-center items-center relative`}
           >
             <Feather name='bell' size={24} color={appColors.white} />
-            {false && (
-              <View className='w-2 h-2 bg-[#E85637] rounded-full absolute top-1 right-1'></View>
+            {currentUser.notificationCount > 0 && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  backgroundColor: "#E85637",
+                  borderRadius: 10,
+                  width: 20,
+                  height: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: appColors.white,
+                    fontSize: 12,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {currentUser.notificationCount > 99 ? "99+" : currentUser.notificationCount}
+                </Text>
+              </View>
             )}
           </View>
         )}

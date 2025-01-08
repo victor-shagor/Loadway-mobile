@@ -12,6 +12,7 @@ import InSufficientBalance from "./InSufficientBalance";
 import { payBills } from "@src/api/bills";
 import { queryClient } from "@src/providers/get-query-client";
 import Receipt from "./Receipt";
+import { getCurrentUser } from "@src/api/user";
 
 type FundWalletModalProps = {
   close: () => void;
@@ -19,6 +20,9 @@ type FundWalletModalProps = {
   isExternalDeficit?: boolean;
   externalDeficit?: number;
   bills?: Array<string>;
+  amount?: number;
+  totalDue?: number;
+  refeshData?: () => void;
 };
 
 export const PaymentModal = ({
@@ -27,12 +31,15 @@ export const PaymentModal = ({
   isExternalDeficit,
   externalDeficit = 0,
   bills = [],
+  amount,
+  totalDue,
+  refeshData,
 }: FundWalletModalProps) => {
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState("");
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
 
-  const { currentUser } = useOnboardingContext();
+  const { currentUser, setCurrentUser } = useOnboardingContext();
 
   useEffect(() => {
     (async () => {
@@ -59,8 +66,8 @@ export const PaymentModal = ({
         children: (
           <AppToast
             message={error?.response?.data?.message || "An error occurred"}
-            leftIcon='alert-circle'
-            color='#fff'
+            leftIcon="alert-circle"
+            color="#fff"
           />
         ),
         right: <View></View>,
@@ -68,6 +75,8 @@ export const PaymentModal = ({
       close();
     },
     onSuccess: async (data: any) => {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
       ToastService.show({
         position: "top",
         contentContainerStyle: {
@@ -78,7 +87,7 @@ export const PaymentModal = ({
         children: (
           <AppToast
             message={data?.message || "Payment successful"}
-            leftIcon='check-circle'
+            leftIcon="check-circle"
           />
         ),
         right: <View></View>,
@@ -111,8 +120,8 @@ export const PaymentModal = ({
           children: (
             <AppToast
               message={"Failed to retrieve authorization URL."}
-              leftIcon='alert-circle'
-              color='#fff'
+              leftIcon="alert-circle"
+              color="#fff"
             />
           ),
           right: <View></View>,
@@ -132,8 +141,8 @@ export const PaymentModal = ({
               error?.message ||
               "An error occurred while processing your request"
             }
-            leftIcon='alert-circle'
-            color='#fff'
+            leftIcon="alert-circle"
+            color="#fff"
           />
         ),
         right: <View></View>,
@@ -150,13 +159,16 @@ export const PaymentModal = ({
   if (authorizationUrl) {
     return (
       <Pay
+        authorizationUrl={authorizationUrl}
+        setAuthorizationUrl={setAuthorizationUrl}
         close={close}
         amount={externalDeficit}
-        payStackKey='sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238'
         reference={ref}
         onSuccess={() => {
           if (type === "bill") {
             payBillMutation.mutate();
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
+            queryClient.invalidateQueries({ queryKey: ["bills"] });
           } else {
             close();
           }
@@ -167,23 +179,29 @@ export const PaymentModal = ({
 
   if (loading) {
     return (
-      <View className='flex-1 justify-center items-center h-48'>
-        <ActivityIndicator size='large' color={appColors.orange} />
-        <Text className='text-black text-xl font-medium pb-1.5 text-center'>
+      <View className="flex-1 justify-center items-center h-48">
+        <ActivityIndicator size="large" color={appColors.orange} />
+        <Text className="text-black text-xl font-medium pb-1.5 text-center">
           Processing
         </Text>
       </View>
     );
   }
 
+  console.log({ isExternalDeficit });
+  console.log({ externalDeficit });
+
   if (isExternalDeficit) {
     return (
-      <View className='py-10 px-[5vw]' style={{ gap: 20 }}>
+      <View className="py-10 px-[5vw]" style={{ gap: 20 }}>
         <InSufficientBalance
+          amount={amount}
           deficit={externalDeficit}
           handleAddFunds={handleAddFunds}
           handleBuy={() => close()}
           isExternalDeficit={isExternalDeficit}
+          totalDue={totalDue}
+          refeshData={refeshData}
         />
       </View>
     );

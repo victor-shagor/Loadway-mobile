@@ -65,20 +65,20 @@ const TransactionDetails = (props: Props) => {
                 </Text>
               </View>
             </View>
-            <View className='flex-row'>
-              <View className='flex-1'>
+            {/* <View className='flex-row'> */}
+              {/* <View className='flex-1'>
                 <Text className='text-black/80 text-sm'>AMOUNT</Text>
                 <Text className='text-black font-medium text-lg'>
                   {formatMoney(transaction?.amount || 0, "₦")}
                 </Text>
-              </View>
-              <View className='flex-1'>
+              </View> */}
+              {/* <View className='flex-1'>
                 <Text className='text-black/80 text-sm'>REFERENCE</Text>
                 <Text className='text-black font-medium text-lg'>
                   {transaction?.reference}
                 </Text>
-              </View>
-            </View>
+              </View> */}
+            {/* </View> */}
             <View className='flex-row'>
               <View className='flex-1'>
                 <Text className='text-black/80 text-sm'>PAID</Text>

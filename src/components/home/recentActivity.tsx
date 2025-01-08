@@ -58,10 +58,13 @@ const RecentActivity = () => {
                 </Text>
                 <Text className='text-black text-base'>{item.title}</Text>
               </View>
-              <View>
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
                 <Text className='text-black/80 text-xs'>
                   {formatTimestamp(item.createdAt)}
                 </Text>
+                {(item.status && item.status !== 'ACTIVE') && <View style={{ alignItems: "center", justifyContent:'center', padding: 5, backgroundColor: '#E85637', borderRadius: 10}}>
+                  <Text className="text-white">{ item.status}</Text>
+                </View>}
               </View>
             </View>
           ))

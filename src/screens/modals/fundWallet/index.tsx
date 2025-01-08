@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   Pressable,
   Text,
   TextInput,
@@ -17,6 +18,7 @@ import AppToast from "@src/components/common/AppToast";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { formatMoney } from "@src/utils/helper";
+import WebView from "react-native-webview";
 
 type FundWalletModalProps = {
   close: () => void;
@@ -34,7 +36,68 @@ export const FundWalletModal = ({
   const [ref, setRef] = useState("");
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
 
-  const { currentUser } = useOnboardingContext();
+  const { currentUser, setCurrentUser } = useOnboardingContext();
+
+  const handlePay = async (navState: any) => {
+    console.log("nastate", navState);
+    if (navState.url.includes("success")) {
+      // Handle success
+      close();
+      setAuthorizationUrl(null);
+      const url = `/transaction/verify/${ref}`;
+      const res = await axios.get(url);
+      if (res.data?.success) {
+        setCurrentUser({
+          ...currentUser,
+          wallet: {
+            balance:
+              Number(currentUser?.wallet?.balance || 0) +
+              Number(form?.getFieldValue("amount")),
+          },
+        });
+        ToastService.show({
+          position: "top",
+          contentContainerStyle: {
+            top: 70,
+            borderRadius: 100,
+            backgroundColor: "#FFF1C6",
+          },
+          children: (
+            <AppToast
+              message={"Transaction successful"}
+              leftIcon="check-circle"
+            />
+          ),
+          right: <View></View>,
+        });
+      }
+    } else if (navState.url.includes("cancel")) {
+      // Handle failure
+      setAuthorizationUrl(null);
+      close();
+      ToastService.show({
+        position: "top",
+        contentContainerStyle: {
+          top: 70,
+          borderRadius: 100,
+          backgroundColor: "#ef4444",
+        },
+        children: (
+          <AppToast
+            message="Transaction failed. Please try again."
+            leftIcon="alert-circle"
+            color="#fff"
+          />
+        ),
+      });
+      try {
+        const url = `/transaction/cancel/${ref}`;
+        await axios.get(url);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const initiateTransaction = async (amount: any) => {
     try {
@@ -58,8 +121,8 @@ export const FundWalletModal = ({
           children: (
             <AppToast
               message={"Failed to retrieve authorization URL."}
-              leftIcon='alert-circle'
-              color='#fff'
+              leftIcon="alert-circle"
+              color="#fff"
             />
           ),
           right: <View></View>,
@@ -79,8 +142,8 @@ export const FundWalletModal = ({
               error?.message ||
               "An error occurred while processing your request"
             }
-            leftIcon='alert-circle'
-            color='#fff'
+            leftIcon="alert-circle"
+            color="#fff"
           />
         ),
         right: <View></View>,
@@ -89,6 +152,9 @@ export const FundWalletModal = ({
       setLoading(false);
     }
   };
+
+  console.log("authorizationUrl", authorizationUrl);
+  console.log("ref", ref);
 
   const mutation = useMutation({
     mutationFn: async (value: any) => {
@@ -106,8 +172,8 @@ export const FundWalletModal = ({
         children: (
           <AppToast
             message={error?.response?.data?.message || "An error occurred"}
-            leftIcon='alert-circle'
-            color='#fff'
+            leftIcon="alert-circle"
+            color="#fff"
           />
         ),
         right: <View></View>,
@@ -136,11 +202,11 @@ export const FundWalletModal = ({
   if (authorizationUrl) {
     return (
       <Pay
-        close={close}
-        amount={Number(form?.getFieldValue("amount"))}
-        payStackKey='sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238'
-        reference={ref}
-        onSuccess={() => close()}
+       amount={Number(form?.getFieldValue("amount"))}
+       setAuthorizationUrl={setAuthorizationUrl}
+       authorizationUrl={authorizationUrl}
+       close={close}
+       reference={ref}
       />
     );
   }
@@ -157,13 +223,13 @@ export const FundWalletModal = ({
   }
 
   return (
-    <View className='py-10 px-[5vw]' style={{ gap: 20 }}>
+    <View className="py-10 px-[5vw]" style={{ gap: 20 }}>
       <View>
-        <Text className='text-black text-xl font-medium pb-1.5 text-center'>
+        <Text className="text-black text-xl font-medium pb-1.5 text-center">
           {type === "bill" ? "POWER TOPUP" : "FUND WALLET"}
         </Text>
         <form.Field
-          name='amount'
+          name="amount"
           validators={{
             onChange: z.string().refine(
               (value) => {
@@ -175,25 +241,25 @@ export const FundWalletModal = ({
             ),
           }}
           children={(field) => (
-            <View className='mb-5'>
-              <Text className='text-[#050402] text-xs font-medium pb-1'>
+            <View className="mb-5">
+              <Text className="text-[#050402] text-xs font-medium pb-1">
                 AMOUNT
               </Text>
-              <View className='bg-[#F1F1F1] rounded-lg h-14 items-center focus:border-[#FF3535CC] focus:border px-4 box-border flex-row'>
-                <Text className='text-[#050402] text-sm mr-1 mt-1 font-medium pb-1'>
+              <View className="bg-[#F1F1F1] rounded-lg h-14 items-center focus:border-[#FF3535CC] focus:border px-4 box-border flex-row">
+                <Text className="text-[#050402] text-sm mr-1 mt-1 font-medium pb-1">
                   ₦
                 </Text>
                 <TextInput
-                  placeholder='0.00'
+                  placeholder="0.00"
                   value={field.state.value}
                   onChangeText={field.handleChange}
-                  keyboardType='number-pad'
-                  className='flex-1'
+                  keyboardType="number-pad"
+                  className="flex-1"
                 />
               </View>
               <View>
                 {field.state.meta.errors[0] && (
-                  <Text className='text-red-500 text-xs absolute top-2'>
+                  <Text className="text-red-500 text-xs absolute top-2">
                     {
                       field.state.meta.errors[0]
                         .toString()
@@ -203,11 +269,11 @@ export const FundWalletModal = ({
                 )}
               </View>
               {type === "bill" && (
-                <View className='flex-row mt-2 justify-end'>
+                <View className="flex-row mt-2 justify-end">
                   {!field.state.meta.errors[0] && (
-                    <Text className='flex-1'>350/KWH: 000</Text>
+                    <Text className="flex-1">350/KWH: 000</Text>
                   )}
-                  <View className='flex-row shrink-0'>
+                  <View className="flex-row shrink-0">
                     <Text>BALANCE: </Text>
                     <Text>
                       {formatMoney(
@@ -242,14 +308,12 @@ export const FundWalletModal = ({
               >
                 {loading ? (
                   <ActivityIndicator
-                    size='small'
-                    color='#fff'
+                    size="small"
+                    color="#fff"
                     style={{ marginRight: 8 }}
                   />
                 ) : (
-                  <Text className='text-white text-center text-lg'>
-                    Make payment
-                  </Text>
+                  <Text className="text-white text-center text-lg">Fund</Text>
                 )}
               </View>
             )}

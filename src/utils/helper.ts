@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function formatCamelCaseToTitleCase(str: string) {
   // Insert a space before all capital letters and capitalize the first letter
   const result = str.replace(/([A-Z])/g, " $1").replace(/^./, function (char) {
@@ -49,6 +51,11 @@ export const timestampDisplay = (timestamp: any) => {
   return { formattedDate, formattedTime };
 };
 
+export const isDateInPast = (dateString: string) => {
+  const date = moment(dateString, "DD.MM.YYYY");
+  return date.isBefore(moment(), "day");
+};
+
 export const formatMoney = (amount: number, currency: string): string => {
   return currency + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -63,20 +70,21 @@ export const getInitials = (name: string): string => {
 };
 
 export const isValidDateString = (dateString: string) => {
-  const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?([+-]\d{2}:\d{2}|Z)?$/;
+  const regex =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?([+-]\d{2}:\d{2}|Z)?$/;
   if (!regex.test(dateString)) {
     return false;
   }
 
   const date = new Date(dateString);
   return !isNaN(date.getTime());
-}
+};
 
 export const formatDate = (date: Date) => {
-  if(!isValidDateString(date as any)) return date;
+  if (!isValidDateString(date as any)) return date;
   const _date = new Date(date);
-  return _date.toISOString().split('T')[0];
-}
+  return _date.toISOString().split("T")[0];
+};
 
 export const formatString = (input: string) => {
   const words = input.toLowerCase().split("_");

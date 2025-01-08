@@ -95,9 +95,9 @@ const Login = () => {
     getValueFor("email").then((value) => {
       loginForm.setFieldValue("email", (value as any) || "");
     });
-    getValueFor("password").then((value) => {
-      loginForm.setFieldValue("password", (value as any) || "");
-    });
+    // getValueFor("password").then((value) => {
+    //   loginForm.setFieldValue("password", (value as any) || "");
+    // });
   }, []);
 
   const loginForm = useForm({

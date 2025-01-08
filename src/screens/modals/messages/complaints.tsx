@@ -31,6 +31,7 @@ type FormField = {
     onChangeAsyncDebounceMs?: number;
     onChangeAsync?: z.ZodSchema<any>;
     onChangeListenTo?: Array<string>;
+    onSubmit?: z.ZodSchema<any> | any;
   };
   placeholder: string;
   type?: string;
@@ -183,11 +184,10 @@ export const ComplaintModal = ({
       setIsLoading(false);
     },
   });
-
   return (
     <View className='px-4 py-8 bg-[#F2F2F2] rounded-t-xl' style={{ gap: 16 }}>
       <View className='flex-row justify-between items-center'>
-        <Text className='text-xl font-medium'>NEW REQUEST</Text>
+        <Text className='text-xl font-medium'>NEW COMPLAINTS</Text>
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
@@ -223,8 +223,12 @@ export const ComplaintModal = ({
         <form.Field
           name='category'
           validators={formFields[0].validators as any}
-          children={(field) => (
-            <View className='mb-6' style={{ gap: 8 }}>
+          children={(field) => {
+
+  {console.log(field.state.meta.errors)}
+  {console.log(field.state.meta.isPristine)}
+            return (
+              <View className='mb-6' style={{ gap: 8 }}>
               <Text className='text-[#050402] text-xs font-medium'>
                 COMPLAINT CATEGORY
               </Text>
@@ -239,7 +243,7 @@ export const ComplaintModal = ({
                   value={field.state.value}
                 />
               </View>
-              {!field.state.meta.isPristine && field.state.meta.errors[0] && (
+              { field.state.meta.errors[0] && (
                 <Text className='text-red-500 text-xs absolute top-20'>
                   {
                     field.state.meta.errors[0]
@@ -249,7 +253,8 @@ export const ComplaintModal = ({
                 </Text>
               )}
             </View>
-          )}
+            )
+          }}
         />
         <form.Field
           name='description'
@@ -270,7 +275,8 @@ export const ComplaintModal = ({
                   spellCheck
                 />
               </View>
-              {!field.state.meta.isPristine && field.state.meta.errors[0] && (
+              
+              { field.state.meta.errors[0] && (
                 <Text className='text-red-500 text-xs absolute top-[156px]'>
                   {
                     field.state.meta.errors[0]

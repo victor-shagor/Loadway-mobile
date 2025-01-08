@@ -49,6 +49,7 @@ import MessageIcon from "@src/components/icons/MessageIcon";
 import ProfileIcon from "@src/components/icons/ProfileIcon";
 import ResetPassword from "@src/screens/UserAuthentication.tsx/ResetPassword";
 import TransactionDetails from "@src/screens/transaction-details";
+import useOnboardingContext from "@src/utils/Context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -98,13 +99,13 @@ const tabs: Array<TabItem> = [
   },
   {
     name: "Message",
-    label: "Requests",
+    label: "Complaints",
     icon: (color: string) => (
       <MessageIcon color={color} width={50} height={50} />
     ),
     component: Messages,
     headerShown: true,
-    headerTitle: "REQUESTS",
+    headerTitle: "COMPLAINTS",
   },
   {
     name: "Profile",
@@ -174,15 +175,19 @@ const DashboardStack = () => {
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
+  const { currentUser, setCurrentUser } =
+    useOnboarding() as OnboardingContextType;
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
   useEffect(() => {
     registerForPushNotificationsAsync();
     notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
+      Notifications.addNotificationReceivedListener(async (notification) => {
         console.log(notification);
         setNotification(notification);
+        const user = await getCurrentUser();
+        setCurrentUser(user);
       });
 
     responseListener.current =
@@ -245,13 +250,14 @@ const DashboardStack = () => {
       }
       try {
         const projectId =
-        Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+        Constants?.expoConfig?.extra?.eas?.projectId 
 
-        token = (await Notifications.getExpoPushTokenAsync({projectId})).data;
-        console.log(token);
+        token = (await Notifications.getExpoPushTokenAsync({projectId:projectId || '37775479-68c7-4825-8ff1-0d646d194630'})).data;
         await updateCurrentUser({ pushNotificationsToken: token });
-      } catch (e) {
+      } catch (e:any) {
+        await updateCurrentUser({ error: e });
         console.log(e);
+        console.log(e?.response);
         return;
       }
     } else {
@@ -261,9 +267,6 @@ const DashboardStack = () => {
 
     return token;
   }
-
-  const { currentUser, setCurrentUser } =
-    useOnboarding() as OnboardingContextType;
 
   const [profile, setProfile] = useState({
     firstName: currentUser?.firstName,
