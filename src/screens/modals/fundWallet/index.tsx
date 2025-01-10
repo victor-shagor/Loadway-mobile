@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   Text,
   TextInput,
@@ -24,11 +25,13 @@ type FundWalletModalProps = {
   isExternalDeficit?: boolean;
   externalDeficit?: number;
   bills?: Array<string>;
+  handlePay: (amount: number, ref: string) => void;
 };
 
 export const FundWalletModal = ({
   close,
   type = "wallet",
+  handlePay
 }: FundWalletModalProps) => {
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState("");
@@ -134,6 +137,10 @@ export const FundWalletModal = ({
   });
 
   if (authorizationUrl) {
+    if(Platform.OS === "android") {
+      handlePay(Number(form?.getFieldValue("amount")), ref);
+      return
+    }
     return (
       <Pay
         close={close}
