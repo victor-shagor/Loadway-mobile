@@ -32,13 +32,7 @@ const GateAccessCard = ({
       accessCodeData.guestName
     },\n\nYour access code is: ${accessCodeData.code}\n\nAddress: ${
       accessCodeData?.address
-    }\n\nWhen you arrive at the gate, show the code to the security team. Your code expires on ${
-      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
-        .formattedDate
-    } at ${
-      timestampDisplay(addDays(accessCodeData?.createdAt || new Date(), 1))
-        .formattedTime
-    }.\n\nPowered by masonatlantic.com`;
+    }\n\nWhen you arrive at the gate, show the code to the security team. Your code expires at midnight.\n\nPowered by masonatlantic.com`;
     await Clipboard.setStringAsync(messageTemplate).then(() => {
       ToastService.show({
         position: "top",

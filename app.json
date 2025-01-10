@@ -1,28 +1,37 @@
 {
   "expo": {
-    "name": "Dwelling",
-    "slug": "dwelling",
-    "version": "1.0.0",
+    "name": "dwelling",
+    "slug": "Loadway-mobile",
+    "version": "4.0.0",
     "orientation": "portrait",
     "entryPoint": "./src/App.tsx",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/foregroundimage.jpeg",
     "userInterfaceStyle": "light",
+    "notification": {
+      "icon": "./src/assets/adaptive-icon.png"
+    },
     "splash": {
-      "image": "./src/assets/splash.png",
+      "image": "./src/assets/splash-screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#410019"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.mydwelling",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
+      "package": "com.schleppproperties.dwelling",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/foregroundimage.jpeg",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -45,7 +54,15 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/adaptive-icon.png"
+        }
+      ],
+      "expo-build-properties",
+      "expo-secure-store"
     ]
   }
 }

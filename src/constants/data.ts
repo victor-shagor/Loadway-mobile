@@ -102,7 +102,7 @@ export const quickLinksArray: QuicklinkProps[] = [
     iconColor: "#E1B13A",
   },
   {
-    name: "Requests",
+    name: "Complaints",
     href: "Message",
     icon: ComplaintIcon,
     bgColor: "#3778E830",
@@ -355,10 +355,6 @@ export const getHelpDataContact: getHelpDataContact[] = [
 
 export const complaintCategories = [
   {
-    label: "Plumbing",
-    value: "Plumbing",
-  },
-  {
     label: "Electrical",
     value: "Electrical",
   },
@@ -369,6 +365,14 @@ export const complaintCategories = [
   {
     label: "Cleaning",
     value: "Cleaning",
+  },
+  {
+    label: "Plumbing",
+    value: "Plumbing",
+  },
+  {
+    label: "Others",
+    value: "Others",
   },
 ];
 

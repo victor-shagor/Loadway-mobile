@@ -11,6 +11,7 @@ export type User = {
   address: string;
   duesSum: number;
   chats: [];
+  notificationCount: number;
 };
 
 export type Wallet = {
@@ -21,6 +22,7 @@ export type Activity = {
   activityType: ActivityType;
   title: string;
   createdAt: string;
+  status?: string;
 };
 
 export enum ActivityType {

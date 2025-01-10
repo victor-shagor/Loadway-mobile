@@ -34,6 +34,7 @@ const CustomModal = ({
   modalContent,
   modalizeRef,
   triggerDisabled = false,
+  onClose
 }: CustomModalProps) => {
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -52,6 +53,7 @@ const CustomModal = ({
       <Portal>
         <Modalize
           ref={modalizeRef}
+          onClose={onClose && onClose}
           adjustToContentHeight
           avoidKeyboardLikeIOS
           handlePosition='inside'

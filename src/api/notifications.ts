@@ -11,3 +11,12 @@ export const getAllNotifications = async ({ category, page, limit }: any) => {
     throw error;
   }
 };
+
+export const updateNotifications = async (id: any) => {
+  try {
+    const response = await axiosInstance.put(`${notifiaction}/update/${id}`);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,5 +1,5 @@
 import { Image, Pressable, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import images from "@src/constants/images";
 import { formatMoney } from "@src/utils/helper";
 import useOnboardingContext from "@src/utils/Context";
@@ -9,6 +9,9 @@ type InSufficientBalanceProps = {
   handleBuy: () => void;
   deficit: number;
   isExternalDeficit?: boolean;
+  amount?: number;
+  totalDue?: number;
+  refeshData?: () => void;
 };
 
 const InSufficientBalance = ({
@@ -16,8 +19,12 @@ const InSufficientBalance = ({
   handleBuy,
   deficit,
   isExternalDeficit,
+  amount,
+  totalDue,
+  refeshData
 }: InSufficientBalanceProps) => {
   const { currentUser } = useOnboardingContext();
+
 
   return (
     <View style={{ gap: 20 }}>
@@ -41,8 +48,7 @@ const InSufficientBalance = ({
           INSUFFICIENT BALANCE
         </Text>
         <Text className='font-medium text-center text-lg text-[#050402]/50'>
-          Your wallet balance is insufficient for the top up amount. Choose an
-          option to proceed
+        {(amount && amount > 0) ? `${formatMoney(amount, "₦")} paid out of ${formatMoney(totalDue || 0, "₦")} owed. Please fund your wallet to pay outstanding`:'Your wallet balance is insufficient for the top up amount. Choose an option to proceed' }
         </Text>
       </View>
       <View style={{ gap: 16 }}>
@@ -62,7 +68,6 @@ const InSufficientBalance = ({
         />
         <Pressable
           onPress={handleBuy}
-          disabled={currentUser?.wallet?.balance === 0}
           children={({ pressed }) => (
             <View
               className={`${
@@ -74,12 +79,7 @@ const InSufficientBalance = ({
               } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
-                {isExternalDeficit
-                  ? "Do it later"
-                  : `Buy ${formatMoney(
-                      Number(currentUser?.wallet.balance || 0),
-                      "₦"
-                    )} instead`}
+                Do it later
               </Text>
             </View>
           )}
