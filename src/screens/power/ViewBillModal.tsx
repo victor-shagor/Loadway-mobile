@@ -2,6 +2,7 @@ import { View, Modal, Pressable, Image, Text } from "react-native";
 import React from "react";
 import images from "@src/constants/images";
 import { formatMoney, timestampDisplay } from "@src/utils/helper";
+import useOnboardingContext from "@src/utils/Context";
 
 const ViewBillModal = ({
   modalVisible,
@@ -12,6 +13,7 @@ const ViewBillModal = ({
   closeModal: () => void;
   item: any;
 }) => {
+  const { currentUser } = useOnboardingContext();
   return (
     <View>
       <Modal visible={modalVisible} transparent animationType='slide'>
@@ -52,7 +54,7 @@ const ViewBillModal = ({
                     FEE:
                   </Text>
                   <Text className='text-[#050402] font-medium text-base'>
-                    {formatMoney(Number(item.fee), "₦")}
+                    {formatMoney(Number(200), "₦")}
                   </Text>
                 </View>
 
@@ -61,7 +63,7 @@ const ViewBillModal = ({
                     TARIFF:
                   </Text>
                   <Text className='text-[#050402] font-medium text-base'>
-                    {item.tariff}
+                    {currentUser?.property?.tariff || 0}/kwh
                   </Text>
                 </View>
 
@@ -88,7 +90,7 @@ const ViewBillModal = ({
                     DATE:
                   </Text>
                   <Text className='text-[#050402] font-medium text-base'>
-                    {timestampDisplay(item.date).formattedDate}
+                    {timestampDisplay(item.createdAt).formattedDate}
                   </Text>
                 </View>
 
@@ -97,7 +99,7 @@ const ViewBillModal = ({
                     TIME:
                   </Text>
                   <Text className='text-[#050402] font-medium text-base'>
-                    {timestampDisplay(item.date).formattedTime}
+                    {timestampDisplay(item.createdAt).formattedTime}
                   </Text>
                 </View>
 

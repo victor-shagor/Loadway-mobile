@@ -14,15 +14,15 @@ const BillCard = ({ item, handlePress }: BillCardProps) => {
         <View>
           <View className='flex-row justify-between items-center'>
             <Text className='text-[#050402]/50 font-medium text-sm'>
-              {timestampDisplay(item.date).formattedDate} at{" "}
-              {timestampDisplay(item.date).formattedTime}
+              {timestampDisplay(item.createdAt).formattedDate} at{" "}
+              {timestampDisplay(item.createdAt).formattedTime}
             </Text>
             <Text className='text-[#050402] font-medium text-sm'>
               {formatMoney(Number(item.amount), "₦")}
             </Text>
           </View>
           <Text className='text-[#050402] font-medium text-lg'>
-            {item.code}
+            {item.metadata?.token || ""}
           </Text>
         </View>
         <View>
