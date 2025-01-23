@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllUserTransactions, getBills } from "@src/api/bills";
+import {
+  getAllUserTransactions,
+  getBills,
+  getElectricityHistory,
+  getElectricityToken,
+} from "@src/api/bills";
 
 const useGetBillsQuery = () => {
   const queryInfo = useQuery({
@@ -17,4 +22,25 @@ const useGetTransactionsQuery = (page?: number, limit?: number) => {
   return queryInfo;
 };
 
-export { useGetBillsQuery, useGetTransactionsQuery };
+const useGetElectricityHistoryQuery = (page?: number, limit?: number) => {
+  const queryInfo = useQuery({
+    queryKey: ["electricityHistory"],
+    queryFn: async () => await getElectricityHistory(page, limit),
+  });
+  return queryInfo;
+};
+
+const useGetElectricityTokenQuery = (requestId: string) => {
+  const queryInfo = useQuery({
+    queryKey: ["electricityToken"],
+    queryFn: async () => await getElectricityToken(requestId),
+  });
+  return queryInfo;
+};
+
+export {
+  useGetBillsQuery,
+  useGetTransactionsQuery,
+  useGetElectricityHistoryQuery,
+  useGetElectricityTokenQuery,
+};

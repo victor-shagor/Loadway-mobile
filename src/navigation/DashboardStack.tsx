@@ -13,8 +13,8 @@ import { appColors } from "../constants/colors";
 import * as Device from "expo-device";
 import Constants from 'expo-constants';
 
-// import Home from "@src/screens/home";
-import Home from "@src/screens/home";
+// import Home from "@src/screens/home"
+import Home from "@src/screens/Home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Profile from "../screens/profile";

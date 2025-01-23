@@ -12,6 +12,7 @@ type InSufficientBalanceProps = {
   amount?: number;
   totalDue?: number;
   refeshData?: () => void;
+  type?: string;
 };
 
 const InSufficientBalance = ({
@@ -21,10 +22,10 @@ const InSufficientBalance = ({
   isExternalDeficit,
   amount,
   totalDue,
-  refeshData
+  refeshData,
+  type = "wallet",
 }: InSufficientBalanceProps) => {
   const { currentUser } = useOnboardingContext();
-
 
   return (
     <View style={{ gap: 20 }}>
@@ -48,7 +49,12 @@ const InSufficientBalance = ({
           INSUFFICIENT BALANCE
         </Text>
         <Text className='font-medium text-center text-lg text-[#050402]/50'>
-        {(amount && amount > 0) ? `${formatMoney(amount, "₦")} paid out of ${formatMoney(totalDue || 0, "₦")} owed. Please fund your wallet to pay outstanding`:'Your wallet balance is insufficient for the top up amount. Choose an option to proceed' }
+          {amount && amount > 0
+            ? `${formatMoney(amount, "₦")} paid out of ${formatMoney(
+                totalDue || 0,
+                "₦"
+              )} owed. Please fund your wallet to pay outstanding`
+            : "Your wallet balance is insufficient for the top up amount. Choose an option to proceed"}
         </Text>
       </View>
       <View style={{ gap: 16 }}>
@@ -79,7 +85,9 @@ const InSufficientBalance = ({
               } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
-                Do it later
+                {type === "bill"
+                  ? `Buy ${formatMoney(Number(amount), "₦")} power instead`
+                  : "Do it later"}
               </Text>
             </View>
           )}
