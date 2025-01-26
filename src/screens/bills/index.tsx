@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useGetCurrentUserQuery } from "@src/hooks/useUserQuery";
 import PaymentModal from "../modals/fundWallet/payment";
+import Pay from "../modals/fundWallet/paystackWebView";
 import { set } from "date-fns";
 import { queryClient } from "@src/providers/get-query-client";
 
@@ -31,6 +32,7 @@ const Bills = () => {
   const [isExternalDeficit, setIsExternalDeficit] = useState(false);
   const [externalDeficit, setExternalDeficit] = useState(0);
   const [paymentAmount, setPaymentAmount] = useState(0);
+  const [ref, setRef] = useState("");
   const [totalDue, setTotalDue] = useState(0);
 
   const { data, isLoading, isFetching, refetch } = useGetBillsQuery();
@@ -85,6 +87,29 @@ const Bills = () => {
     await AsyncStorage.setItem("transactionDetails", JSON.stringify(item));
     navigate("TransactionDetails");
   };
+
+  const handlePay = (amount: number, ref: string) => {
+    setPaymentAmount(amount);
+    setRef(ref);
+  };
+
+  const handleCancel = () => {
+    fundWalletModalRef.current?.close();
+    setPaymentAmount(0);
+    setRef("");
+  };
+
+  if (paymentAmount > 0 && ref !== "") {
+    return (
+      <Pay
+        close={handleCancel}
+        amount={paymentAmount}
+        payStackKey='sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238'
+        reference={ref}
+        onSuccess={handleCancel}
+      />
+    );
+  }
 
   if (isUserLoading || isUserFetching) {
     return (
@@ -289,7 +314,8 @@ const Bills = () => {
         modalContent={
           <FundWalletModal
             close={() => fundWalletModalRef.current?.close()}
-            type="wallet"
+            type='wallet'
+            handlePay={handlePay}
           />
         }
       />
@@ -309,8 +335,7 @@ const Bills = () => {
             isExternalDeficit={isExternalDeficit}
             externalDeficit={externalDeficit}
             close={() => paymentModalRef.current?.close()}
-            type="bill"
-
+            type='bill'
           />
         }
       />

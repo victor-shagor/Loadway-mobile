@@ -5,10 +5,36 @@ import CustomModal from "../CustomModal";
 import { Modalize } from "react-native-modalize";
 import FundWalletModal from "@src/screens/modals/fundWallet";
 import { formatMoney } from "@src/utils/helper";
+import Pay from "@src/screens/modals/fundWallet/paystackWebView";
 
 const Cards = () => {
   const { currentUser } = useOnboardingContext();
   const walletRef = useRef<Modalize>(null);
+  const [paymentAmount, setPaymentAmount] = React.useState(0);
+  const [ref, setRef] = React.useState("");
+
+  const handlePay = (amount: number, ref: string) => {
+    setPaymentAmount(amount);
+    setRef(ref);
+  };
+
+  const handleCancel = () => {
+    walletRef.current?.close();
+    setPaymentAmount(0);
+    setRef("");
+  };
+
+  if (paymentAmount > 0 && ref !== "") {
+    return (
+      <Pay
+        close={handleCancel}
+        amount={paymentAmount}
+        payStackKey='sk_live_a6115d0b2a1fac26e17d15627d6fb0358deba238'
+        reference={ref}
+        onSuccess={handleCancel}
+      />
+    );
+  }
 
   return (
     <View className='bg-[#050402] rounded-2xl overflow-hidden h-60'>
@@ -46,7 +72,11 @@ const Cards = () => {
       <CustomModal
         modalizeRef={walletRef}
         modalContent={
-          <FundWalletModal close={() => walletRef.current?.close()} />
+          <FundWalletModal
+            close={() => walletRef.current?.close()}
+            type='wallet'
+            handlePay={handlePay}
+          />
         }
       />
     </View>
