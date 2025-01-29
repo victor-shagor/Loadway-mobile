@@ -13,6 +13,7 @@ import { payBills } from "@src/api/bills";
 import { queryClient } from "@src/providers/get-query-client";
 import Receipt from "./Receipt";
 import { getCurrentUser } from "@src/api/user";
+import { useNavigation } from "@react-navigation/native";
 
 type FundWalletModalProps = {
   close: () => void;
@@ -38,6 +39,7 @@ export const PaymentModal = ({
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState("");
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
+  const navigation = useNavigation();
 
   const { currentUser, setCurrentUser } = useOnboardingContext();
 
@@ -156,25 +158,40 @@ export const PaymentModal = ({
     initiateTransaction(externalDeficit);
   };
 
+  const handleSuccess = async () => {
+    if (type === "bill") {
+      payBillMutation.mutate();
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["bills"] });
+    } else {
+      close();
+    }
+  };
   if (authorizationUrl) {
-    return (
-      <Pay
-        authorizationUrl={authorizationUrl}
-        setAuthorizationUrl={setAuthorizationUrl}
-        close={close}
-        amount={externalDeficit}
-        reference={ref}
-        onSuccess={() => {
-          if (type === "bill") {
-            payBillMutation.mutate();
-            queryClient.invalidateQueries({ queryKey: ["transactions"] });
-            queryClient.invalidateQueries({ queryKey: ["bills"] });
-          } else {
-            close();
-          }
-        }}
-      />
-    );
+    return navigation.navigate("WebView", {
+      amount: Number(form?.getFieldValue("amount")),
+      reference: ref,
+      authorizationUrl,
+      setAuthorizationUrl,
+      close,
+      onSuccess: type === "bill" ? handleSuccess : undefined,
+    });
+    // <Pay
+    //   authorizationUrl={authorizationUrl}
+    //   setAuthorizationUrl={setAuthorizationUrl}
+    //   close={close}
+    //   amount={externalDeficit}
+    //   reference={ref}
+    //   onSuccess={() => {
+    //     if (type === "bill") {
+    //       payBillMutation.mutate();
+    //       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    //       queryClient.invalidateQueries({ queryKey: ["bills"] });
+    //     } else {
+    //       close();
+    //     }
+    //   }}
+    // />
   }
 
   if (loading) {
@@ -187,9 +204,6 @@ export const PaymentModal = ({
       </View>
     );
   }
-
-  console.log({ isExternalDeficit });
-  console.log({ externalDeficit });
 
   if (isExternalDeficit) {
     return (
@@ -216,7 +230,7 @@ export const PaymentModal = ({
         close();
       }}
       data={{
-        amount: currentUser?.duesSum || 0,
+        amount: totalDue || 0,
         walletBalance: currentUser?.wallet.balance || 0,
         date: timestampDisplay(new Date()).formattedDate,
         time: timestampDisplay(new Date()).formattedTime,

@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { formatMoney, isDateInPast, timestampDisplay } from "@src/utils/helper";
+import { formatMoney, formatNarration, isDateInPast, timestampDisplay } from "@src/utils/helper";
 import FundWalletModal from "../modals/fundWallet";
 import CustomModal from "@src/components/CustomModal";
 import {
@@ -223,7 +223,7 @@ const Bills = () => {
                     </View>
                     <View className='flex-1'>
                       <Text className='text-[#050402]/50 font-medium text-sm'>
-                      {!isDateInPast(item.dueDate) ? 'Since' : 'Due by'}{' '}
+                      {/* {!isDateInPast(item.dueDate) ? 'Since' : 'Due by'}{' '} */}
                         {
                           timestampDisplay(
                             currentTab === "pending"
@@ -234,7 +234,7 @@ const Bills = () => {
                       </Text>
                       <Text className='text-[#050402] font-medium text-base'>
                         {currentTab === "pending"
-                          ? item.billName
+                          ? formatNarration(item.billName)
                           : item.narration}
                       </Text>
                     </View>
@@ -255,9 +255,9 @@ const Bills = () => {
                         "₦"
                       )}
                     </Text>
-                    <Text className='text-[#000] font-small text-sm shrink-0' style={{fontSize: 11}}>
+                    {currentTab === "pending" && <Text className='text-[#000] font-small text-sm shrink-0' style={{fontSize: 11}}>
                       Paid: {formatMoney(item.amount - item.amountDue || 0, "₦")}
-                    </Text>
+                    </Text>}
                     </View>
                   </View>
                 )}

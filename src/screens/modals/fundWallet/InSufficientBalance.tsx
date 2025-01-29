@@ -85,7 +85,7 @@ const InSufficientBalance = ({
               } rounded-full h-16 justify-center items-center border-2 border-black bg-[#FFF6F4]`}
             >
               <Text className='text-center font-medium text-base text-[#E85637]'>
-                {type === "bill"
+                {type === "bill" && amount && amount > 0
                   ? `Buy ${formatMoney(Number(amount), "₦")} power instead`
                   : "Do it later"}
               </Text>

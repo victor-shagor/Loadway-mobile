@@ -17,7 +17,7 @@ const ListIcon = ({ type }: ListIconProps) => {
   const iconMap = {
     COMPLAINT: images.quickLInks.complaints,
     GATE_ACCESS: images.quickLInks.visitors,
-    WALLET: images.quickLInks.electricity,
+    WALLET: images.quickLInks.wallet,
     PASSWORD_CHANGE: images.quickLInks.complaints,
   };
   return (

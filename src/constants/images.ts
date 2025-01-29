@@ -53,6 +53,7 @@ const images = {
     visitors: require("@src/assets/icons/unlock-icon.png"),
     complaints: require("@src/assets/icons/error-icon.png"),
     electricity: require("@src/assets/icons/bolt-icon.png"),
+    wallet: require("@src/assets/icons/filled-wallet-icon.png"),
   },
   bills: {
     walletIcon: require("@src/assets/icons/wallet-icon.png"),

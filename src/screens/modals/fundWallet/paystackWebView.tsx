@@ -5,25 +5,24 @@ import useOnboardingContext from "@src/utils/Context";
 import { ToastService } from "react-native-toastier";
 import AppToast from "@src/components/common/AppToast";
 import { WebView } from 'react-native-webview';
+import { useNavigation } from "@react-navigation/native";
+import { getCurrentUser } from "@src/api/user";
+import { queryClient } from "@src/providers/get-query-client";
 
-export default function Pay({
-  amount,
-  reference,
-  close,
-  authorizationUrl,
-  setAuthorizationUrl,
-  type,
-  onSuccess
-}: {
-  amount: number;
-  authorizationUrl: string;
-  reference: string;
-  close: () => void;
-  onSuccess?: () => void;
-  setAuthorizationUrl: (url: string | null) => void;
-  type?: "wallet" | "bill";
-}) {
+export default function Pay(props: any) {
   const { setCurrentUser, currentUser } = useOnboardingContext();
+ const navigation = useNavigation();
+  const params = props.route.params;
+
+  const {
+    amount,
+    reference,
+    close,
+    authorizationUrl,
+    setAuthorizationUrl,
+    type,
+    onSuccess
+  } = params;
 
   const deviceHeight = Dimensions.get("window").height - 55;
   const deviceWidth = Dimensions.get("window").width;
@@ -43,22 +42,16 @@ export default function Pay({
         startInLoadingState={false}
         scalesPageToFit={true}
         onNavigationStateChange={async (navState: any) => {
-          console.log("nastate", navState);
           if (navState.url.includes("success")) {
-            // Handle success
-            close();
             setAuthorizationUrl(null);
+            close();
+            navigation.goBack();
             const url = `/transaction/verify/${reference}`;
             const res = await axios.get(url);
             if (res.data?.success) {
-              setCurrentUser({
-                ...currentUser,
-                wallet: {
-                  balance:
-                    Number(currentUser?.wallet?.balance || 0) +
-                    Number(amount),
-                },
-              });
+              const user = await getCurrentUser();
+              setCurrentUser(user);
+              queryClient.invalidateQueries({ queryKey: ["currentUser"] });
               onSuccess && onSuccess();
               ToastService.show({
                 position: "top",
@@ -80,6 +73,7 @@ export default function Pay({
             // Handle failure
             setAuthorizationUrl(null);
             close();
+            navigation.goBack();
             ToastService.show({
               position: "top",
               contentContainerStyle: {

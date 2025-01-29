@@ -2,10 +2,10 @@
   "expo": {
     "name": "dwelling",
     "slug": "Loadway-mobile",
-    "version": "4.0.0",
+    "version": "4.1.0",
     "orientation": "portrait",
     "entryPoint": "./src/App.tsx",
-    "icon": "./src/assets/foregroundimage.jpeg",
+    "icon": "./src/assets/foregroundimages.png",
     "userInterfaceStyle": "light",
     "notification": {
       "icon": "./src/assets/adaptive-icon.png"
@@ -26,9 +26,9 @@
       }
     },
     "android": {
-      "package": "com.schleppproperties.dwelling",
+      "package": "com.schleppproperty.dwelling",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/foregroundimage.jpeg",
+        "foregroundImage": "./src/assets/foregroundimages.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.RECORD_AUDIO"]

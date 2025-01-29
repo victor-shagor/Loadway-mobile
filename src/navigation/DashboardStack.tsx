@@ -14,7 +14,7 @@ import * as Device from "expo-device";
 import Constants from 'expo-constants';
 
 // import Home from "@src/screens/home"
-import Home from "@src/screens/Home";
+import Home from "@src/screens/home";
 import Bills from "../screens/bills";
 import Messages from "../screens/message";
 import Profile from "../screens/profile";
@@ -50,6 +50,7 @@ import ProfileIcon from "@src/components/icons/ProfileIcon";
 import ResetPassword from "@src/screens/UserAuthentication.tsx/ResetPassword";
 import TransactionDetails from "@src/screens/transaction-details";
 import useOnboardingContext from "@src/utils/Context";
+import Pay from "@src/screens/modals/fundWallet/paystackWebView";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -395,6 +396,13 @@ const DashboardStack = () => {
       component: TransactionDetails,
       showHeader: true,
       title: "TRANSACTION DETAILS",
+      leftIcon: "arrow-left",
+    },
+    {
+      name: "WebView",
+      component: Pay,
+      showHeader: false,
+      title: "PAYMENT",
       leftIcon: "arrow-left",
     },
   ];
